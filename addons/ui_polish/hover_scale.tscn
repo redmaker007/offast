@@ -1,0 +1,8 @@
+[gd_scene format=3 uid="uid://cmrxkr3nf2x84"]
+
+[ext_resource type="Script" uid="uid://b2uetry7p7cdr" path="res://addons/ui_polish/hover_scale.gd" id="1_jwm27"]
+[ext_resource type="AudioStream" uid="uid://iw2j5c1v6ksb" path="res://sound/mixkit-message-pop-alert-2354.mp3" id="2_n83lq"]
+
+[node name="HoverScale" type="Node" unique_id=1454724611]
+script = ExtResource("1_jwm27")
+hover_sound = ExtResource("2_n83lq")

@@ -1,0 +1,268 @@
+[gd_scene format=3 uid="uid://cmdwjaqvy66fi"]
+
+[ext_resource type="Script" uid="uid://cn8gvlu1u57ob" path="res://main_game/game/main_scene.gd" id="1_a1lbd"]
+[ext_resource type="Script" uid="uid://50u2kjf8e22m" path="res://main_game/game/instruction/instruction_box.gd" id="1_bedcl"]
+[ext_resource type="Script" uid="uid://b683y4hyp8bod" path="res://main_game/game/round/que_generator.gd" id="2_116g0"]
+[ext_resource type="Script" uid="uid://dbxcfbeu48tg3" path="res://main_game/game/email/email_reader.gd" id="4_mh3vd"]
+[ext_resource type="Script" uid="uid://b54v20n6oo48o" path="res://main_game/game/round/round_manager.gd" id="5_mh3vd"]
+[ext_resource type="Script" uid="uid://r0ck0gbb5r3e" path="res://main_game/game/instruction/instruction_execute_manager.gd" id="6_8fo1x"]
+[ext_resource type="PackedScene" uid="uid://cmrxkr3nf2x84" path="res://addons/ui_polish/hover_scale.tscn" id="6_toloy"]
+[ext_resource type="Theme" uid="uid://mc8mrn88s36b" path="res://theme/office_draw.tres" id="8_nggn0"]
+[ext_resource type="Shader" uid="uid://1gcn0tdpnc55" path="res://theme/glow_outline.gdshader" id="8_wxc6e"]
+[ext_resource type="Script" uid="uid://bcxew14614uds" path="res://main_game/game/instruction/instruction_execute_page.gd" id="9_17gcd"]
+[ext_resource type="Texture2D" uid="uid://xlmcgsit4biw" path="res://theme/laptop.png" id="9_asovh"]
+[ext_resource type="Texture2D" uid="uid://dkruy1ff8p4oj" path="res://theme/true_mark.png" id="10_c78lx"]
+[ext_resource type="Script" uid="uid://c3l7s3hng70ks" path="res://main_game/game/widgets/clickable_item.gd" id="10_r27cc"]
+[ext_resource type="Texture2D" uid="uid://da276o5s6cjbf" path="res://theme/false_mark.png" id="11_4j4se"]
+[ext_resource type="Texture2D" uid="uid://deglhobr6d8oj" path="res://theme/next_mark.png" id="12_4j4se"]
+[ext_resource type="AudioStream" uid="uid://c3i4jdi1ve7ap" path="res://sound/click2.mp3" id="12_6xou6"]
+[ext_resource type="Script" uid="uid://dhw01an7ycpsq" path="res://main_game/game/email/email_read_page.gd" id="12_ygwb2"]
+[ext_resource type="Texture2D" uid="uid://3srrhri3mfdp" path="res://theme/false_mark2.png" id="15_0ogao"]
+[ext_resource type="Script" uid="uid://cd5gsxlwlycv5" path="res://main_game/game/widgets/cancel_button.gd" id="16_asovh"]
+[ext_resource type="Script" uid="uid://wkvk11jgmydc" path="res://main_game/game/widgets/back_to_menu_button.gd" id="17_back"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_hhoq2"]
+shader = ExtResource("8_wxc6e")
+shader_parameter/enabled = false
+shader_parameter/maxLineWidth = 22.270001057825
+shader_parameter/minLineWidth = 0.0
+shader_parameter/speed = 6.000000285
+shader_parameter/blockSize = 5.890000279775
+shader_parameter/color = Color(0.9658665, 0.53836435, 0.36339462, 1)
+shader_parameter/tolerance = 0.7090000336775
+
+[node name="main_scene" type="Control" unique_id=751504015]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+script = ExtResource("1_a1lbd")
+
+[node name="instruction_box" type="Node" parent="." unique_id=660279875]
+unique_name_in_owner = true
+script = ExtResource("1_bedcl")
+
+[node name="email_generator" type="Node" parent="." unique_id=150925690]
+unique_name_in_owner = true
+script = ExtResource("2_116g0")
+
+[node name="email_reader" type="Node" parent="." unique_id=1950801893]
+unique_name_in_owner = true
+script = ExtResource("4_mh3vd")
+
+[node name="round_manager" type="Node" parent="." unique_id=61556616]
+unique_name_in_owner = true
+script = ExtResource("5_mh3vd")
+
+[node name="instruction_execute_manager" type="Node" parent="." unique_id=1872061990]
+unique_name_in_owner = true
+script = ExtResource("6_8fo1x")
+
+[node name="Control" type="PanelContainer" parent="." unique_id=494889764]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+mouse_filter = 1
+theme = ExtResource("8_nggn0")
+
+[node name="laptop_control" type="Control" parent="Control" unique_id=888319210]
+layout_mode = 2
+
+[node name="laptop" type="TextureRect" parent="Control/laptop_control" unique_id=805262257]
+material = SubResource("ShaderMaterial_hhoq2")
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -385.0
+offset_top = -134.0
+offset_right = 101.0
+offset_bottom = 300.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.5, 0.5)
+pivot_offset = Vector2(246, 194)
+offset_transform_position = Vector2(7.185, 149.09)
+offset_transform_scale = Vector2(0.5, 0.5)
+mouse_filter = 0
+texture = ExtResource("9_asovh")
+stretch_mode = 2
+script = ExtResource("10_r27cc")
+click_signal = "open_email_window_request"
+
+[node name="HoverScale" parent="Control/laptop_control/laptop" unique_id=1454724611 instance=ExtResource("6_toloy")]
+hover_volume = 0.5
+click_sound = ExtResource("12_6xou6")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Control" unique_id=676030873]
+layout_mode = 2
+mouse_filter = 2
+alignment = 1
+
+[node name="instruction_executre_page" type="PanelContainer" parent="Control/VBoxContainer" unique_id=624460870]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(780, 540)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+mouse_filter = 1
+theme = ExtResource("8_nggn0")
+theme_type_variation = &"systemPanel"
+script = ExtResource("9_17gcd")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Control/VBoxContainer/instruction_executre_page" unique_id=225978403]
+layout_mode = 2
+alignment = 1
+
+[node name="instruction_text" type="Label" parent="Control/VBoxContainer/instruction_executre_page/VBoxContainer" unique_id=1183420712]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 6
+horizontal_alignment = 1
+
+[node name="choice_button" type="HBoxContainer" parent="Control/VBoxContainer/instruction_executre_page/VBoxContainer" unique_id=605532112]
+layout_mode = 2
+size_flags_vertical = 3
+alignment = 1
+
+[node name="yes_butt" type="Button" parent="Control/VBoxContainer/instruction_executre_page/VBoxContainer/choice_button" unique_id=725099744]
+modulate = Color(0.65882355, 0.77254903, 0.627451, 1)
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+size_flags_horizontal = 6
+size_flags_vertical = 4
+icon = ExtResource("10_c78lx")
+icon_alignment = 1
+expand_icon = true
+
+[node name="HoverScale" parent="Control/VBoxContainer/instruction_executre_page/VBoxContainer/choice_button/yes_butt" unique_id=1344451438 instance=ExtResource("6_toloy")]
+hover_volume = 0.5
+click_sound = ExtResource("12_6xou6")
+
+[node name="no_butt" type="Button" parent="Control/VBoxContainer/instruction_executre_page/VBoxContainer/choice_button" unique_id=1004666666]
+modulate = Color(0.76862746, 0.47843137, 0.41568628, 1)
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+size_flags_horizontal = 6
+size_flags_vertical = 4
+theme = ExtResource("8_nggn0")
+icon = ExtResource("11_4j4se")
+icon_alignment = 1
+expand_icon = true
+
+[node name="HoverScale" parent="Control/VBoxContainer/instruction_executre_page/VBoxContainer/choice_button/no_butt" unique_id=524001528 instance=ExtResource("6_toloy")]
+hover_volume = 0.5
+click_sound = ExtResource("12_6xou6")
+
+[node name="email_read_page" type="PanelContainer" parent="Control/VBoxContainer" unique_id=518721048]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(780, 540)
+custom_maximum_size = Vector2(780, 540)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+mouse_filter = 1
+theme = ExtResource("8_nggn0")
+theme_type_variation = &"emailPanel"
+script = ExtResource("12_ygwb2")
+
+[node name="Control" type="Control" parent="Control/VBoxContainer/email_read_page" unique_id=464092759]
+layout_mode = 2
+
+[node name="sender_name_text" type="Label" parent="Control/VBoxContainer/email_read_page/Control" unique_id=2104584303]
+custom_minimum_size = Vector2(150, 30)
+custom_maximum_size = Vector2(150, 30)
+layout_mode = 0
+offset_left = 19.0
+offset_top = 24.0
+offset_right = 169.0
+offset_bottom = 54.0
+offset_transform_enabled = true
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Control/VBoxContainer/email_read_page" unique_id=165542676]
+layout_mode = 2
+alignment = 1
+
+[node name="cancel_button" type="Button" parent="Control/VBoxContainer/email_read_page/VBoxContainer" unique_id=1655821474]
+modulate = Color(0.76862746, 0.47843137, 0.41568628, 1)
+custom_minimum_size = Vector2(64.6, 60.2)
+custom_maximum_size = Vector2(64.6, 60.2)
+layout_mode = 2
+size_flags_horizontal = 8
+theme = ExtResource("8_nggn0")
+theme_type_variation = &"round_button"
+icon = ExtResource("15_0ogao")
+icon_alignment = 1
+expand_icon = true
+script = ExtResource("16_asovh")
+
+[node name="HoverScale" parent="Control/VBoxContainer/email_read_page/VBoxContainer/cancel_button" unique_id=1737713058 instance=ExtResource("6_toloy")]
+hover_volume = 0.5
+click_sound = ExtResource("12_6xou6")
+
+[node name="email_content" type="Label" parent="Control/VBoxContainer/email_read_page/VBoxContainer" unique_id=1882389200]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 6
+horizontal_alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Control/VBoxContainer/email_read_page/VBoxContainer" unique_id=1363536124]
+layout_mode = 2
+size_flags_vertical = 3
+alignment = 1
+
+[node name="next_email" type="Button" parent="Control/VBoxContainer/email_read_page/VBoxContainer/HBoxContainer" unique_id=42997686]
+modulate = Color(0.9098039, 0.8352941, 0.6901961, 1)
+custom_minimum_size = Vector2(120, 45)
+custom_maximum_size = Vector2(120, 45)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 6
+offset_transform_visual_only = false
+theme = ExtResource("8_nggn0")
+theme_type_variation = &"LongButton"
+icon = ExtResource("12_4j4se")
+icon_alignment = 1
+expand_icon = true
+
+[node name="HoverScale" parent="Control/VBoxContainer/email_read_page/VBoxContainer/HBoxContainer/next_email" unique_id=29391216 instance=ExtResource("6_toloy")]
+hover_volume = 0.5
+click_sound = ExtResource("12_6xou6")
+
+[node name="Control" type="Control" parent="Control/VBoxContainer" unique_id=385012328]
+visible = false
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+
+[node name="back_to_menu" type="Button" parent="." unique_id=420256063]
+custom_minimum_size = Vector2(140, 44)
+layout_mode = 1
+offset_left = 24.0
+offset_top = 24.0
+offset_right = 164.0
+offset_bottom = 68.0
+theme_type_variation = &"systemPanel"
+text = "回主菜单"
+script = ExtResource("17_back")
+
+[node name="HoverScale" parent="back_to_menu" unique_id=1575342905 instance=ExtResource("6_toloy")]
+hover_volume = 0.5
+click_sound = ExtResource("12_6xou6")
+
+[connection signal="pressed" from="Control/VBoxContainer/instruction_executre_page/VBoxContainer/choice_button/yes_butt" to="instruction_execute_manager" method="_on_yes_butt_pressed"]
+[connection signal="pressed" from="Control/VBoxContainer/instruction_executre_page/VBoxContainer/choice_button/no_butt" to="instruction_execute_manager" method="_on_no_butt_pressed"]
+[connection signal="pressed" from="Control/VBoxContainer/email_read_page/VBoxContainer/cancel_button" to="Control/VBoxContainer/email_read_page/VBoxContainer/cancel_button" method="_on_pressed"]
+[connection signal="pressed" from="Control/VBoxContainer/email_read_page/VBoxContainer/HBoxContainer/next_email" to="email_reader" method="_on_button_pressed"]
+[connection signal="pressed" from="back_to_menu" to="back_to_menu" method="_on_pressed"]
