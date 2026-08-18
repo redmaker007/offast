@@ -1,30 +1,31 @@
-extends popup_window
+extends PanelContainer
 
-## 读邮件的窗口。开关动画在 popup_window 里，这里只管什么时候该开、以及显示什么内容。
+## 邮件页：笔记本的第一个 app。
+##
+## 邮件阅后即焚，所以这里不缓存任何内容——显示过的信在数据层已经不存在了，
+## 换页、换天、读档之后一律清空，不给玩家"翻回去看一眼"的机会。
+
+const EMPTY_TEXT := "Inbox empty."
 
 
 func _ready() -> void:
-	super()
-	SignalBus.round_state_change.connect(on_round_state_change)
-	SignalBus.open_email_window_request.connect(on_open_request)
-	# 邮件内容由窗口自己订阅，数据层不再直接往这里的 Label 写字。
 	SignalBus.show_email.connect(on_show_email)
-	SignalBus.game_restored.connect(on_game_restored)
+	SignalBus.inbox_empty.connect(_on_inbox_empty)
+	SignalBus.round_state_change.connect(_on_round_state_change)
+	SignalBus.game_restored.connect(_clear)
 
 
-func on_round_state_change(rs:RoundState.Round_State):
-	if rs == RoundState.Round_State.RECEIVING_EMAIL:
-		WindowManager.open_window(self)
+func _on_round_state_change(_rs) -> void:
+	# 新的一天换一批邮件，上一天残留的内容不该还挂在屏幕上。
+	_clear()
 
 
-func on_game_restored():
-	# 读档之后要按恢复出来的回合状态决定该不该开，判断和上面完全一样。
-	on_round_state_change(RoundState.current_round_state)
+func _clear() -> void:
+	%email_content.text = ""
 
 
-func on_open_request():
-	if RoundState.current_round_state == RoundState.Round_State.RECEIVING_EMAIL:
-		WindowManager.open_window(self)
+func _on_inbox_empty() -> void:
+	%email_content.text = EMPTY_TEXT
 
 
 func on_show_email(e:email):

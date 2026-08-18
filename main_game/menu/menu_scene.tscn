@@ -3,8 +3,19 @@
 [ext_resource type="Theme" uid="uid://mc8mrn88s36b" path="res://theme/office_draw.tres" id="1_theme"]
 [ext_resource type="Script" uid="uid://cx3ighyn6txkn" path="res://main_game/menu/menu_scene.gd" id="2_menu"]
 [ext_resource type="PackedScene" uid="uid://cmrxkr3nf2x84" path="res://addons/ui_polish/hover_scale.tscn" id="3_hover"]
+[ext_resource type="Shader" uid="uid://ch6vsavegvfcr" path="res://theme/cartoon_backgram.gdshader" id="3_wyp6x"]
+[ext_resource type="Texture2D" uid="uid://dgfbscgi8e8tx" path="res://theme/cartoon_background_shape.png" id="4_4fie0"]
 [ext_resource type="AudioStream" uid="uid://c3i4jdi1ve7ap" path="res://sound/click2.mp3" id="4_click"]
-[ext_resource type="Script" uid="uid://x2a4lkkyv60u" path="res://main_game/menu/settings_panel.gd" id="6_settings"]
+[ext_resource type="Texture2D" uid="uid://df8sjyomoflvb" path="res://theme/setting_mark.png" id="5_ymidt"]
+[ext_resource type="PackedScene" path="res://main_game/menu/settings_panel.tscn" id="6_settings"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ibu3k"]
+shader = ExtResource("3_wyp6x")
+shader_parameter/pattern = ExtResource("4_4fie0")
+shader_parameter/pattern_color = Color(1.1508185, 0.7357858, 0.47886068, 1)
+shader_parameter/tiling = 100.0
+shader_parameter/speed = Vector2(0.445, 0.225)
+shader_parameter/rotation = 0.0
 
 [node name="menu_scene" type="Control" unique_id=1548529346]
 layout_mode = 3
@@ -16,7 +27,8 @@ grow_vertical = 2
 theme = ExtResource("1_theme")
 script = ExtResource("2_menu")
 
-[node name="background" type="PanelContainer" parent="." unique_id=1705340379]
+[node name="background" type="ColorRect" parent="." unique_id=1711605917]
+material = SubResource("ShaderMaterial_ibu3k")
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -24,9 +36,12 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 1
+color = Color(1, 0.84313726, 0.60784316, 1)
 
 [node name="VBoxContainer" type="VBoxContainer" parent="background" unique_id=718150582]
-layout_mode = 2
+layout_mode = 0
+offset_right = 1152.0
+offset_bottom = 648.0
 theme_override_constants/separation = 18
 alignment = 1
 
@@ -36,12 +51,13 @@ text = "OFFAST"
 horizontal_alignment = 1
 
 [node name="new_game_button" type="Button" parent="background/VBoxContainer" unique_id=610722248]
+modulate = Color(0.9098039, 0.8352941, 0.6901961, 1)
 custom_minimum_size = Vector2(120, 45)
 layout_mode = 2
 size_flags_horizontal = 4
 theme = ExtResource("1_theme")
 theme_type_variation = &"LongButton"
-text = "开始新游戏"
+text = "New Start"
 
 [node name="HoverScale" parent="background/VBoxContainer/new_game_button" unique_id=51400353 instance=ExtResource("3_hover")]
 hover_volume = 0.5
@@ -49,91 +65,51 @@ click_sound = ExtResource("4_click")
 
 [node name="continue_button" type="Button" parent="background/VBoxContainer" unique_id=663293745]
 unique_name_in_owner = true
+modulate = Color(0.9098039, 0.8352941, 0.6901961, 1)
 custom_minimum_size = Vector2(120, 45)
 layout_mode = 2
 size_flags_horizontal = 4
 theme = ExtResource("1_theme")
 theme_type_variation = &"LongButton"
 disabled = true
-text = "继续游戏"
+text = "Resume"
 
 [node name="HoverScale" parent="background/VBoxContainer/continue_button" unique_id=1529112466 instance=ExtResource("3_hover")]
 hover_volume = 0.5
 click_sound = ExtResource("4_click")
 
 [node name="settings_button" type="Button" parent="background/VBoxContainer" unique_id=769127330]
+modulate = Color(0.9098039, 0.8352941, 0.6901961, 1)
 custom_minimum_size = Vector2(120, 45)
 layout_mode = 2
 size_flags_horizontal = 4
 theme = ExtResource("1_theme")
 theme_type_variation = &"LongButton"
-text = "设置"
+icon = ExtResource("5_ymidt")
+icon_alignment = 1
+expand_icon = true
 
 [node name="HoverScale" parent="background/VBoxContainer/settings_button" unique_id=1031355882 instance=ExtResource("3_hover")]
 hover_volume = 0.5
 click_sound = ExtResource("4_click")
 
 [node name="quit_button" type="Button" parent="background/VBoxContainer" unique_id=1669694317]
+modulate = Color(0.9098039, 0.8352941, 0.6901961, 1)
 custom_minimum_size = Vector2(120, 45)
 layout_mode = 2
 size_flags_horizontal = 4
 theme = ExtResource("1_theme")
 theme_type_variation = &"LongButton"
-text = "退出游戏"
+text = "Quit"
 
 [node name="HoverScale" parent="background/VBoxContainer/quit_button" unique_id=1908325115 instance=ExtResource("3_hover")]
 hover_volume = 0.5
 click_sound = ExtResource("4_click")
 
-[node name="settings_panel" type="PanelContainer" parent="." unique_id=1329901550]
+[node name="settings_panel" parent="." unique_id=1329901550 instance=ExtResource("6_settings")]
 unique_name_in_owner = true
-visible = false
-custom_minimum_size = Vector2(520, 360)
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -260.0
-offset_top = -180.0
-offset_right = 260.0
-offset_bottom = 180.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 1
-theme_type_variation = &"systemPanel"
-script = ExtResource("6_settings")
-
-[node name="VBoxContainer" type="VBoxContainer" parent="settings_panel" unique_id=2145340788]
-layout_mode = 2
-theme_override_constants/separation = 16
-alignment = 1
-
-[node name="settings_title" type="Label" parent="settings_panel/VBoxContainer" unique_id=213587879]
-layout_mode = 2
-text = "设置"
-horizontal_alignment = 1
-
-[node name="placeholder" type="Label" parent="settings_panel/VBoxContainer" unique_id=1884135402]
-layout_mode = 2
-size_flags_vertical = 3
-text = "（还没做，之后填音量之类的）"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="close_button" type="Button" parent="settings_panel/VBoxContainer" unique_id=1113829194]
-custom_minimum_size = Vector2(160, 48)
-layout_mode = 2
-size_flags_horizontal = 4
-text = "关闭"
-
-[node name="HoverScale" parent="settings_panel/VBoxContainer/close_button" unique_id=393232198 instance=ExtResource("3_hover")]
-hover_volume = 0.5
-click_sound = ExtResource("4_click")
 
 [connection signal="pressed" from="background/VBoxContainer/new_game_button" to="." method="_on_new_game_pressed"]
 [connection signal="pressed" from="background/VBoxContainer/continue_button" to="." method="_on_continue_pressed"]
 [connection signal="pressed" from="background/VBoxContainer/settings_button" to="." method="_on_settings_pressed"]
 [connection signal="pressed" from="background/VBoxContainer/quit_button" to="." method="_on_quit_pressed"]
-[connection signal="pressed" from="settings_panel/VBoxContainer/close_button" to="settings_panel" method="_on_close_pressed"]

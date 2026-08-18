@@ -28,13 +28,12 @@ var employee_list = [
 "Luc", "Chloe"
 ]
 
+## 不放回抽样：这份名单会直接变成人事 app 的行，
+## 有放回的话同一个人会出现两行，玩家没法分辨该填哪一行。
 func get_random_employee_name(num:int):
-
-	var random_employee_name_list = []
-	for i in range(num):
-		var picked_employee = employee_list[randi() % employee_list.size()]
-		random_employee_name_list.append(picked_employee)
-	return random_employee_name_list
+	var pool = employee_list.duplicate()
+	pool.shuffle()
+	return pool.slice(0, mini(num, pool.size()))
 
 
 func generate_email(_employee_list):

@@ -1,0 +1,29 @@
+[gd_scene format=3 uid="uid://cqm1oro3w3l64"]
+
+[ext_resource type="Script" uid="uid://bk1p4310pwggc" path="res://addons/bgm/bgm_player.gd" id="1_bgm"]
+[ext_resource type="Script" uid="uid://c12f1y4lagyil" path="res://addons/bgm/bgm_cue.gd" id="2_xf7pq"]
+[ext_resource type="PackedScene" uid="uid://c8spa0wtoth0c" path="res://main_game/menu/menu_scene.tscn" id="3_dx28i"]
+[ext_resource type="AudioStream" uid="uid://bqyp1ah0noidr" path="res://sound/bgm/offast_bgm_60bpm.mp3" id="4_3l11s"]
+[ext_resource type="PackedScene" uid="uid://cmdwjaqvy66fi" path="res://main_game/game/main_scene.tscn" id="5_dx28i"]
+[ext_resource type="AudioStream" uid="uid://drdqdn5gatyy0" path="res://sound/bgm/offast_90bpm.mp3" id="6_3l11s"]
+
+[sub_resource type="Resource" id="Resource_0tsfb"]
+script = ExtResource("2_xf7pq")
+scene = ExtResource("3_dx28i")
+scene_path = "uid://c8spa0wtoth0c"
+stream = ExtResource("4_3l11s")
+volume_db = -4.5
+fade = 1
+metadata/_custom_type_script = "uid://c12f1y4lagyil"
+
+[sub_resource type="Resource" id="Resource_xf7pq"]
+script = ExtResource("2_xf7pq")
+scene = ExtResource("5_dx28i")
+scene_path = "uid://cmdwjaqvy66fi"
+stream = ExtResource("6_3l11s")
+volume_db = -3.0
+metadata/_custom_type_script = "uid://c12f1y4lagyil"
+
+[node name="Bgm" type="Node" unique_id=325040370]
+script = ExtResource("1_bgm")
+cues = Array[ExtResource("2_xf7pq")]([SubResource("Resource_0tsfb"), SubResource("Resource_xf7pq")])

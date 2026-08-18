@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="conversation" format=3 uid="uid://cptdl5ue274n3"]
+
+[ext_resource type="Script" uid="uid://cbi723wus0jey" path="res://main_game/game/story/dialogue.gd" id="1_a3afw"]
+[ext_resource type="Script" uid="uid://cidkfo0yykwhn" path="res://main_game/game/story/conversation_bubble.gd" id="2_mwsm0"]
+[ext_resource type="Script" uid="uid://soglr6dnw8ew" path="res://main_game/game/story/conversation_choice.gd" id="3_tq61o"]
+[ext_resource type="Script" uid="uid://cdo60qthkk8xi" path="res://main_game/game/story/conversation.gd" id="4_ppgit"]
+
+[sub_resource type="Resource" id="Resource_k5xme"]
+script = ExtResource("2_mwsm0")
+text = "Day 2."
+
+[sub_resource type="Resource" id="Resource_3j5a3"]
+script = ExtResource("2_mwsm0")
+text = "Someone in Accounting was let go yesterday. Nobody says why."
+
+[sub_resource type="Resource" id="Resource_u6b8g"]
+script = ExtResource("1_a3afw")
+bubbles = Array[ExtResource("2_mwsm0")]([SubResource("Resource_k5xme"), SubResource("Resource_3j5a3")])
+
+[resource]
+script = ExtResource("4_ppgit")
+dialogues = Array[ExtResource("1_a3afw")]([SubResource("Resource_u6b8g")])

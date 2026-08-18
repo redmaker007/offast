@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="conversation" format=3 uid="uid://0o167afkys70"]
+
+[ext_resource type="Script" uid="uid://cbi723wus0jey" path="res://main_game/game/story/dialogue.gd" id="1_gnygg"]
+[ext_resource type="Script" uid="uid://cidkfo0yykwhn" path="res://main_game/game/story/conversation_bubble.gd" id="2_hbar7"]
+[ext_resource type="Script" uid="uid://soglr6dnw8ew" path="res://main_game/game/story/conversation_choice.gd" id="3_yjdx0"]
+[ext_resource type="Script" uid="uid://cdo60qthkk8xi" path="res://main_game/game/story/conversation.gd" id="4_dauok"]
+
+[sub_resource type="Resource" id="Resource_l21il"]
+script = ExtResource("2_hbar7")
+text = "Day 3."
+
+[sub_resource type="Resource" id="Resource_cd4u3"]
+script = ExtResource("2_hbar7")
+text = "Two directors are sending conflicting orders. Rank wins."
+
+[sub_resource type="Resource" id="Resource_63y34"]
+script = ExtResource("1_gnygg")
+bubbles = Array[ExtResource("2_hbar7")]([SubResource("Resource_l21il"), SubResource("Resource_cd4u3")])
+
+[resource]
+script = ExtResource("4_dauok")
+dialogues = Array[ExtResource("1_gnygg")]([SubResource("Resource_63y34")])

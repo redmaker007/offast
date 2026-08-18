@@ -5,31 +5,128 @@
 [ext_resource type="Script" uid="uid://b683y4hyp8bod" path="res://main_game/game/round/que_generator.gd" id="2_116g0"]
 [ext_resource type="Script" uid="uid://dbxcfbeu48tg3" path="res://main_game/game/email/email_reader.gd" id="4_mh3vd"]
 [ext_resource type="Script" uid="uid://b54v20n6oo48o" path="res://main_game/game/round/round_manager.gd" id="5_mh3vd"]
-[ext_resource type="Script" uid="uid://r0ck0gbb5r3e" path="res://main_game/game/instruction/instruction_execute_manager.gd" id="6_8fo1x"]
+[ext_resource type="Script" uid="uid://de6tkdhw5l3ur" path="res://main_game/game/instruction/personnel_manager.gd" id="6_dkwpr"]
 [ext_resource type="PackedScene" uid="uid://cmrxkr3nf2x84" path="res://addons/ui_polish/hover_scale.tscn" id="6_toloy"]
+[ext_resource type="Script" uid="uid://dy53fcanqnmmd" path="res://main_game/game/round/day_clock.gd" id="7_6m4a6"]
+[ext_resource type="Texture2D" uid="uid://c4tibi4q3p00d" path="res://theme/items/3t.png" id="8_gq25j"]
 [ext_resource type="Theme" uid="uid://mc8mrn88s36b" path="res://theme/office_draw.tres" id="8_nggn0"]
 [ext_resource type="Shader" uid="uid://1gcn0tdpnc55" path="res://theme/glow_outline.gdshader" id="8_wxc6e"]
 [ext_resource type="Script" uid="uid://bcxew14614uds" path="res://main_game/game/instruction/instruction_execute_page.gd" id="9_17gcd"]
-[ext_resource type="Texture2D" uid="uid://xlmcgsit4biw" path="res://theme/laptop.png" id="9_asovh"]
-[ext_resource type="Texture2D" uid="uid://dkruy1ff8p4oj" path="res://theme/true_mark.png" id="10_c78lx"]
-[ext_resource type="Script" uid="uid://c3l7s3hng70ks" path="res://main_game/game/widgets/clickable_item.gd" id="10_r27cc"]
-[ext_resource type="Texture2D" uid="uid://da276o5s6cjbf" path="res://theme/false_mark.png" id="11_4j4se"]
+[ext_resource type="Texture2D" uid="uid://b3w2n5ecsc101" path="res://theme/items/2t.png" id="9_bdyjf"]
+[ext_resource type="Script" uid="uid://c3l7s3hng70ks" path="res://main_game/game/widgets/clickable_item.gd" id="10_bdyjf"]
+[ext_resource type="Texture2D" uid="uid://b5ddc2qjstvot" path="res://theme/items/10t.png" id="11_p2pey"]
 [ext_resource type="Texture2D" uid="uid://deglhobr6d8oj" path="res://theme/next_mark.png" id="12_4j4se"]
 [ext_resource type="AudioStream" uid="uid://c3i4jdi1ve7ap" path="res://sound/click2.mp3" id="12_6xou6"]
+[ext_resource type="Texture2D" uid="uid://brafdan80rp5l" path="res://theme/items/6t.png" id="12_msbq1"]
 [ext_resource type="Script" uid="uid://dhw01an7ycpsq" path="res://main_game/game/email/email_read_page.gd" id="12_ygwb2"]
+[ext_resource type="Texture2D" uid="uid://d10xosxgf3efw" path="res://theme/items/5t.png" id="13_i2w82"]
+[ext_resource type="Texture2D" uid="uid://cydsvnuy4piet" path="res://theme/items/9t.png" id="14_g1emn"]
 [ext_resource type="Texture2D" uid="uid://3srrhri3mfdp" path="res://theme/false_mark2.png" id="15_0ogao"]
+[ext_resource type="Texture2D" uid="uid://b8ajguubnoaqo" path="res://theme/items/test-export.png" id="15_csskb"]
 [ext_resource type="Script" uid="uid://cd5gsxlwlycv5" path="res://main_game/game/widgets/cancel_button.gd" id="16_asovh"]
 [ext_resource type="Script" uid="uid://wkvk11jgmydc" path="res://main_game/game/widgets/back_to_menu_button.gd" id="17_back"]
+[ext_resource type="Texture2D" uid="uid://c25txihrqe3ks" path="res://theme/items/4t.png" id="19_6ccht"]
+[ext_resource type="Script" uid="uid://c5ndbrui0xg15" path="res://main_game/game/widgets/calendar_face.gd" id="21_6m4a6"]
+[ext_resource type="Script" uid="uid://bs1r5jxjxddx6" path="res://main_game/game/laptop_page.gd" id="21_laptop"]
+[ext_resource type="Script" uid="uid://co27d22quswp5" path="res://main_game/game/laptop_select_page.gd" id="22_ac6o7"]
+[ext_resource type="Texture2D" uid="uid://cll447er0kkkd" path="res://theme/items/calendar/1.png" id="22_cca48"]
+[ext_resource type="Texture2D" uid="uid://fvsjfb4k2hqc" path="res://theme/items/calendar/2.png" id="23_ymimj"]
+[ext_resource type="Texture2D" uid="uid://dyixdxoxp5c28" path="res://theme/items/calendar/3.png" id="24_3p1ss"]
+[ext_resource type="Texture2D" uid="uid://cvgvylv2iu1xs" path="res://theme/items/calendar/4.png" id="25_2u8wn"]
+[ext_resource type="Script" uid="uid://bea43hjft2c77" path="res://main_game/game/calendar_page.gd" id="28_c0ovc"]
+[ext_resource type="Script" uid="uid://5uq6wqq3umtg" path="res://main_game/game/story/story_page.gd" id="29_407uj"]
+[ext_resource type="Script" uid="uid://chdgxmwp1cb2f" path="res://main_game/game/round/result_overlay.gd" id="30_lfs87"]
+[ext_resource type="Script" uid="uid://cu70bw7747eus" path="res://main_game/game/round/ending_overlay.gd" id="31_cca48"]
+[ext_resource type="Script" uid="uid://bqv4k0av7dd8w" path="res://main_game/game/widgets/clock_label.gd" id="32_ymimj"]
+[ext_resource type="PackedScene" uid="uid://cqhrcfnj2patb" path="res://main_game/game/story/bubble_view.tscn" id="35_3p1ss"]
+[ext_resource type="Script" uid="uid://cdo60qthkk8xi" path="res://main_game/game/story/conversation.gd" id="37_conv"]
+[ext_resource type="Resource" uid="uid://b8oxtt6l4xgy7" path="res://main_game/game/story/conversations/day_1.tres" id="38_day1"]
+[ext_resource type="Resource" uid="uid://cptdl5ue274n3" path="res://main_game/game/story/conversations/day_2.tres" id="39_day2"]
+[ext_resource type="Resource" uid="uid://0o167afkys70" path="res://main_game/game/story/conversations/day_3.tres" id="40_day3"]
+[ext_resource type="Resource" uid="uid://cvw6ipemsd11o" path="res://main_game/game/story/conversations/day_4.tres" id="41_day4"]
+[ext_resource type="Resource" uid="uid://xf3lk5qnyyyb" path="res://main_game/game/story/conversations/day_5.tres" id="42_day5"]
+[ext_resource type="Resource" uid="uid://dgbqkkjj287ew" path="res://main_game/game/story/conversations/fallback.tres" id="43_fb"]
+[ext_resource type="AudioStream" uid="uid://imw02iw42c88" path="res://sound/typing_2.wav" id="43_umbos"]
+[ext_resource type="Texture2D" uid="uid://dkruy1ff8p4oj" path="res://theme/true_mark.png" id="44_true"]
+[ext_resource type="Texture2D" uid="uid://da276o5s6cjbf" path="res://theme/false_mark.png" id="45_false"]
+[ext_resource type="Texture2D" uid="uid://df8sjyomoflvb" path="res://theme/setting_mark.png" id="46_gear"]
+[ext_resource type="PackedScene" path="res://main_game/menu/settings_panel.tscn" id="47_settings"]
+[ext_resource type="Script" uid="uid://bkuloffj8na4p" path="res://addons/ui_polish/popup_window.gd" id="48_popup"]
+[ext_resource type="Script" path="res://main_game/game/widgets/notice_dialog.gd" id="49_notice"]
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_hhoq2"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_gq25j"]
 shader = ExtResource("8_wxc6e")
 shader_parameter/enabled = false
-shader_parameter/maxLineWidth = 22.270001057825
+shader_parameter/maxLineWidth = 14.4990006887025
 shader_parameter/minLineWidth = 0.0
-shader_parameter/speed = 6.000000285
-shader_parameter/blockSize = 5.890000279775
-shader_parameter/color = Color(0.9658665, 0.53836435, 0.36339462, 1)
-shader_parameter/tolerance = 0.7090000336775
+shader_parameter/speed = 5.2950002515125
+shader_parameter/blockSize = 20.0
+shader_parameter/color = Color(0.98764473, 0.5664917, 0.48990333, 1)
+shader_parameter/tolerance = 0.606000028785
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_p2pey"]
+shader = ExtResource("8_wxc6e")
+shader_parameter/enabled = false
+shader_parameter/maxLineWidth = 14.4990006887025
+shader_parameter/minLineWidth = 0.0
+shader_parameter/speed = 5.2950002515125
+shader_parameter/blockSize = 20.0
+shader_parameter/color = Color(0.98764473, 0.5664917, 0.48990333, 1)
+shader_parameter/tolerance = 0.606000028785
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_msbq1"]
+shader = ExtResource("8_wxc6e")
+shader_parameter/enabled = false
+shader_parameter/maxLineWidth = 14.4990006887025
+shader_parameter/minLineWidth = 0.0
+shader_parameter/speed = 5.2950002515125
+shader_parameter/blockSize = 20.0
+shader_parameter/color = Color(0.98764473, 0.5664917, 0.48990333, 1)
+shader_parameter/tolerance = 0.606000028785
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ac6o7"]
+shader = ExtResource("8_wxc6e")
+shader_parameter/enabled = false
+shader_parameter/maxLineWidth = 14.4990006887025
+shader_parameter/minLineWidth = 0.0
+shader_parameter/speed = 5.2950002515125
+shader_parameter/blockSize = 20.0
+shader_parameter/color = Color(0.98764473, 0.5664917, 0.48990333, 1)
+shader_parameter/tolerance = 0.606000028785
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_6ccht"]
+shader = ExtResource("8_wxc6e")
+shader_parameter/enabled = false
+shader_parameter/maxLineWidth = 14.4990006887025
+shader_parameter/minLineWidth = 0.0
+shader_parameter/speed = 5.2950002515125
+shader_parameter/blockSize = 20.0
+shader_parameter/color = Color(0.98764473, 0.5664917, 0.48990333, 1)
+shader_parameter/tolerance = 0.606000028785
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_dkwpr"]
+shader = ExtResource("8_wxc6e")
+shader_parameter/enabled = false
+shader_parameter/maxLineWidth = 14.4990006887025
+shader_parameter/minLineWidth = 0.0
+shader_parameter/speed = 5.2950002515125
+shader_parameter/blockSize = 20.0
+shader_parameter/color = Color(0.98764473, 0.5664917, 0.48990333, 1)
+shader_parameter/tolerance = 0.606000028785
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_6m4a6"]
+shader = ExtResource("8_wxc6e")
+shader_parameter/enabled = false
+shader_parameter/maxLineWidth = 14.4990006887025
+shader_parameter/minLineWidth = 0.0
+shader_parameter/speed = 5.2950002515125
+shader_parameter/blockSize = 20.0
+shader_parameter/color = Color(0.98764473, 0.5664917, 0.48990333, 1)
+shader_parameter/tolerance = 0.606000028785
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_laptop"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_3p1ss"]
 
 [node name="main_scene" type="Control" unique_id=751504015]
 layout_mode = 3
@@ -38,7 +135,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-mouse_filter = 1
+mouse_filter = 2
 script = ExtResource("1_a1lbd")
 
 [node name="instruction_box" type="Node" parent="." unique_id=660279875]
@@ -56,10 +153,15 @@ script = ExtResource("4_mh3vd")
 [node name="round_manager" type="Node" parent="." unique_id=61556616]
 unique_name_in_owner = true
 script = ExtResource("5_mh3vd")
+mistakes_per_life = 2
 
-[node name="instruction_execute_manager" type="Node" parent="." unique_id=1872061990]
+[node name="personnel_manager" type="Node" parent="." unique_id=1872061990]
 unique_name_in_owner = true
-script = ExtResource("6_8fo1x")
+script = ExtResource("6_dkwpr")
+
+[node name="day_clock" type="Node" parent="." unique_id=575942722]
+unique_name_in_owner = true
+script = ExtResource("7_6m4a6")
 
 [node name="Control" type="PanelContainer" parent="." unique_id=494889764]
 layout_mode = 1
@@ -73,99 +175,271 @@ size_flags_vertical = 4
 mouse_filter = 1
 theme = ExtResource("8_nggn0")
 
+[node name="door_control" type="Control" parent="Control" unique_id=295467068]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="door" type="TextureRect" parent="Control/door_control" unique_id=2068510054]
+material = SubResource("ShaderMaterial_gq25j")
+layout_mode = 0
+offset_left = 823.0
+offset_top = 30.00003
+offset_right = 974.0
+offset_bottom = 688.0
+scale = Vector2(0.575, 0.48)
+pivot_offset = Vector2(69.56531, 283.33328)
+texture = ExtResource("8_gq25j")
+script = ExtResource("10_bdyjf")
+click_signal = "leave_office_request"
+
+[node name="HoverScale" parent="Control/door_control/door" unique_id=1454724611 instance=ExtResource("6_toloy")]
+hover_volume = 0.5
+click_sound = ExtResource("12_6xou6")
+center_pivot = false
+
+[node name="light_control" type="Control" parent="Control" unique_id=2072009231]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="light" type="TextureRect" parent="Control/light_control" unique_id=1641952157]
+material = SubResource("ShaderMaterial_p2pey")
+layout_mode = 0
+offset_left = 520.99994
+offset_top = 28.000004
+offset_right = 702.99994
+offset_bottom = 139.0
+scale = Vector2(0.575, 0.48)
+texture = ExtResource("11_p2pey")
+script = ExtResource("10_bdyjf")
+click_signal = "open_light_request"
+
+[node name="HoverScale" parent="Control/light_control/light" unique_id=1806914131 instance=ExtResource("6_toloy")]
+hover_volume = 0.5
+click_sound = ExtResource("12_6xou6")
+center_pivot = false
+
+[node name="electricbox_control" type="Control" parent="Control" unique_id=1185708771]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="electricbox" type="TextureRect" parent="Control/electricbox_control" unique_id=47990813]
+material = SubResource("ShaderMaterial_msbq1")
+layout_mode = 0
+offset_left = 308.0
+offset_top = 184.0
+offset_right = 418.0
+offset_bottom = 319.0
+scale = Vector2(0.575, 0.48)
+texture = ExtResource("12_msbq1")
+script = ExtResource("10_bdyjf")
+click_signal = "open_electricbox_request"
+
+[node name="HoverScale" parent="Control/electricbox_control/electricbox" unique_id=367197045 instance=ExtResource("6_toloy")]
+hover_volume = 0.5
+click_sound = ExtResource("12_6xou6")
+center_pivot = false
+
 [node name="laptop_control" type="Control" parent="Control" unique_id=888319210]
 layout_mode = 2
+mouse_filter = 2
 
-[node name="laptop" type="TextureRect" parent="Control/laptop_control" unique_id=805262257]
-material = SubResource("ShaderMaterial_hhoq2")
+[node name="laptop" type="TextureRect" parent="Control/laptop_control" unique_id=943076679]
+z_index = 2
+material = SubResource("ShaderMaterial_ac6o7")
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -385.0
-offset_top = -134.0
-offset_right = 101.0
-offset_bottom = 300.0
+offset_left = -316.0
+offset_top = -32.0
+offset_right = -97.0
+offset_bottom = 158.0
 grow_horizontal = 2
 grow_vertical = 2
-scale = Vector2(0.5, 0.5)
-pivot_offset = Vector2(246, 194)
-offset_transform_position = Vector2(7.185, 149.09)
-offset_transform_scale = Vector2(0.5, 0.5)
-mouse_filter = 0
-texture = ExtResource("9_asovh")
-stretch_mode = 2
-script = ExtResource("10_r27cc")
-click_signal = "open_email_window_request"
+scale = Vector2(0.575, 0.48)
+pivot_offset = Vector2(113, 86)
+texture = ExtResource("9_bdyjf")
+script = ExtResource("10_bdyjf")
+click_signal = "open_laptop_request"
 
-[node name="HoverScale" parent="Control/laptop_control/laptop" unique_id=1454724611 instance=ExtResource("6_toloy")]
+[node name="HoverScale" parent="Control/laptop_control/laptop" unique_id=750403698 instance=ExtResource("6_toloy")]
 hover_volume = 0.5
 click_sound = ExtResource("12_6xou6")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Control" unique_id=676030873]
+[node name="notes_control" type="Control" parent="Control" unique_id=20847891]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="notes" type="TextureRect" parent="Control/notes_control" unique_id=38439007]
+z_index = 2
+material = SubResource("ShaderMaterial_6ccht")
+layout_mode = 0
+offset_left = 96.0
+offset_top = 301.0
+offset_right = 171.0
+offset_bottom = 421.0
+scale = Vector2(0.57525754, 0.47918952)
+pivot_offset = Vector2(39.982086, 56.345154)
+texture = ExtResource("13_i2w82")
+script = ExtResource("10_bdyjf")
+click_signal = "open_notes_request"
+
+[node name="HoverScale" parent="Control/notes_control/notes" unique_id=2106853381 instance=ExtResource("6_toloy")]
+hover_volume = 0.5
+click_sound = ExtResource("12_6xou6")
+
+[node name="caller_control" type="Control" parent="Control" unique_id=1839391919]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="caller" type="TextureRect" parent="Control/caller_control" unique_id=1860602362]
+z_index = 2
+material = SubResource("ShaderMaterial_dkwpr")
+layout_mode = 0
+offset_left = 203.0
+offset_top = 237.00003
+offset_right = 273.0
+offset_bottom = 475.00003
+scale = Vector2(0.57525957, 0.4791912)
+pivot_offset = Vector2(34.766876, 112.68988)
+texture = ExtResource("14_g1emn")
+script = ExtResource("10_bdyjf")
+click_signal = "open_caller_request"
+
+[node name="HoverScale" parent="Control/caller_control/caller" unique_id=1068831406 instance=ExtResource("6_toloy")]
+hover_volume = 0.5
+click_sound = ExtResource("12_6xou6")
+
+[node name="table_control" type="Control" parent="Control" unique_id=1946382421]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="table" type="TextureRect" parent="Control/table_control" unique_id=1644984128]
+z_index = 1
+layout_mode = 0
+offset_left = -167.99997
+offset_top = 273.99997
+offset_right = 932.0
+offset_bottom = 699.0
+scale = Vector2(0.567, 0.477)
+pivot_offset = Vector2(557.3193, 209.64362)
+mouse_filter = 2
+texture = ExtResource("15_csskb")
+
+[node name="calendar_control" type="Control" parent="Control" unique_id=815841534]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="calendar" type="TextureRect" parent="Control/calendar_control" unique_id=603786647]
+unique_name_in_owner = true
+z_index = 2
+material = SubResource("ShaderMaterial_6m4a6")
+layout_mode = 0
+offset_left = 86.0
+offset_top = 142.99998
+offset_right = 280.0
+offset_bottom = 506.0
+scale = Vector2(0.575, 0.48)
+texture = ExtResource("19_6ccht")
+script = ExtResource("21_6m4a6")
+face_3_lives = ExtResource("22_cca48")
+face_2_lives = ExtResource("23_ymimj")
+face_1_life = ExtResource("24_3p1ss")
+face_0_lives = ExtResource("25_2u8wn")
+click_signal = "open_calendar_request"
+
+[node name="HoverScale" parent="Control/calendar_control/calendar" unique_id=1603552601 instance=ExtResource("6_toloy")]
+hover_volume = 0.5
+click_sound = ExtResource("12_6xou6")
+center_pivot = false
+
+[node name="laptop_page" type="PanelContainer" parent="Control" unique_id=1030673075]
+unique_name_in_owner = true
+visible = false
+z_index = 10
+layout_mode = 2
+mouse_filter = 2
+theme = ExtResource("8_nggn0")
+theme_type_variation = &"systemPanel"
+theme_override_styles/panel = SubResource("StyleBoxEmpty_laptop")
+script = ExtResource("21_laptop")
+
+[node name="frame" type="VBoxContainer" parent="Control/laptop_page" unique_id=1693021771]
 layout_mode = 2
 mouse_filter = 2
 alignment = 1
 
-[node name="instruction_executre_page" type="PanelContainer" parent="Control/VBoxContainer" unique_id=624460870]
+[node name="title_bar" type="HBoxContainer" parent="Control/laptop_page/frame" unique_id=279370429]
+custom_minimum_size = Vector2(780, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+mouse_filter = 2
+
+[node name="Control" type="Control" parent="Control/laptop_page/frame/title_bar" unique_id=621260901]
+z_index = 5
+layout_mode = 2
+mouse_filter = 1
+
+[node name="cancel_button" type="Button" parent="Control/laptop_page/frame/title_bar/Control" unique_id=1655821474]
+modulate = Color(0.76862746, 0.47843137, 0.41568628, 1)
+z_index = 5
+custom_minimum_size = Vector2(64.6, 60.2)
+custom_maximum_size = Vector2(64.6, 60.2)
+layout_mode = 0
+offset_left = 697.0
+offset_top = 14.0
+offset_right = 761.6
+offset_bottom = 74.2
+size_flags_horizontal = 8
+theme = ExtResource("8_nggn0")
+theme_type_variation = &"round_button"
+icon = ExtResource("15_0ogao")
+icon_alignment = 1
+expand_icon = true
+script = ExtResource("16_asovh")
+
+[node name="HoverScale" parent="Control/laptop_page/frame/title_bar/Control/cancel_button" unique_id=1737713058 instance=ExtResource("6_toloy")]
+hover_volume = 0.5
+click_sound = ExtResource("12_6xou6")
+
+[node name="pages" type="VBoxContainer" parent="Control/laptop_page/frame" unique_id=676030873]
+layout_mode = 2
+mouse_filter = 2
+alignment = 1
+
+[node name="instruction_execute_page" type="PanelContainer" parent="Control/laptop_page/frame/pages" unique_id=624460870]
 unique_name_in_owner = true
 visible = false
 custom_minimum_size = Vector2(780, 540)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
-mouse_filter = 1
+mouse_filter = 2
 theme = ExtResource("8_nggn0")
 theme_type_variation = &"systemPanel"
 script = ExtResource("9_17gcd")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Control/VBoxContainer/instruction_executre_page" unique_id=225978403]
+[node name="VBoxContainer" type="VBoxContainer" parent="Control/laptop_page/frame/pages/instruction_execute_page" unique_id=225978403]
 layout_mode = 2
+mouse_filter = 2
 alignment = 1
 
-[node name="instruction_text" type="Label" parent="Control/VBoxContainer/instruction_executre_page/VBoxContainer" unique_id=1183420712]
-unique_name_in_owner = true
+[node name="title" type="Label" parent="Control/laptop_page/frame/pages/instruction_execute_page/VBoxContainer" unique_id=825354049]
 layout_mode = 2
-size_flags_vertical = 6
+text = "Personnel"
 horizontal_alignment = 1
 
-[node name="choice_button" type="HBoxContainer" parent="Control/VBoxContainer/instruction_executre_page/VBoxContainer" unique_id=605532112]
+[node name="personnel_list" type="VBoxContainer" parent="Control/laptop_page/frame/pages/instruction_execute_page/VBoxContainer" unique_id=367391585]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
+mouse_filter = 2
+theme_override_constants/separation = 14
 alignment = 1
 
-[node name="yes_butt" type="Button" parent="Control/VBoxContainer/instruction_executre_page/VBoxContainer/choice_button" unique_id=725099744]
-modulate = Color(0.65882355, 0.77254903, 0.627451, 1)
-custom_minimum_size = Vector2(50, 50)
-layout_mode = 2
-size_flags_horizontal = 6
-size_flags_vertical = 4
-icon = ExtResource("10_c78lx")
-icon_alignment = 1
-expand_icon = true
-
-[node name="HoverScale" parent="Control/VBoxContainer/instruction_executre_page/VBoxContainer/choice_button/yes_butt" unique_id=1344451438 instance=ExtResource("6_toloy")]
-hover_volume = 0.5
-click_sound = ExtResource("12_6xou6")
-
-[node name="no_butt" type="Button" parent="Control/VBoxContainer/instruction_executre_page/VBoxContainer/choice_button" unique_id=1004666666]
-modulate = Color(0.76862746, 0.47843137, 0.41568628, 1)
-custom_minimum_size = Vector2(50, 50)
-layout_mode = 2
-size_flags_horizontal = 6
-size_flags_vertical = 4
-theme = ExtResource("8_nggn0")
-icon = ExtResource("11_4j4se")
-icon_alignment = 1
-expand_icon = true
-
-[node name="HoverScale" parent="Control/VBoxContainer/instruction_executre_page/VBoxContainer/choice_button/no_butt" unique_id=524001528 instance=ExtResource("6_toloy")]
-hover_volume = 0.5
-click_sound = ExtResource("12_6xou6")
-
-[node name="email_read_page" type="PanelContainer" parent="Control/VBoxContainer" unique_id=518721048]
+[node name="email_read_page" type="PanelContainer" parent="Control/laptop_page/frame/pages" unique_id=518721048]
 unique_name_in_owner = true
 visible = false
 custom_minimum_size = Vector2(780, 540)
@@ -173,15 +447,16 @@ custom_maximum_size = Vector2(780, 540)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
-mouse_filter = 1
+mouse_filter = 2
 theme = ExtResource("8_nggn0")
 theme_type_variation = &"emailPanel"
 script = ExtResource("12_ygwb2")
 
-[node name="Control" type="Control" parent="Control/VBoxContainer/email_read_page" unique_id=464092759]
+[node name="Control" type="Control" parent="Control/laptop_page/frame/pages/email_read_page" unique_id=464092759]
 layout_mode = 2
+mouse_filter = 2
 
-[node name="sender_name_text" type="Label" parent="Control/VBoxContainer/email_read_page/Control" unique_id=2104584303]
+[node name="sender_name_text" type="Label" parent="Control/laptop_page/frame/pages/email_read_page/Control" unique_id=2104584303]
 custom_minimum_size = Vector2(150, 30)
 custom_maximum_size = Vector2(150, 30)
 layout_mode = 0
@@ -191,39 +466,23 @@ offset_right = 169.0
 offset_bottom = 54.0
 offset_transform_enabled = true
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Control/VBoxContainer/email_read_page" unique_id=165542676]
+[node name="VBoxContainer" type="VBoxContainer" parent="Control/laptop_page/frame/pages/email_read_page" unique_id=165542676]
 layout_mode = 2
+mouse_filter = 2
 alignment = 1
 
-[node name="cancel_button" type="Button" parent="Control/VBoxContainer/email_read_page/VBoxContainer" unique_id=1655821474]
-modulate = Color(0.76862746, 0.47843137, 0.41568628, 1)
-custom_minimum_size = Vector2(64.6, 60.2)
-custom_maximum_size = Vector2(64.6, 60.2)
-layout_mode = 2
-size_flags_horizontal = 8
-theme = ExtResource("8_nggn0")
-theme_type_variation = &"round_button"
-icon = ExtResource("15_0ogao")
-icon_alignment = 1
-expand_icon = true
-script = ExtResource("16_asovh")
-
-[node name="HoverScale" parent="Control/VBoxContainer/email_read_page/VBoxContainer/cancel_button" unique_id=1737713058 instance=ExtResource("6_toloy")]
-hover_volume = 0.5
-click_sound = ExtResource("12_6xou6")
-
-[node name="email_content" type="Label" parent="Control/VBoxContainer/email_read_page/VBoxContainer" unique_id=1882389200]
+[node name="email_content" type="Label" parent="Control/laptop_page/frame/pages/email_read_page/VBoxContainer" unique_id=1882389200]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 6
 horizontal_alignment = 1
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Control/VBoxContainer/email_read_page/VBoxContainer" unique_id=1363536124]
+[node name="HBoxContainer" type="HBoxContainer" parent="Control/laptop_page/frame/pages/email_read_page/VBoxContainer" unique_id=1363536124]
 layout_mode = 2
 size_flags_vertical = 3
 alignment = 1
 
-[node name="next_email" type="Button" parent="Control/VBoxContainer/email_read_page/VBoxContainer/HBoxContainer" unique_id=42997686]
+[node name="next_email" type="Button" parent="Control/laptop_page/frame/pages/email_read_page/VBoxContainer/HBoxContainer" unique_id=42997686]
 modulate = Color(0.9098039, 0.8352941, 0.6901961, 1)
 custom_minimum_size = Vector2(120, 45)
 custom_maximum_size = Vector2(120, 45)
@@ -237,32 +496,410 @@ icon = ExtResource("12_4j4se")
 icon_alignment = 1
 expand_icon = true
 
-[node name="HoverScale" parent="Control/VBoxContainer/email_read_page/VBoxContainer/HBoxContainer/next_email" unique_id=29391216 instance=ExtResource("6_toloy")]
+[node name="HoverScale" parent="Control/laptop_page/frame/pages/email_read_page/VBoxContainer/HBoxContainer/next_email" unique_id=29391216 instance=ExtResource("6_toloy")]
 hover_volume = 0.5
 click_sound = ExtResource("12_6xou6")
 
-[node name="Control" type="Control" parent="Control/VBoxContainer" unique_id=385012328]
-visible = false
-custom_minimum_size = Vector2(0, 50)
+[node name="laptop_select_page" type="PanelContainer" parent="Control/laptop_page/frame/pages" unique_id=2029378928]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(780, 540)
+custom_maximum_size = Vector2(780, 540)
 layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+mouse_filter = 2
+theme = ExtResource("8_nggn0")
+theme_type_variation = &"systemPanel"
+script = ExtResource("22_ac6o7")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Control/laptop_page/frame/pages/laptop_select_page" unique_id=2095806268]
+layout_mode = 2
+mouse_filter = 2
+alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Control/laptop_page/frame/pages/laptop_select_page/VBoxContainer" unique_id=1003122919]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 40
+alignment = 1
+
+[node name="email_button" type="Button" parent="Control/laptop_page/frame/pages/laptop_select_page/VBoxContainer/HBoxContainer" unique_id=1194393537]
+modulate = Color(0.9098039, 0.8352941, 0.6901961, 1)
+custom_minimum_size = Vector2(180, 60)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme = ExtResource("8_nggn0")
+theme_type_variation = &"LongButton"
+text = "Email"
+
+[node name="HoverScale" parent="Control/laptop_page/frame/pages/laptop_select_page/VBoxContainer/HBoxContainer/email_button" unique_id=187088467 instance=ExtResource("6_toloy")]
+hover_volume = 0.5
+click_sound = ExtResource("12_6xou6")
+
+[node name="instruction_button" type="Button" parent="Control/laptop_page/frame/pages/laptop_select_page/VBoxContainer/HBoxContainer" unique_id=9763939]
+modulate = Color(0.9098039, 0.8352941, 0.6901961, 1)
+custom_minimum_size = Vector2(180, 60)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme = ExtResource("8_nggn0")
+theme_type_variation = &"LongButton"
+text = "Personnel"
+
+[node name="HoverScale" parent="Control/laptop_page/frame/pages/laptop_select_page/VBoxContainer/HBoxContainer/instruction_button" unique_id=887912541 instance=ExtResource("6_toloy")]
+hover_volume = 0.5
+click_sound = ExtResource("12_6xou6")
+
+[node name="calendar_page" type="PanelContainer" parent="Control" unique_id=277804419]
+unique_name_in_owner = true
+visible = false
+z_index = 10
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+mouse_filter = 2
+theme = ExtResource("8_nggn0")
+theme_override_styles/panel = SubResource("StyleBoxEmpty_3p1ss")
+script = ExtResource("28_c0ovc")
+
+[node name="frame" type="VBoxContainer" parent="Control/calendar_page" unique_id=729706275]
+layout_mode = 2
+mouse_filter = 2
+alignment = 1
+
+[node name="window" type="PanelContainer" parent="Control/calendar_page/frame" unique_id=1480867431]
+custom_minimum_size = Vector2(440, 320)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme = ExtResource("8_nggn0")
+theme_type_variation = &"systemPanel"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Control/calendar_page/frame/window" unique_id=1517996313]
+layout_mode = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="calendar_day" type="Label" parent="Control/calendar_page/frame/window/VBoxContainer" unique_id=449819202]
+unique_name_in_owner = true
+layout_mode = 2
+horizontal_alignment = 1
+
+[node name="calendar_lives" type="TextureRect" parent="Control/calendar_page/frame/window/VBoxContainer" unique_id=1500680587]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(260, 200)
+layout_mode = 2
+size_flags_horizontal = 4
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="close_button" type="Button" parent="Control/calendar_page/frame/window/VBoxContainer" unique_id=1064474720]
+custom_minimum_size = Vector2(160, 48)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_type_variation = &"LongButton"
+text = "Close"
+script = ExtResource("16_asovh")
+
+[node name="story_page" type="PanelContainer" parent="." unique_id=239407989]
+z_index = 10
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("8_nggn0")
+theme_type_variation = &"scrimPanel"
+script = ExtResource("29_407uj")
+by_day = Array[ExtResource("37_conv")]([ExtResource("38_day1"), ExtResource("39_day2"), ExtResource("40_day3"), ExtResource("41_day4"), ExtResource("42_day5")])
+fallback = ExtResource("43_fb")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="story_page" unique_id=228809273]
+layout_mode = 2
+theme_override_constants/separation = 24
+alignment = 1
+
+[node name="bubble_view" parent="story_page/VBoxContainer" unique_id=1357826500 instance=ExtResource("35_3p1ss")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+type_sound = ExtResource("43_umbos")
+
+[node name="result_overlay" type="PanelContainer" parent="." unique_id=1247765031]
+visible = false
+z_index = 20
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -87.0
+offset_bottom = 87.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("8_nggn0")
+theme_type_variation = &"scrimPanel"
+script = ExtResource("30_lfs87")
+
+[node name="card" type="PanelContainer" parent="result_overlay" unique_id=1951718049]
+custom_minimum_size = Vector2(760, 520)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_type_variation = &"systemPanel"
+
+[node name="margin" type="MarginContainer" parent="result_overlay/card" unique_id=1351804880]
+layout_mode = 2
+theme_override_constants/margin_left = 64
+theme_override_constants/margin_top = 52
+theme_override_constants/margin_right = 64
+theme_override_constants/margin_bottom = 52
+
+[node name="VBoxContainer" type="VBoxContainer" parent="result_overlay/card/margin" unique_id=848962767]
+layout_mode = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="result_title" type="Label" parent="result_overlay/card/margin/VBoxContainer" unique_id=1318588096]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"titleLabel"
+text = "Day 1 / 5"
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="stats" type="HBoxContainer" parent="result_overlay/card/margin/VBoxContainer" unique_id=1682905100]
+layout_mode = 2
+theme_override_constants/separation = 110
+alignment = 1
+
+[node name="correct" type="VBoxContainer" parent="result_overlay/card/margin/VBoxContainer/stats" unique_id=1538329200]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="mark" type="TextureRect" parent="result_overlay/card/margin/VBoxContainer/stats/correct" unique_id=719436601]
+custom_minimum_size = Vector2(96, 96)
+layout_mode = 2
+size_flags_horizontal = 4
+mouse_filter = 2
+texture = ExtResource("44_true")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="result_correct" type="Label" parent="result_overlay/card/margin/VBoxContainer/stats/correct" unique_id=1081027328]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"markLabel"
+text = "0"
+horizontal_alignment = 1
+
+[node name="wrong" type="VBoxContainer" parent="result_overlay/card/margin/VBoxContainer/stats" unique_id=292045599]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="mark" type="TextureRect" parent="result_overlay/card/margin/VBoxContainer/stats/wrong" unique_id=1372085271]
+custom_minimum_size = Vector2(96, 96)
+layout_mode = 2
+size_flags_horizontal = 4
+mouse_filter = 2
+texture = ExtResource("45_false")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="result_wrong" type="Label" parent="result_overlay/card/margin/VBoxContainer/stats/wrong" unique_id=1052353158]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"markLabel"
+text = "0"
+horizontal_alignment = 1
+
+[node name="result_lives" type="Label" parent="result_overlay/card/margin/VBoxContainer" unique_id=135862137]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Lives left: 3"
+horizontal_alignment = 1
+
+[node name="result_note" type="Label" parent="result_overlay/card/margin/VBoxContainer" unique_id=1641598967]
+unique_name_in_owner = true
+visible = false
+modulate = Color(1, 1, 1, 0.7)
+layout_mode = 2
+theme_override_font_sizes/font_size = 19
+text = "HR has noticed."
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="continue_button" type="Button" parent="result_overlay/card/margin/VBoxContainer" unique_id=1591498140]
+custom_minimum_size = Vector2(220, 56)
+layout_mode = 2
+size_flags_horizontal = 4
+theme = ExtResource("8_nggn0")
+theme_type_variation = &"LongButton"
+text = "Continue"
+
+[node name="HoverScale" parent="result_overlay/card/margin/VBoxContainer/continue_button" unique_id=1679901218 instance=ExtResource("6_toloy")]
+hover_volume = 0.5
+click_sound = ExtResource("12_6xou6")
+
+[node name="ending_overlay" type="PanelContainer" parent="." unique_id=1786798606]
+visible = false
+z_index = 20
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -659.5
+offset_bottom = 659.5
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("8_nggn0")
+theme_type_variation = &"scrimPanel"
+script = ExtResource("31_cca48")
+
+[node name="card" type="PanelContainer" parent="ending_overlay" unique_id=420056789]
+custom_minimum_size = Vector2(700, 480)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_type_variation = &"systemPanel"
+
+[node name="margin" type="MarginContainer" parent="ending_overlay/card" unique_id=184888324]
+layout_mode = 2
+theme_override_constants/margin_left = 64
+theme_override_constants/margin_top = 52
+theme_override_constants/margin_right = 64
+theme_override_constants/margin_bottom = 52
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ending_overlay/card/margin" unique_id=981334584]
+layout_mode = 2
+theme_override_constants/separation = 28
+alignment = 1
+
+[node name="ending_title" type="Label" parent="ending_overlay/card/margin/VBoxContainer" unique_id=1915828009]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"titleLabel"
+text = "YOU MADE IT"
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="ending_text" type="Label" parent="ending_overlay/card/margin/VBoxContainer" unique_id=412203141]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Five days survived. See you Monday."
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="back_button" type="Button" parent="ending_overlay/card/margin/VBoxContainer" unique_id=1874640326]
+custom_minimum_size = Vector2(220, 56)
+layout_mode = 2
+size_flags_horizontal = 4
+theme = ExtResource("8_nggn0")
+theme_type_variation = &"LongButton"
+text = "Back to Menu"
+
+[node name="HoverScale" parent="ending_overlay/card/margin/VBoxContainer/back_button" unique_id=1054069364 instance=ExtResource("6_toloy")]
+hover_volume = 0.5
+click_sound = ExtResource("12_6xou6")
+
+[node name="settings_panel" parent="." unique_id=430039340 instance=ExtResource("47_settings")]
+unique_name_in_owner = true
+z_index = 30
+layout_mode = 1
+
+[node name="notice_dialog" type="PanelContainer" parent="."]
+unique_name_in_owner = true
+visible = false
+z_index = 40
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("8_nggn0")
+theme_type_variation = &"scrimPanel"
+script = ExtResource("49_notice")
+
+[node name="notice_card" type="PanelContainer" parent="notice_dialog"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(960, 300)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_type_variation = &"empty_panel"
+script = ExtResource("48_popup")
+
+[node name="notice_bubble" parent="notice_dialog/notice_card" instance=ExtResource("35_3p1ss")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+advance_text = "OK"
+type_sound = ExtResource("43_umbos")
 
 [node name="back_to_menu" type="Button" parent="." unique_id=420256063]
-custom_minimum_size = Vector2(140, 44)
+modulate = Color(0.9098039, 0.8352941, 0.6901961, 1)
+z_index = 20
+custom_minimum_size = Vector2(120, 45)
 layout_mode = 1
 offset_left = 24.0
 offset_top = 24.0
 offset_right = 164.0
-offset_bottom = 68.0
-theme_type_variation = &"systemPanel"
-text = "回主菜单"
+offset_bottom = 69.0
+theme = ExtResource("8_nggn0")
+theme_type_variation = &"LongButton"
+text = "Menu"
 script = ExtResource("17_back")
 
 [node name="HoverScale" parent="back_to_menu" unique_id=1575342905 instance=ExtResource("6_toloy")]
 hover_volume = 0.5
 click_sound = ExtResource("12_6xou6")
 
-[connection signal="pressed" from="Control/VBoxContainer/instruction_executre_page/VBoxContainer/choice_button/yes_butt" to="instruction_execute_manager" method="_on_yes_butt_pressed"]
-[connection signal="pressed" from="Control/VBoxContainer/instruction_executre_page/VBoxContainer/choice_button/no_butt" to="instruction_execute_manager" method="_on_no_butt_pressed"]
-[connection signal="pressed" from="Control/VBoxContainer/email_read_page/VBoxContainer/cancel_button" to="Control/VBoxContainer/email_read_page/VBoxContainer/cancel_button" method="_on_pressed"]
-[connection signal="pressed" from="Control/VBoxContainer/email_read_page/VBoxContainer/HBoxContainer/next_email" to="email_reader" method="_on_button_pressed"]
+[node name="settings_button" type="Button" parent="." unique_id=1635297471]
+modulate = Color(0.9098039, 0.8352941, 0.6901961, 1)
+z_index = 20
+custom_minimum_size = Vector2(120, 45)
+layout_mode = 0
+offset_left = 988.0
+offset_top = 24.0
+offset_right = 1128.0
+offset_bottom = 69.0
+theme = ExtResource("8_nggn0")
+theme_type_variation = &"LongButton"
+icon = ExtResource("46_gear")
+icon_alignment = 1
+expand_icon = true
+
+[node name="HoverScale" parent="settings_button" unique_id=1897653891 instance=ExtResource("6_toloy")]
+hover_volume = 0.5
+click_sound = ExtResource("12_6xou6")
+
+[node name="clock_label" type="Label" parent="." unique_id=505762800]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -180.0
+offset_top = 87.0
+offset_right = -24.0
+offset_bottom = 131.0
+grow_horizontal = 0
+theme = ExtResource("8_nggn0")
+horizontal_alignment = 2
+script = ExtResource("32_ymimj")
+
+[connection signal="pressed" from="Control/laptop_page/frame/title_bar/Control/cancel_button" to="Control/laptop_page/frame/title_bar/Control/cancel_button" method="_on_pressed"]
+[connection signal="pressed" from="Control/laptop_page/frame/pages/email_read_page/VBoxContainer/HBoxContainer/next_email" to="email_reader" method="_on_button_pressed"]
+[connection signal="pressed" from="Control/laptop_page/frame/pages/laptop_select_page/VBoxContainer/HBoxContainer/email_button" to="Control/laptop_page/frame/pages/laptop_select_page" method="_on_email_button_pressed"]
+[connection signal="pressed" from="Control/laptop_page/frame/pages/laptop_select_page/VBoxContainer/HBoxContainer/instruction_button" to="Control/laptop_page/frame/pages/laptop_select_page" method="_on_instruction_button_pressed"]
+[connection signal="pressed" from="Control/calendar_page/frame/window/VBoxContainer/close_button" to="Control/calendar_page/frame/window/VBoxContainer/close_button" method="_on_pressed"]
+[connection signal="pressed" from="result_overlay/card/margin/VBoxContainer/continue_button" to="result_overlay" method="_on_continue_pressed"]
+[connection signal="pressed" from="ending_overlay/card/margin/VBoxContainer/back_button" to="ending_overlay" method="_on_back_pressed"]
 [connection signal="pressed" from="back_to_menu" to="back_to_menu" method="_on_pressed"]
+[connection signal="pressed" from="settings_button" to="." method="_on_settings_pressed"]

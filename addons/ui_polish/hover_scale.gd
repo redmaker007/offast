@@ -62,10 +62,19 @@ func _ready() -> void:
 		target.gui_input.connect(_on_target_gui_input)
 
 	hover_audio_player = AudioStreamPlayer.new()
+	_route_to_sfx(hover_audio_player)
 	add_child(hover_audio_player)
 
 	click_audio_player = AudioStreamPlayer.new()
+	_route_to_sfx(click_audio_player)
 	add_child(click_audio_player)
+
+
+## 挂到 SFX 总线，音量就归设置面板的 SFX 滑块管。
+## 项目里没有这条总线（换个项目用这个 addon）就留在 Master，不影响出声。
+func _route_to_sfx(p: AudioStreamPlayer) -> void:
+	if AudioServer.get_bus_index("SFX") >= 0:
+		p.bus = &"SFX"
 
 
 func _apply_pivot() -> void:

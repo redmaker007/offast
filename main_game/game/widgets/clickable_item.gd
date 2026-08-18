@@ -1,8 +1,12 @@
 extends Control
+class_name clickable_item
 
 ## 通用可点击元件：
 ## 1. 有 ShaderMaterial 时，鼠标悬停自动开关 shader 的 enabled 参数（描边发光）。
 ## 2. 鼠标左键点击时，在 SignalBus 上发出 click_signal 指定的信号。
+##
+## 两者都受回合状态管辖：只有上班时间（RoundState.is_interactive()）才响应。
+## 发光也要一起锁——只拦点击不拦发光的话，剧情期间物件还会亮，看起来像能点。
 ##
 ## 直接把这个脚本挂到任意 Control（TextureRect / Panel / ...）上即可。
 
@@ -14,14 +18,23 @@ signal clicked
 @export var click_signal:String
 
 var _pressed_inside := false
+var _is_hovering := false
 
 
 func _ready() -> void:
 	mouse_entered.connect(_on_mouse_entered)
 	mouse_exited.connect(_on_mouse_exited)
+	# 状态切换时鼠标可能正停在物件上，得主动把发光同步一次。
+	SignalBus.round_state_change.connect(_on_round_state_change)
+
+
+func _on_round_state_change(_rs) -> void:
+	_set_glow(_is_hovering)
 
 
 func _gui_input(event: InputEvent) -> void:
+	if not RoundState.is_interactive():
+		return
 	if not (event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT):
 		return
 
@@ -47,13 +60,18 @@ func _emit_click() -> void:
 
 
 func _on_mouse_entered() -> void:
+	_is_hovering = true
 	_set_glow(true)
 
 
 func _on_mouse_exited() -> void:
+	_is_hovering = false
 	_set_glow(false)
 
 
 func _set_glow(on: bool) -> void:
+	# 锁住的时候一律不亮，不管鼠标在哪。
+	if not RoundState.is_interactive():
+		on = false
 	if material is ShaderMaterial:
 		material.set_shader_parameter("enabled", on)

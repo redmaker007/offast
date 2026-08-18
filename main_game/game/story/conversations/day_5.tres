@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="conversation" format=3 uid="uid://xf3lk5qnyyyb"]
+
+[ext_resource type="Script" uid="uid://cbi723wus0jey" path="res://main_game/game/story/dialogue.gd" id="1_6d38m"]
+[ext_resource type="Script" uid="uid://cidkfo0yykwhn" path="res://main_game/game/story/conversation_bubble.gd" id="2_hp45i"]
+[ext_resource type="Script" uid="uid://soglr6dnw8ew" path="res://main_game/game/story/conversation_choice.gd" id="3_eluql"]
+[ext_resource type="Script" uid="uid://cdo60qthkk8xi" path="res://main_game/game/story/conversation.gd" id="4_faioy"]
+
+[sub_resource type="Resource" id="Resource_3jdi1"]
+script = ExtResource("2_hp45i")
+text = "Day 5."
+
+[sub_resource type="Resource" id="Resource_re72o"]
+script = ExtResource("2_hp45i")
+text = "Last day of the week. Just get through it."
+
+[sub_resource type="Resource" id="Resource_cw2hq"]
+script = ExtResource("1_6d38m")
+bubbles = Array[ExtResource("2_hp45i")]([SubResource("Resource_3jdi1"), SubResource("Resource_re72o")])
+
+[resource]
+script = ExtResource("4_faioy")
+dialogues = Array[ExtResource("1_6d38m")]([SubResource("Resource_cw2hq")])

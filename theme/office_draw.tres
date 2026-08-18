@@ -3,11 +3,14 @@
 [ext_resource type="Texture2D" uid="uid://bjgp8uss7tvka" path="res://theme/button_base.png" id="1_70egs"]
 [ext_resource type="Texture2D" uid="uid://d2fmhp0wi7iw4" path="res://theme/button_pressed.png" id="2_vxkq8"]
 [ext_resource type="Texture2D" uid="uid://bs5n4g8g21vk6" path="res://theme/long_button_base.png" id="3_q6xqi"]
+[ext_resource type="Texture2D" uid="uid://8jaft41k6mgf" path="res://theme/long_button_hover.png" id="3_vxkq8"]
 [ext_resource type="Texture2D" uid="uid://ch5qjlv12c5l" path="res://theme/panel.png" id="4_svcjs"]
 [ext_resource type="Texture2D" uid="uid://divbke5wdub0c" path="res://theme/office_bg.png" id="5_ey6br"]
 [ext_resource type="Texture2D" uid="uid://k2dihwu5306m" path="res://theme/email.png" id="6_avl7x"]
 [ext_resource type="Texture2D" uid="uid://8to3holipnmm" path="res://theme/circle_button_base.png" id="7_g340t"]
 [ext_resource type="Texture2D" uid="uid://bf5hi8rrgjnmi" path="res://theme/big_panel.png" id="8_ptd7o"]
+[ext_resource type="Texture2D" uid="uid://clfuc0pi0xr7g" path="res://theme/slider_grabber.png" id="9_grab"]
+[ext_resource type="Texture2D" uid="uid://bdqp58kjrr56b" path="res://theme/slider_grabber_hl.png" id="10_grabhl"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_x73tn"]
 texture = ExtResource("1_70egs")
@@ -21,11 +24,59 @@ texture = ExtResource("1_70egs")
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_g1ctd"]
 texture = ExtResource("2_vxkq8")
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sliderfill"]
+content_margin_left = 6.0
+content_margin_top = 5.0
+content_margin_right = 6.0
+content_margin_bottom = 5.0
+bg_color = Color(1, 0.73333335, 0.49411765, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.3529412, 0.21176471, 0.12156863, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sliderfillhl"]
+content_margin_left = 6.0
+content_margin_top = 5.0
+content_margin_right = 6.0
+content_margin_bottom = 5.0
+bg_color = Color(1, 0.61960787, 0.32156864, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.3529412, 0.21176471, 0.12156863, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_slidertrack"]
+content_margin_left = 6.0
+content_margin_top = 5.0
+content_margin_right = 6.0
+content_margin_bottom = 5.0
+bg_color = Color(1, 0.9411765, 0.85490197, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.3529412, 0.21176471, 0.12156863, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_c78lx"]
-texture = ExtResource("3_q6xqi")
+texture = ExtResource("3_vxkq8")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_035vb"]
-texture = ExtResource("3_q6xqi")
+texture = ExtResource("3_vxkq8")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_g8vjq"]
 texture = ExtResource("3_q6xqi")
@@ -46,6 +97,8 @@ texture = ExtResource("6_avl7x")
 axis_stretch_horizontal = 2
 axis_stretch_vertical = 2
 
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_6av2d"]
+
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_2b6vn"]
 texture = ExtResource("4_svcjs")
 
@@ -61,18 +114,36 @@ texture = ExtResource("7_g340t")
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ibu3k"]
 texture = ExtResource("7_g340t")
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_scrim"]
+bg_color = Color(0.17254902, 0.101960786, 0.05490196, 0.6)
+
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_uclfm"]
 texture = ExtResource("8_ptd7o")
 
 [resource]
 Button/colors/font_color = Color(0.11890503, 0.057120636, 0.29787308, 1)
-Button/colors/font_hover_color = Color(0.16203487, 0, 0.99239975, 1)
+Button/colors/font_hover_color = Color(1, 1, 1, 1)
+Button/colors/font_hover_pressed_color = Color(1, 1, 1, 1)
+Button/colors/icon_hover_color = Color(2.571, 2.368, 1.973, 1)
+Button/colors/icon_hover_pressed_color = Color(4.165, 4.165, 4.165, 1)
+Button/colors/icon_normal_color = Color(1, 1, 1, 1)
 Button/styles/hover = SubResource("StyleBoxTexture_x73tn")
 Button/styles/hover_pressed = SubResource("StyleBoxTexture_obo8e")
 Button/styles/normal = SubResource("StyleBoxTexture_i006a")
 Button/styles/pressed = SubResource("StyleBoxTexture_g1ctd")
+HSlider/icons/grabber = ExtResource("9_grab")
+HSlider/icons/grabber_disabled = ExtResource("9_grab")
+HSlider/icons/grabber_highlight = ExtResource("10_grabhl")
+HSlider/styles/grabber_area = SubResource("StyleBoxFlat_sliderfill")
+HSlider/styles/grabber_area_highlight = SubResource("StyleBoxFlat_sliderfillhl")
+HSlider/styles/slider = SubResource("StyleBoxFlat_slidertrack")
 Label/colors/font_color = Color(0.17254902, 0.101960786, 0.05490196, 1)
 LongButton/base_type = &"Button"
+LongButton/colors/font_hover_color = Color(1, 1, 1, 1)
+LongButton/colors/font_hover_pressed_color = Color(1, 1, 1, 1)
+LongButton/colors/icon_hover_color = Color(2.571, 2.368, 1.973, 1)
+LongButton/colors/icon_hover_pressed_color = Color(4.165, 4.165, 4.165, 1)
+LongButton/colors/icon_normal_color = Color(1, 1, 1, 1)
 LongButton/styles/hover = SubResource("StyleBoxTexture_c78lx")
 LongButton/styles/hover_pressed = SubResource("StyleBoxTexture_035vb")
 LongButton/styles/normal = SubResource("StyleBoxTexture_g8vjq")
@@ -81,6 +152,10 @@ Panel/styles/panel = SubResource("StyleBoxTexture_j85xd")
 PanelContainer/styles/panel = SubResource("StyleBoxTexture_nggn0")
 emailPanel/base_type = &"PanelContainer"
 emailPanel/styles/panel = SubResource("StyleBoxTexture_6xou6")
+empty_panel/base_type = &"PanelContainer"
+empty_panel/styles/panel = SubResource("StyleBoxEmpty_6av2d")
+markLabel/base_type = &"Label"
+markLabel/font_sizes/font_size = 30
 paper_panelContainer/base_type = &"PanelContainer"
 paper_panelContainer/styles/panel = SubResource("StyleBoxTexture_2b6vn")
 round_button/base_type = &"Button"
@@ -88,5 +163,9 @@ round_button/styles/hover = SubResource("StyleBoxTexture_hhoq2")
 round_button/styles/hover_pressed = SubResource("StyleBoxTexture_5n3nv")
 round_button/styles/normal = SubResource("StyleBoxTexture_p4ihe")
 round_button/styles/pressed = SubResource("StyleBoxTexture_ibu3k")
+scrimPanel/base_type = &"PanelContainer"
+scrimPanel/styles/panel = SubResource("StyleBoxFlat_scrim")
 systemPanel/base_type = &"PanelContainer"
 systemPanel/styles/panel = SubResource("StyleBoxTexture_uclfm")
+titleLabel/base_type = &"Label"
+titleLabel/font_sizes/font_size = 42

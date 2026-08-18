@@ -15,6 +15,10 @@ run/main_scene="res://main_game/boot.tscn"
 config/features=PackedStringArray("4.7", "Forward Plus")
 config/icon="res://icon.svg"
 
+[audio]
+
+buses/default_bus_layout="uid://bw2mqkpbtp4re"
+
 [autoload]
 
 SignalBus="*uid://cfucvlfc0a3n3"
@@ -23,6 +27,8 @@ RoundState="*uid://btrln84isgbh7"
 WindowManager="*uid://cm8x8nwqup0yt"
 SaveState="*uid://d06ejkfi6h0ms"
 MCPRuntimeProbe="*uid://bsg12huaf1u5i"
+Bgm="*res://addons/bgm/bgm_player.tscn"
+AudioSettings="*res://addons/audio_settings/audio_settings.gd"
 
 [display]
 

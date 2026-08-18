@@ -19,7 +19,7 @@ func _ready() -> void:
 func _on_new_game_pressed() -> void:
 	SceneTransition.discard(GAME_SCENE)
 	SaveState.clear()
-	RoundState.current_round_state = RoundState.Round_State.RECEIVING_EMAIL
+	RoundState.current_round_state = RoundState.Round_State.STORY
 	SceneTransition.goto(GAME_SCENE, SceneTransition.Slide.LEFT)
 
 

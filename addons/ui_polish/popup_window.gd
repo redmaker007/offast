@@ -56,11 +56,19 @@ func _ready() -> void:
 	_apply_pivot()
 
 	_audio = AudioStreamPlayer.new()
+	_route_to_sfx(_audio)
 	add_child(_audio)
 
 	if is_open:
 		# 场景里就摆成显示状态的窗口，要让管理器知道，否则它以为一个窗口都没开。
 		WindowManager.adopt(self)
+
+
+## 挂到 SFX 总线，音量就归设置面板的 SFX 滑块管。
+## 项目里没有这条总线（换个项目用这个 addon）就留在 Master，不影响出声。
+func _route_to_sfx(p: AudioStreamPlayer) -> void:
+	if AudioServer.get_bus_index("SFX") >= 0:
+		p.bus = &"SFX"
 
 
 ## 弹出窗口。可以 await，动画播完才返回。

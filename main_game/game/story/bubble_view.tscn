@@ -1,0 +1,105 @@
+[gd_scene format=3 uid="uid://cqhrcfnj2patb"]
+
+[ext_resource type="Script" uid="uid://dr34kvbg0r2c5" path="res://main_game/game/story/bubble_view.gd" id="1_7qjv8"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7qjv8"]
+content_margin_left = 28.0
+content_margin_top = 28.0
+content_margin_right = 28.0
+content_margin_bottom = 28.0
+bg_color = Color(1, 0.84313726, 0.60784316, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.3529412, 0.21176471, 0.12156863, 1)
+corner_radius_top_left = 36
+corner_radius_top_right = 36
+corner_radius_bottom_right = 36
+corner_radius_bottom_left = 36
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_w10q3"]
+content_margin_left = 8.0
+content_margin_top = 8.0
+content_margin_right = 8.0
+content_margin_bottom = 8.0
+bg_color = Color(1, 0.84313726, 0.60784316, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(1, 0.73333335, 0.49411765, 1)
+corner_radius_top_left = 18
+corner_radius_top_right = 18
+corner_radius_bottom_right = 18
+corner_radius_bottom_left = 18
+
+[node name="bubble_view" type="Control" unique_id=424521757]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 1
+script = ExtResource("1_7qjv8")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=2122230574]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme_override_constants/separation = 18
+alignment = 1
+
+[node name="plate" type="PanelContainer" parent="VBoxContainer" unique_id=1149762869]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(880, 210)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_styles/panel = SubResource("StyleBoxFlat_7qjv8")
+
+[node name="row" type="HBoxContainer" parent="VBoxContainer/plate" unique_id=1254836733]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 22
+alignment = 2
+
+[node name="text_box" type="Label" parent="VBoxContainer/plate/row" unique_id=333040721]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(600, 0)
+layout_mode = 2
+size_flags_horizontal = 8
+text = "Preview text, only visible in the editor. Replaced at runtime by show_bubble(). Long enough to show where it wraps."
+horizontal_alignment = 2
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="avatar_frame" type="PanelContainer" parent="VBoxContainer/plate/row" unique_id=1202396759]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(148, 148)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 4
+theme_override_styles/panel = SubResource("StyleBoxFlat_w10q3")
+
+[node name="avatar" type="TextureRect" parent="VBoxContainer/plate/row/avatar_frame" unique_id=1046654838]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(124, 124)
+layout_mode = 2
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="next_button" type="Button" parent="VBoxContainer" unique_id=1254992195]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(220, 56)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_type_variation = &"LongButton"
+text = "Next"
+
+[node name="choice_list" type="VBoxContainer" parent="VBoxContainer" unique_id=267677651]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/separation = 12
+alignment = 1
