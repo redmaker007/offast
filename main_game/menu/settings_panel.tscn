@@ -37,7 +37,7 @@ alignment = 1
 [node name="settings_title" type="Label" parent="VBoxContainer"]
 layout_mode = 2
 theme_type_variation = &"titleLabel"
-text = "Settings"
+text = "UI_SETTINGS"
 horizontal_alignment = 1
 
 [node name="volume_rows" type="VBoxContainer" parent="VBoxContainer"]
@@ -54,7 +54,7 @@ alignment = 1
 [node name="bgm_label" type="Label" parent="VBoxContainer/volume_rows/bgm_row"]
 custom_minimum_size = Vector2(80, 0)
 layout_mode = 2
-text = "BGM"
+text = "UI_BGM"
 
 [node name="bgm_slider" type="HSlider" parent="VBoxContainer/volume_rows/bgm_row"]
 unique_name_in_owner = true
@@ -81,7 +81,7 @@ alignment = 1
 [node name="sfx_label" type="Label" parent="VBoxContainer/volume_rows/sfx_row"]
 custom_minimum_size = Vector2(80, 0)
 layout_mode = 2
-text = "SFX"
+text = "UI_SFX"
 
 [node name="sfx_slider" type="HSlider" parent="VBoxContainer/volume_rows/sfx_row"]
 unique_name_in_owner = true
@@ -100,16 +100,37 @@ layout_mode = 2
 text = "80%"
 horizontal_alignment = 2
 
+[node name="language_row" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 16
+alignment = 1
+
+[node name="language_label" type="Label" parent="VBoxContainer/language_row"]
+custom_minimum_size = Vector2(90, 0)
+layout_mode = 2
+size_flags_vertical = 4
+text = "UI_LANGUAGE"
+
+[node name="language_button" type="Button" parent="VBoxContainer/language_row"]
+unique_name_in_owner = true
+modulate = Color(0.9098039, 0.8352941, 0.6901961, 1)
+custom_minimum_size = Vector2(180, 44)
+layout_mode = 2
+theme_type_variation = &"LongButton"
+auto_translate_mode = 2
+text = "中文"
+
 [node name="close_button" type="Button" parent="VBoxContainer"]
 custom_minimum_size = Vector2(160, 48)
 layout_mode = 2
 size_flags_horizontal = 4
 theme = ExtResource("1_theme")
 theme_type_variation = &"LongButton"
-text = "Close"
+text = "UI_CLOSE"
 
 [node name="HoverScale" parent="VBoxContainer/close_button" instance=ExtResource("3_hover")]
 hover_volume = 0.5
 click_sound = ExtResource("4_click")
 
+[connection signal="pressed" from="VBoxContainer/language_row/language_button" to="." method="_on_language_pressed"]
 [connection signal="pressed" from="VBoxContainer/close_button" to="." method="_on_close_pressed"]

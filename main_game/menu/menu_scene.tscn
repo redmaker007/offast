@@ -57,7 +57,7 @@ layout_mode = 2
 size_flags_horizontal = 4
 theme = ExtResource("1_theme")
 theme_type_variation = &"LongButton"
-text = "New Start"
+text = "UI_NEW_START"
 
 [node name="HoverScale" parent="background/VBoxContainer/new_game_button" unique_id=51400353 instance=ExtResource("3_hover")]
 hover_volume = 0.5
@@ -72,7 +72,7 @@ size_flags_horizontal = 4
 theme = ExtResource("1_theme")
 theme_type_variation = &"LongButton"
 disabled = true
-text = "Resume"
+text = "UI_RESUME"
 
 [node name="HoverScale" parent="background/VBoxContainer/continue_button" unique_id=1529112466 instance=ExtResource("3_hover")]
 hover_volume = 0.5
@@ -100,7 +100,7 @@ layout_mode = 2
 size_flags_horizontal = 4
 theme = ExtResource("1_theme")
 theme_type_variation = &"LongButton"
-text = "Quit"
+text = "UI_QUIT"
 
 [node name="HoverScale" parent="background/VBoxContainer/quit_button" unique_id=1908325115 instance=ExtResource("3_hover")]
 hover_volume = 0.5

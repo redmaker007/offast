@@ -84,6 +84,10 @@ signal choice_picked(index: int, choice: conversation_choice)
 var _bubble: conversation_bubble = null
 var _text_done := false
 
+## 这一条气泡上**真正摆出来的**选项（条件不成立的已经滤掉了）。
+## 按钮下标对的是这个数组，不是气泡上的原始 choices。
+var _shown_choices: Array[conversation_choice] = []
+
 ## 逐字机走的是 _process 而不是 tween：要在每冒一个字的那一刻响一声，
 ## tween 只能事后去查 visible_characters 变了没有，绕一道还不准。
 var _typing := false
@@ -140,7 +144,9 @@ func show_bubble(b: conversation_bubble) -> void:
 	%next_button.visible = true
 	%next_button.disabled = not b.can_skip
 
-	_start_typing(b.text)
+	_shown_choices = _visible_choices(b.choices)
+	# {caller:米拉} 之类的占位符换成这一局的真号码。
+	_start_typing(story_text.resolve(b.text))
 
 
 ## 文字有没有出完。story_page 存档 / 跳过时会问。
@@ -219,10 +225,11 @@ func _on_text_done() -> void:
 	_text_done = true
 	if _bubble == null:
 		return
-	if _bubble.is_choice():
+	# 选项被条件滤光了就当普通气泡处理——不然会卡在一个没有按钮的选择题上。
+	if not _shown_choices.is_empty():
 		# 换成选择题模式：next 收起来，选项摆出来。
 		%next_button.visible = false
-		_build_choices(_bubble.choices)
+		_build_choices(_shown_choices)
 		%choice_list.visible = true
 	else:
 		%next_button.disabled = false
@@ -241,14 +248,24 @@ func _on_next_pressed() -> void:
 
 
 func _on_choice_pressed(index: int) -> void:
-	if _bubble == null or index < 0 or index >= _bubble.choices.size():
+	if _bubble == null or index < 0 or index >= _shown_choices.size():
 		return
 	# 选完立刻锁住，免得连点两下发两次。
 	_set_choices_disabled(true)
-	choice_picked.emit(index, _bubble.choices[index])
+	choice_picked.emit(index, _shown_choices[index])
 
 
 # ── 选项按钮 ────────────────────────────────────────────
+
+## 只显示条件成立的选项。条件不成立的那条就当不存在——
+## 灰着摆在那等于告诉玩家「这里还有一条路」，那是剧透。
+func _visible_choices(choices: Array[conversation_choice]) -> Array[conversation_choice]:
+	var out: Array[conversation_choice] = []
+	for c in choices:
+		if c != null and c.available():
+			out.append(c)
+	return out
+
 
 func _build_choices(choices: Array[conversation_choice]) -> void:
 	_clear_choices()

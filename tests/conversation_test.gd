@@ -7,7 +7,6 @@ extends Node
 
 const MAIN_SCENE := "res://main_game/game/main_scene.tscn"
 const BUBBLE_VIEW := "res://main_game/game/story/bubble_view.tscn"
-const CONV_DIR := "res://main_game/game/story/conversations"
 
 var _passed := 0
 var _failed := 0
@@ -76,14 +75,14 @@ func _test_data_classes() -> void:
 ## 从 story_beat 移植过来的那几份 .tres 要还在、还能读。
 func _test_shipped_conversations() -> void:
 	_section = "随包的剧情资源"
+	# 剧情内容现在写在 story/days/day_N.story 里，由导入器变成 day_plan。
 	for i in range(1, 6):
-		var path := "%s/day_%d.tres" % [CONV_DIR, i]
-		var c: conversation = load(path)
-		_is_true("day_%d 能加载" % i, c != null)
-		if c != null:
-			_is_false("day_%d 非空" % i, c.is_empty())
-	var fb: conversation = load("%s/fallback.tres" % CONV_DIR)
-	_is_true("fallback 能加载", fb != null)
+		var plan: day_plan = load("res://story/zh/days/day_%d.story" % i)
+		_is_true("day_%d 能加载" % i, plan != null)
+		if plan != null:
+			_is_true("day_%d 有开场剧情" % i, plan.story != null)
+			if plan.story != null:
+				_is_false("day_%d 的开场非空" % i, plan.story.is_empty())
 
 
 # ── bubble_view ─────────────────────────────────────────
@@ -462,13 +461,13 @@ func _test_story_page_branch() -> void:
 func _test_story_page_day_lookup() -> void:
 	_section = "按天查表"
 	var page := _page()
-	var d1: conversation = load("%s/day_1.tres" % CONV_DIR)
-	var fb: conversation = load("%s/fallback.tres" % CONV_DIR)
+	var book := _scene.get_node("story_book")
 
-	_eq("第 1 天", page.conversation_for_day(1), d1)
-	_eq("第 5 天", page.conversation_for_day(5), load("%s/day_5.tres" % CONV_DIR))
-	_eq("超出配置的天用 fallback", page.conversation_for_day(99), fb)
-	_eq("第 0 天也用 fallback", page.conversation_for_day(0), fb)
+	# 内容只有一个来源：story_book 里当天那份 day_plan（由 .story 文本导入）。
+	_eq("第 1 天", page.conversation_for_day(1), book.plan_for(1).story)
+	_eq("第 5 天", page.conversation_for_day(5), book.plan_for(5).story)
+	_eq("超出配置的天没有剧情", page.conversation_for_day(99), null)
+	_eq("第 0 天也没有", page.conversation_for_day(0), null)
 
 
 func _test_story_page_empty() -> void:

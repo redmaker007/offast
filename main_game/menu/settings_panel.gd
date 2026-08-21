@@ -1,6 +1,6 @@
 extends popup_window
 
-## 设置面板。开关动画全部来自 popup_window，这里只管音量滑块和关闭按钮。
+## 设置面板。开关动画全部来自 popup_window，这里只管音量滑块、语言和关闭按钮。
 ##
 ## 滑块不直接动 AudioServer，一律走 AudioSettings——音量落在音频总线上，
 ## 存盘也归它，这里只负责「把玩家拖的值递过去」和「把当前值显示出来」。
@@ -25,13 +25,29 @@ func _ready() -> void:
 
 	# 别的地方改了音量（reset()、以后可能加的快捷键），滑块要跟着动。
 	AudioSettings.volume_changed.connect(_on_volume_changed)
+	SignalBus.locale_changed.connect(_on_locale_changed)
 	_pull_from_settings()
+	_show_language()
 
 
 ## 把 AudioSettings 里的当前值摆到滑块上。
 func _pull_from_settings() -> void:
 	for row in _rows:
 		_show(row, AudioSettings.get_volume(row["bus"]))
+
+
+## 语言按钮按一下换下一种。按钮上显示的是**那个语言自己的写法**（中文 / English），
+## 所以它不跟着 tr() 走（场景里关掉了自动翻译）。
+func _on_language_pressed() -> void:
+	LocaleSettings.next_locale()
+
+
+func _on_locale_changed(_loc: String) -> void:
+	_show_language()
+
+
+func _show_language() -> void:
+	%language_button.text = LocaleSettings.label_of()
 
 
 func _on_slider_changed(value: float, row: Dictionary) -> void:

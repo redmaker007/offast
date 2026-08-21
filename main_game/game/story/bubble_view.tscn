@@ -94,7 +94,7 @@ custom_minimum_size = Vector2(220, 56)
 layout_mode = 2
 size_flags_horizontal = 4
 theme_type_variation = &"LongButton"
-text = "Next"
+text = "UI_NEXT"
 
 [node name="choice_list" type="VBoxContainer" parent="VBoxContainer" unique_id=267677651]
 unique_name_in_owner = true

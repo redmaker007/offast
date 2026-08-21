@@ -1,0 +1,15 @@
+[remap]
+
+importer="offast.story"
+importer_version=2
+type="Resource"
+uid="uid://ce18tsag8n8uh"
+path="res://.godot/imported/world.story-ef428e6ed42a834769114dfde9bbacd1.res"
+
+[deps]
+
+source_file="res://story/en/world.story"
+dest_files=["res://.godot/imported/world.story-ef428e6ed42a834769114dfde9bbacd1.res"]
+
+[params]
+

@@ -2,34 +2,25 @@ extends PanelContainer
 
 ## 剧情层：每天开场的全屏覆盖。STORY 段显示，其余时候隐藏。
 ##
-## 职责是「播完当天那段 conversation」：一条气泡一条喂给 bubble_view，
-## 全部走完发 story_finished，round_manager 收到就开工。
+## 职责是「播完当天那段 conversation」，播完发 story_finished，round_manager 收到就开工。
+## 具体的播放逻辑（下一条是谁、选项往哪跳、选完加什么数值）在 conversation_player 里，
+## 和桌面桥段层（event_page）共用一份。
 ##
-## 怎么演一条气泡（逐字机、按钮、选项）归 bubble_view；
-## 播到哪一段、下一条是谁、选项往哪跳，归这里。
+## 内容只有一个来源：story_book 里当天那份 day_plan 的 story（由 story/days/day_N.story
+## 导入而来）。没配的天就直接跳过剧情开工。
 ##
 ## 播放进度不进存档：STORY 段中途回菜单再读档，这一天的剧情从头播一遍。
 ## 剧情是每天开场的固定内容，重看一遍不会丢任何东西，不值得为它加存档字段。
 
-## 第几天播哪段剧情。**下标 0 是第 1 天**。
-## 没配到的天（数组不够长、或者那一格是空的）用下面的 fallback。
-@export var by_day: Array[conversation] = []
-
-## 兜底剧情。by_day 里没有对应的天时用它。
-## 连它都留空的话，STORY 段会立刻结束直接开工——开发期没写剧情时就是这样。
-@export var fallback: conversation
-
-var _conversation: conversation = null
-var _dialogue: dialogue = null
-var _index := 0
+var _player: conversation_player
 
 
 func _ready() -> void:
 	visible = false
+	_player = conversation_player.new(%bubble_view)
+	_player.finished.connect(_on_player_finished)
 	SignalBus.round_state_change.connect(_on_round_state_change)
 	SignalBus.game_restored.connect(_refresh)
-	%bubble_view.advance_requested.connect(_on_advance_requested)
-	%bubble_view.choice_picked.connect(_on_choice_picked)
 
 
 func _on_round_state_change(_rs) -> void:
@@ -44,64 +35,18 @@ func _refresh() -> void:
 		play(conversation_for_day(%round_manager.current_day))
 
 
-## 第 day 天（从 1 开始）该播哪段剧情。
+## 第 day 天（从 1 开始）该播哪段剧情。没写就是 null，
+## conversation_player 收到 null 会立刻发 finished，不卡玩家。
 func conversation_for_day(day: int) -> conversation:
-	var i := day - 1
-	if i >= 0 and i < by_day.size() and by_day[i] != null:
-		return by_day[i]
-	return fallback
+	var plan: day_plan = %story_book.plan_for(day)
+	return plan.story if plan != null else null
 
-
-# ── 播放 ────────────────────────────────────────────────
 
 ## 从头播一段剧情。传 null 或空的会直接结束（发 story_finished）。
-## 平时由 _refresh() 按天调，也可以从外面直接喂一段进来。
+## 平时由 _refresh() 按天调，结局层也会直接喂一段进来。
 func play(c: conversation) -> void:
-	_conversation = c
-	if c == null or c.is_empty():
-		# 没写剧情就别卡着玩家，直接进入上班。
-		_finish()
-		return
-	_enter(c.first())
+	_player.play(c)
 
 
-## 进入一段 dialogue，从它第一条气泡开始。传 null 就是这段剧情播完了。
-func _enter(d: dialogue) -> void:
-	_dialogue = d
-	_index = 0
-	if d == null:
-		_finish()
-		return
-	_show_current()
-
-
-func _show_current() -> void:
-	var b: conversation_bubble = _dialogue.bubble_at(_index)
-	if b == null:
-		# 这一段走完了，线性接下一段；没有下一段就整段剧情结束。
-		_enter(_conversation.next_after(_dialogue))
-		return
-	%bubble_view.show_bubble(b)
-
-
-func _on_advance_requested() -> void:
-	_index += 1
-	_show_current()
-
-
-func _on_choice_picked(_index_in_bubble: int, choice: conversation_choice) -> void:
-	if choice != null and choice.jumps():
-		var target := _conversation.find(choice.goto)
-		if target != null:
-			_enter(target)
-			return
-		# goto 写错了不崩，退回线性继续，顺手提醒一句。
-		push_warning("选项的 goto 找不到对应的 dialogue：%s" % choice.goto)
-	_on_advance_requested()
-
-
-func _finish() -> void:
-	_conversation = null
-	_dialogue = null
-	_index = 0
+func _on_player_finished() -> void:
 	SignalBus.story_finished.emit()

@@ -30,6 +30,21 @@ if (-not $scenes) {
     exit 2
 }
 
+# 上一次导入失败的 .story 会在 .import 里记 valid=false，之后**光把代码修好也不会重试**，
+# 只会一直加载失败。跑测试前先把这种坏掉的元数据删掉，让 Godot 重新导一次。
+Get-ChildItem -Path (Join-Path $projectRoot "story") -Filter "*.import" -Recurse -ErrorAction SilentlyContinue |
+    Where-Object { (Get-Content $_.FullName -Raw) -match "valid=false" } |
+    ForEach-Object {
+        Write-Host "重新导入：$($_.Name -replace '\.import$','')" -ForegroundColor Yellow
+        Remove-Item $_.FullName -Force
+    }
+
+# 先导一次：.story 剧本改了要重新导入才生效，新加的 class_name 也要扫进
+# global_script_class_cache，不然 headless 认不出来。别把它的输出接进
+# Select-Object -First N —— 管道提前关掉会让 Godot 写 stdout 阻塞，整个进程挂死。
+& $Godot --headless --path $projectRoot --import 2>&1 |
+    Where-Object { $_ -match 'SCRIPT ERROR|Parse Error|Failed to load' }
+
 # headless 下 dummy 渲染器刷的噪音，真机跑不会出现。
 $noise = 'custom_samplers|_dump_node_code|GDScript backtrace|^\s+\[\d+\]\s|^\s+at:\s|^Godot Engine v'
 $failed = 0

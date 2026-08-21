@@ -37,6 +37,15 @@ enum Side {
 ## 选项。**留空就是普通气泡**，非空就变成选择题。
 @export var choices: Array[conversation_choice] = []
 
+## 这一条要不要播。留空 = 总是播；写了条件（`?if ...` 包起来的那些行）
+## 就只在成立时播，不成立整条跳过。语法见 story_condition。
+@export var condition: String = ""
+
+
+## 现在该不该播这一条。
+func visible() -> bool:
+	return story_condition.eval(condition)
+
 
 ## 是不是选择题气泡。
 func is_choice() -> bool:

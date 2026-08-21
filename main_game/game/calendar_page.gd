@@ -30,5 +30,5 @@ func _on_round_state_change(_rs) -> void:
 
 func _refresh() -> void:
 	var rm = %round_manager
-	%calendar_day.text = "Day %d / %d" % [rm.current_day, rm.days_to_win]
+	%calendar_day.text = tr("UI_DAY_COUNT") % [rm.current_day, rm.days_to_win]
 	%calendar_lives.texture = %calendar.current_face()

@@ -31,12 +31,19 @@ func load_data(d: Dictionary) -> void:
 
 
 func append_instruction(e:email):
+	# 剧情信可以不带人事指令（欢迎信、打探信），那种不进标准答案。
+	if str(e.instruction).is_empty() or str(e.target_employee_name).is_empty():
+		return
+	# 员工自己申请加薪/升职（graded=no）也不进：他会出现在人事表上，
+	# 但那一行怎么填都不算对错，只影响剧情分。
+	if not e.graded:
+		return
 	var i = is_already_in_instruction_box(e)
 	if i:
-		i.change_instruction(e.instruction, e.sender_class)
+		i.change_instruction(e.instruction, e.sender_class, e.faction_key)
 	else:
 		i = f_instruction.new()
-		i.init_instruction(e.instruction, e.target_employee_name, e.sender_class)
+		i.init_instruction(e.instruction, e.target_employee_name, e.sender_class, e.faction_key)
 		instruction_box[e.target_employee_name] = i
 
 

@@ -18,10 +18,10 @@ func _on_round_state_change(rs) -> void:
 
 
 func _on_day_result_ready(result: Dictionary) -> void:
-	%result_title.text = "Day %d / %d" % [result.get("day", 0), result.get("days_to_win", 0)]
+	%result_title.text = tr("UI_DAY_COUNT") % [result.get("day", 0), result.get("days_to_win", 0)]
 	%result_correct.text = "%d / %d" % [result.get("correct", 0), result.get("total", 0)]
 	%result_wrong.text = "%d" % result.get("wrong", 0)
-	%result_lives.text = "Lives left: %d" % result.get("lives", 0)
+	%result_lives.text = tr("UI_LIVES_LEFT") % result.get("lives", 0)
 	# 一个没错的日子不用挂这句，留白本身就是"今天没事"。
 	%result_note.visible = int(result.get("wrong", 0)) > 0
 	visible = true

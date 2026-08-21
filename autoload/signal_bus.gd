@@ -94,3 +94,57 @@ signal open_notes_request()
 
 ## 玩家点了灯，请求打开灯的界面。
 signal open_light_request()
+
+
+# ── 剧情立场 ────────────────────────────────────────────
+
+## 四条结局分变了。带的是快照副本，收到的人改它不会影响 GameState。
+signal scores_changed(scores:Dictionary)
+
+## 某个员工的权限等级变了（被批了 promotion）。
+signal level_changed(employee_name:StringName, level:int)
+
+## 玩家换了语言。UI 靠自动翻译不用管，剧情内容要重装（story_book 接这条）。
+signal locale_changed(locale:String)
+
+## 剧情内容按语言重新装了一遍（切语言时）。
+signal story_content_reloaded(locale:String)
+
+## 玩家回了一封剧情邮件。数值已经在 GameState 里加过了，
+## 这条是给别的系统（成就、日志、测试）用的通知。
+signal email_replied(email_id:StringName, reply:email_reply)
+
+
+# ── 笔记本的另外两个 app ─────────────────────────────────
+
+## 笔记本选择页上点了「档案」。
+signal open_profile_page_request()
+
+## 要求翻到档案页并定位到某个员工（邮件里的「查档案」按钮）。
+## 和上面两条分开：那两条是纯翻页，这条还带定位目标。
+signal profile_focus_requested(employee_name:StringName)
+
+
+# ── 登录 ────────────────────────────────────────────────
+
+## 登录成功。笔记本据此翻到选择页，档案页据此按新权限重列。
+signal login_succeeded(signed_in:account)
+
+## 用户名或密码不对。登录页显示错误，别的地方不用管。
+signal login_failed()
+
+## 主动退出登录（换号用），或者到了新的一天电脑自己锁了。
+signal logged_out()
+
+
+# ── 结局 ────────────────────────────────────────────────
+
+## 第 5 天结算完，先把五天的人事调动日志摊给玩家看。
+signal log_review_requested()
+
+## 玩家看完日志点了继续。
+signal log_review_finished()
+
+## 这一局的结局定了，结局层据此显示对应文案。
+## id 取 GameState.ending_id() 的结果，或者被开除时的 "fired"。
+signal ending_ready(ending_id:StringName)

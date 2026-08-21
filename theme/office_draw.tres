@@ -12,14 +12,14 @@
 [ext_resource type="Texture2D" uid="uid://clfuc0pi0xr7g" path="res://theme/slider_grabber.png" id="9_grab"]
 [ext_resource type="Texture2D" uid="uid://bdqp58kjrr56b" path="res://theme/slider_grabber_hl.png" id="10_grabhl"]
 
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_i006a"]
+texture = ExtResource("1_70egs")
+
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_x73tn"]
 texture = ExtResource("1_70egs")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_obo8e"]
 texture = ExtResource("2_vxkq8")
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_i006a"]
-texture = ExtResource("1_70egs")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_g1ctd"]
 texture = ExtResource("2_vxkq8")
@@ -72,16 +72,46 @@ corner_radius_top_right = 10
 corner_radius_bottom_right = 10
 corner_radius_bottom_left = 10
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_input_focus"]
+content_margin_left = 14.0
+content_margin_top = 8.0
+content_margin_right = 14.0
+content_margin_bottom = 8.0
+bg_color = Color(1, 0.9647059, 0.8901961, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.3529412, 0.21176471, 0.12156863, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_input"]
+content_margin_left = 14.0
+content_margin_top = 8.0
+content_margin_right = 14.0
+content_margin_bottom = 8.0
+bg_color = Color(1, 0.9137255, 0.79607844, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.3529412, 0.21176471, 0.12156863, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_g8vjq"]
+texture = ExtResource("3_q6xqi")
+
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_c78lx"]
 texture = ExtResource("3_vxkq8")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_035vb"]
 texture = ExtResource("3_vxkq8")
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_g8vjq"]
-texture = ExtResource("3_q6xqi")
-axis_stretch_horizontal = 2
-axis_stretch_vertical = 2
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_4j4se"]
 texture = ExtResource("3_q6xqi")
@@ -122,11 +152,13 @@ texture = ExtResource("8_ptd7o")
 
 [resource]
 Button/colors/font_color = Color(0.11890503, 0.057120636, 0.29787308, 1)
+Button/colors/font_disabled_color = Color(0.11890503, 0.057120636, 0.29787308, 0.4)
 Button/colors/font_hover_color = Color(1, 1, 1, 1)
 Button/colors/font_hover_pressed_color = Color(1, 1, 1, 1)
 Button/colors/icon_hover_color = Color(2.571, 2.368, 1.973, 1)
 Button/colors/icon_hover_pressed_color = Color(4.165, 4.165, 4.165, 1)
 Button/colors/icon_normal_color = Color(1, 1, 1, 1)
+Button/styles/disabled = SubResource("StyleBoxTexture_i006a")
 Button/styles/hover = SubResource("StyleBoxTexture_x73tn")
 Button/styles/hover_pressed = SubResource("StyleBoxTexture_obo8e")
 Button/styles/normal = SubResource("StyleBoxTexture_i006a")
@@ -138,12 +170,22 @@ HSlider/styles/grabber_area = SubResource("StyleBoxFlat_sliderfill")
 HSlider/styles/grabber_area_highlight = SubResource("StyleBoxFlat_sliderfillhl")
 HSlider/styles/slider = SubResource("StyleBoxFlat_slidertrack")
 Label/colors/font_color = Color(0.17254902, 0.101960786, 0.05490196, 1)
+LineEdit/colors/caret_color = Color(0.17254902, 0.101960786, 0.05490196, 1)
+LineEdit/colors/font_color = Color(0.17254902, 0.101960786, 0.05490196, 1)
+LineEdit/colors/font_placeholder_color = Color(0.17254902, 0.101960786, 0.05490196, 0.45)
+LineEdit/colors/font_selected_color = Color(1, 1, 1, 1)
+LineEdit/colors/selection_color = Color(0.3529412, 0.21176471, 0.12156863, 0.55)
+LineEdit/styles/focus = SubResource("StyleBoxFlat_input_focus")
+LineEdit/styles/normal = SubResource("StyleBoxFlat_input")
+LineEdit/styles/read_only = SubResource("StyleBoxFlat_input")
 LongButton/base_type = &"Button"
+LongButton/colors/font_disabled_color = Color(0.17254902, 0.101960786, 0.05490196, 0.4)
 LongButton/colors/font_hover_color = Color(1, 1, 1, 1)
 LongButton/colors/font_hover_pressed_color = Color(1, 1, 1, 1)
 LongButton/colors/icon_hover_color = Color(2.571, 2.368, 1.973, 1)
 LongButton/colors/icon_hover_pressed_color = Color(4.165, 4.165, 4.165, 1)
 LongButton/colors/icon_normal_color = Color(1, 1, 1, 1)
+LongButton/styles/disabled = SubResource("StyleBoxTexture_g8vjq")
 LongButton/styles/hover = SubResource("StyleBoxTexture_c78lx")
 LongButton/styles/hover_pressed = SubResource("StyleBoxTexture_035vb")
 LongButton/styles/normal = SubResource("StyleBoxTexture_g8vjq")

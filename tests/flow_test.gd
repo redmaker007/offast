@@ -41,6 +41,8 @@ func _ready() -> void:
 	await _test_settle_bad_day_costs_life()
 	await _test_day_time_up()
 	await _test_save_roundtrip()
+	await _test_notes_pad()
+	await _test_promotion_quota()
 	await _test_clear_run()
 	await _test_fired_run()
 	await _test_ingame_settings()
@@ -79,9 +81,12 @@ func _test_begin_workday() -> void:
 	_is_true("桌面可交互", RoundState.is_interactive())
 	_is_false("剧情层可见", _node("story_page").visible)
 
-	_eq("点名人数", rm.current_round_employee_name_list.size(), rm.employees_per_day)
-	_eq("名单去重后人数", _unique(rm.current_round_employee_name_list).size(), rm.employees_per_day)
-	_eq("收件箱封数", _node("email_reader").remaining(), rm.emails_per_day)
+	# 剧情角色不占随机名额：表 = 随机员工 employees_per_day 个 + 当天剧情涉及的人。
+	_eq("点名人数", rm.current_round_employee_name_list.size(),
+		rm.employees_per_day + _story_roster_size())
+	_eq("名单去重后人数", _unique(rm.current_round_employee_name_list).size(),
+		rm.current_round_employee_name_list.size())
+	_eq("收件箱封数", _node("email_reader").remaining(), _expected_mail_count())
 
 	var truth: Dictionary = _node("instruction_box").get_all()
 	_is_true("标准答案非空", truth.size() > 0)
@@ -91,9 +96,19 @@ func _test_begin_workday() -> void:
 	# 收到的邮件也必须全部打在名单里的人身上，否则玩家没有可填的行。
 	var off_roster := 0
 	for e in _node("email_reader").unread_email:
+		# 不带人事指令的剧情信（欢迎信、打探信）没有目标，不需要表上有行。
+		if str(e.target_employee_name).is_empty():
+			continue
 		if not (e.target_employee_name in rm.current_round_employee_name_list):
 			off_roster += 1
 	_eq("名单外的邮件封数", off_roster, 0)
+
+	# 当天配了剧情内容的话，剧情角色必须在名单里，否则收到命令也没处填。
+	var plan = _node("story_book").plan_for(rm.current_day)
+	if plan != null:
+		for story_name in plan.story_roster:
+			_is_true("剧情角色 %s 在名单里" % story_name,
+				String(story_name) in rm.current_round_employee_name_list)
 
 	var clock := _node("day_clock")
 	_is_true("时钟在走", clock.is_processing())
@@ -111,17 +126,16 @@ func _test_personnel_rows() -> void:
 		return
 
 	var pm := _node("personnel_manager")
-	var seen: Array = []
-	for row in rows:
-		var label := row.get_child(0) as Label
-		seen.append(label.text)
-		_is_true("行 %s 在名单里" % label.text, label.text in roster)
-		_eq("行 %s 的按钮数" % label.text, row.get_child_count() - 1, pm.ACTIONS.size())
-	_eq("行覆盖的人数", _unique(seen).size(), roster.size())
+	for i in range(rows.size()):
+		var who: String = String(roster[i])
+		_eq("行 %s 的按钮数" % who, rows[i].get_child_count() - 1, pm.ACTIONS.size())
+		var shown := (rows[i].get_child(0) as Label).text
+		_is_true("行 %s 上有名字" % who, not shown.is_empty())
+	_eq("行数覆盖整份名单", rows.size(), roster.size())
 
 	# UI 上按一下要真的写进 personnel_manager。
 	var first_row: HBoxContainer = rows[0]
-	var target: String = (first_row.get_child(0) as Label).text
+	var target: String = _row_name(first_row)
 	var button: Button = first_row.get_child(1) as Button
 	var before: bool = pm.is_set(target, pm.ACTIONS[0])
 	button.button_pressed = not before
@@ -146,7 +160,7 @@ func _test_leave_blocked() -> void:
 	_is_true("时钟还在走", _node("day_clock").is_processing())
 	_is_true("提示弹出来了", notice.visible)
 	_eq("提示文案", notice.get_node("%notice_bubble").get_node("%text_box").text,
-		_rm().unfinished_notice)
+		tr(_rm().unfinished_notice))
 
 	notice._on_ok_pressed()
 	await _windows_settled()
@@ -166,6 +180,7 @@ func _test_leave_blocked() -> void:
 ## 全填对：不扣命，结算层显示满分。
 func _test_settle_perfect_day() -> void:
 	_section = "判分：全对（_settle_day）"
+	var graded := _graded_count()
 	_fill_correct()
 	_eq("判分器算出的错误数", int(_node("personnel_manager").grade()["wrong"]), 0)
 
@@ -182,9 +197,11 @@ func _test_settle_perfect_day() -> void:
 
 	var overlay := _node("result_overlay")
 	_is_true("结算层可见", overlay.visible)
-	_eq("结算层标题", overlay.get_node("%result_title").text, "Day 1 / %d" % _rm().days_to_win)
+	_eq("结算层标题", overlay.get_node("%result_title").text,
+		tr("UI_DAY_COUNT") % [1, _rm().days_to_win])
+	# 分母是「判分的行数」——员工自己申请升职那种行不进分母。
 	_eq("结算层对的数", overlay.get_node("%result_correct").text,
-		"%d / %d" % [_rm().employees_per_day, _rm().employees_per_day])
+		"%d / %d" % [graded, graded])
 	_eq("结算层错的数", overlay.get_node("%result_wrong").text, "0")
 	_is_false("全对不挂 HR 那句", overlay.get_node("%result_note").visible)
 
@@ -199,7 +216,7 @@ func _test_settle_bad_day_costs_life() -> void:
 	_is_false("次日结算层可见", _node("result_overlay").visible)
 
 	await _advance_to_game()
-	_eq("次日收件箱封数", _node("email_reader").remaining(), _rm().emails_per_day)
+	_eq("次日收件箱封数", _node("email_reader").remaining(), _expected_mail_count())
 	_eq("次日标准答案没串味", _keys_subset(_node("instruction_box").get_all(),
 		_rm().current_round_employee_name_list), true)
 
@@ -219,7 +236,7 @@ func _test_settle_bad_day_costs_life() -> void:
 	if _life_lost_events.size() == 1:
 		_eq("扣命信号带的剩余命数", _life_lost_events[0], lives_before - 1)
 	_eq("结算层剩余命数", _node("result_overlay").get_node("%result_lives").text,
-		"Lives left: %d" % (lives_before - 1))
+		tr("UI_LIVES_LEFT") % (lives_before - 1))
 	_is_true("错了就挂 HR 那句", _node("result_overlay").get_node("%result_note").visible)
 
 
@@ -295,13 +312,170 @@ func _test_save_roundtrip() -> void:
 	_eq("行数", rows.size(), before["roster"].size())
 	var mismatched := 0
 	for row in rows:
-		var employee: String = (row.get_child(0) as Label).text
+		var employee: String = _row_name(row)
 		for i in range(_node("personnel_manager").ACTIONS.size()):
 			var action: String = _node("personnel_manager").ACTIONS[i]
 			var button := row.get_child(1 + i) as Button
 			if button.button_pressed != _node("personnel_manager").is_set(employee, action):
 				mismatched += 1
 	_eq("按钮状态和表对不上的格子数", mismatched, 0)
+
+
+## 每天的升职名额：默认一天只能给一个人升职，超了那一下会被挡掉并弹提示。
+func _test_promotion_quota() -> void:
+	_section = "升职名额"
+	await _spawn_scene(false)
+	await _advance_to_game()
+
+	var rm := _rm()
+	var pm := _node("personnel_manager")
+	var roster: Array = rm.current_round_employee_name_list
+	_eq("默认一天一个", rm.promotions_per_day, 1)
+	if roster.size() < 2:
+		_record("名单至少两个人", false, "实际 %d" % roster.size())
+		return
+
+	var notices: Array = []
+	var conn := func(text: String) -> void: notices.append(text)
+	SignalBus.notice_requested.connect(conn)
+
+	# 第一个人：正常填得进去。
+	_is_true("第一个升职填得进去", pm.toggle(roster[0], "Promotion"))
+	_eq("已用名额", pm.promotions_used(), 1)
+	_eq("没弹提示", notices.size(), 0)
+
+	# 第二个人：名额没了，数据层一动不动。
+	_is_false("第二个升职被挡掉", pm.toggle(roster[1], "Promotion"))
+	_is_false("第二个人没被写进表", pm.is_set(roster[1], "Promotion"))
+	_eq("已用名额没变", pm.promotions_used(), 1)
+	_eq("弹了一条提示", notices.size(), 1)
+	_has_text("提示里写了名额数", str(notices[0]) if notices.size() > 0 else "", "1")
+
+	# 名额限的只是升职，别的动作照填。
+	_is_true("加薪不受名额限制", pm.toggle(roster[1], "Raise"))
+
+	# 把第一个人的升职取消，名额就回来了。
+	_is_true("取消不会被挡", pm.toggle(roster[0], "Promotion"))
+	_eq("名额回来了", pm.promotions_used(), 0)
+	_is_true("现在轮到第二个人升得了", pm.toggle(roster[1], "Promotion"))
+
+	# UI 层：被挡掉的那一下按钮要弹回去，不能表上勾着、数据里没有。
+	pm.begin_day()
+	SignalBus.round_state_change.emit(RoundState.Round_State.GAME)
+	await _frames(2)
+	var rows := _personnel_rows()
+	var promo_index: int = pm.ACTIONS.find("Promotion")
+	var first_button := rows[0].get_child(1 + promo_index) as Button
+	var second_button := rows[1].get_child(1 + promo_index) as Button
+	first_button.button_pressed = true
+	await _frames(1)
+	_is_true("UI 上第一个人升职生效", pm.is_set(_row_name(rows[0]), "Promotion"))
+	second_button.button_pressed = true
+	await _frames(1)
+	_is_false("UI 上第二个人的数据没被改", pm.is_set(_row_name(rows[1]), "Promotion"))
+	_is_false("按钮也弹回去了", second_button.button_pressed)
+
+	# 名额改大 / 关掉限制。
+	rm.promotions_per_day = 2
+	_is_true("名额放宽后第二个人填得进去", pm.toggle(_row_name(rows[1]), "Promotion"))
+	_eq("已用两个", pm.promotions_used(), 2)
+	rm.promotions_per_day = -1
+	_is_true("-1 = 不限制", pm.toggle(_row_name(rows[2]), "Promotion"))
+	_eq("三个都填上了", pm.promotions_used(), 3)
+	rm.promotions_per_day = 1
+
+	SignalBus.notice_requested.disconnect(conn)
+
+	# 随机信不该凑出填不下的标准答案，否则这一天永远拿不到满分。
+	for i in range(4):
+		await _spawn_scene(false)
+		await _advance_to_game()
+		_is_true("第 %d 次开工：标准答案里的升职人数不超名额" % (i + 1),
+			_truth_promotions() <= _rm().promotions_per_day,
+			"要求升职 %d 人，名额 %d" % [_truth_promotions(), _rm().promotions_per_day])
+
+
+## 标准答案里有几个人要升职。
+func _truth_promotions() -> int:
+	var count := 0
+	var truth: Dictionary = _node("instruction_box").get_all()
+	for name in truth:
+		if bool(truth[name].has_promotion):
+			count += 1
+	return count
+
+
+## 这一行是谁（**标识**，不是表上显示的名字——那个是翻译过的）。
+## 行是按 roster() 顺序铺的，所以下标就能对上。
+func _row_name(row: Node) -> String:
+	var rows := _personnel_rows()
+	var at := rows.find(row)
+	var roster: Array = _node("personnel_manager").roster()
+	return String(roster[at]) if at >= 0 and at < roster.size() else ""
+
+
+## 桌上那本记事本：玩家自己写的东西，能翻页、有字数上限、进存档、不跨局。
+func _test_notes_pad() -> void:
+	_section = "记事本"
+	await _spawn_scene(false)
+	await _advance_to_game()
+
+	var pad := _node("notes_page")
+	_is_false("一开始没打开", pad.visible)
+
+	SignalBus.open_notes_request.emit()
+	await _windows_settled()
+	_is_true("点便签打开了", pad.visible)
+	_eq("从第 1 页起手", pad.page, 0)
+	_has_text("页码显示", _node("%note_page_label").text, "1 / 5")
+
+	# 第 1 页印着电脑的账号密码——邮件阅后即焚，这是玩家唯一查得回去的地方。
+	_eq("第 1 行是用户名", _node("%note_line_0").text, "hrtemp")
+	_eq("第 2 行是密码", _node("%note_line_1").text, "4471")
+	_eq("每行最多 6 个字符", _node("%note_line_0").max_length, pad.MAX_CHARS)
+
+	# 记事本要能打开着看邮件——它不走 WindowManager，不会被笔记本顶掉。
+	SignalBus.open_laptop_request.emit()
+	await _windows_settled()
+	_is_true("开笔记本不会把记事本关掉", pad.visible)
+	await WindowManager.close_current(_scene)
+	await _windows_settled()
+
+	# 玩家自己写一行，翻页再翻回来还在。
+	_node("%note_line_2").text = "Mira"
+	_node("%note_line_2").text_changed.emit("Mira")
+	pad._on_next_pressed()
+	_eq("翻到第 2 页", pad.page, 1)
+	_eq("第 2 页是空的", _node("%note_line_2").text, "")
+	_node("%note_line_0").text = "fire"
+	_node("%note_line_0").text_changed.emit("fire")
+	pad._on_prev_pressed()
+	_eq("翻回第 1 页", pad.page, 0)
+	_eq("第 1 页写的还在", _node("%note_line_2").text, "Mira")
+
+	# 翻页不循环：到头就停住，按钮也灰掉。
+	pad._on_prev_pressed()
+	_eq("第 1 页再往前还是第 1 页", pad.page, 0)
+	_is_true("上一页按钮灰了", _node("%note_prev").disabled)
+	for i in range(10):
+		pad._on_next_pressed()
+	_eq("翻到底停在最后一页", pad.page, pad.PAGES - 1)
+	_is_true("下一页按钮灰了", _node("%note_next").disabled)
+
+	_is_true("存盘成功", SaveState.save_game())
+
+	# 读档回来：玩家写的东西一个字都不能少。
+	await _spawn_scene(true)
+	var restored := _node("notes_page")
+	_eq("第 1 页第 3 行读回来了", restored._line(0, 2), "Mira")
+	_eq("第 2 页第 1 行读回来了", restored._line(1, 0), "fire")
+	_eq("读档后回到第 1 页", restored.page, 0)
+
+	# 开新局是新建场景，本子回到初始状态（只剩印好的账号密码）。
+	await _spawn_scene(false)
+	var fresh := _node("notes_page")
+	_eq("新局第 1 页第 1 行", fresh._line(0, 0), "hrtemp")
+	_eq("新局不留上一局写的东西", fresh._line(0, 2), "")
 
 
 ## 一路全对撑到最后一天 → 通关。
@@ -325,9 +499,22 @@ func _test_clear_run() -> void:
 	_eq("通关信号次数", _game_cleared_count, 1)
 	_eq("开除信号次数", _game_over_count, 0)
 
+	# 通关之后先摊五天的人事调动日志，玩家点继续才给结局。
+	var log_layer := _node("log_overlay")
+	_is_true("日志层可见", log_layer.visible)
+	_is_true("日志有条目", log_layer.get_node("%log_list").get_child_count() > 0)
+
 	var ending := _node("ending_overlay")
+	_is_false("看日志时结局层还没出来", ending.visible)
+
+	log_layer._on_continue_pressed()
+	await _frames(2)
+	_is_false("日志层收起", log_layer.visible)
 	_is_true("结局层可见", ending.visible)
-	_eq("结局标题", ending.get_node("%ending_title").text, "YOU MADE IT")
+	# 全程照章办事 = 第二天把随机员工全 fire 了（A+2）、第五天批了瑞克的 promotion，
+	# 所以「满分通关」走的是结局 A。听话本身就是一种选择。
+	_eq("结局标题", ending.get_node("%ending_title").text,
+		_node("ending_director").def_for(GameState.SCORE_A).title)
 
 
 ## 一路全错把命扣光 → 被开除，而且不会同时报通关。
@@ -355,7 +542,9 @@ func _test_fired_run() -> void:
 
 	var ending := _node("ending_overlay")
 	_is_true("结局层可见", ending.visible)
-	_eq("结局标题", ending.get_node("%ending_title").text, "YOU'RE FIRED")
+	_is_false("被开除不摊日志", _node("log_overlay").visible)
+	_eq("结局标题", ending.get_node("%ending_title").text,
+		_node("ending_director").def_for(&"E").title)
 
 
 ## 游戏内的设置入口：右上角齿轮开的和菜单里是同一个 settings_panel.tscn，
@@ -567,6 +756,50 @@ func _fill_wrong() -> void:
 	var pm := _node("personnel_manager")
 	for employee_name in _rm().current_round_employee_name_list:
 		pm.toggle(employee_name, pm.ACTIONS[0])
+
+
+## 当天有几个剧情角色进表（day_plan 的 roster + 剧情信点名下令的人）。
+func _story_roster_size() -> int:
+	var plan = _node("story_book").plan_for(_rm().current_day)
+	if plan == null:
+		return 0
+	var names: Array = []
+	for n in plan.story_roster:
+		if not String(n).is_empty() and not names.has(String(n)):
+			names.append(String(n))
+	for m in plan.scripted_emails:
+		if m == null or m.targets_all_random():
+			continue
+		var t := String(m.target_employee)
+		if not t.is_empty() and not names.has(t):
+			names.append(t)
+	return names.size()
+
+
+## 当天判分的行数（不判分的行不进分母）。
+func _graded_count() -> int:
+	var pm := _node("personnel_manager")
+	var count := 0
+	for name in _rm().current_round_employee_name_list:
+		if pm.is_graded(name):
+			count += 1
+	return count
+
+
+## 当天该收几封信 = 剧情信 + 填充信。没配 day_plan 的天就是老样子（emails_per_day）。
+func _expected_mail_count() -> int:
+	var rm := _rm()
+	var plan = _node("story_book").plan_for(rm.current_day)
+	if plan == null:
+		return rm.emails_per_day
+	var filler: int = plan.filler_emails if plan.filler_emails >= 0 else rm.emails_per_day
+	var scripted := 0
+	for m in plan.scripted_emails:
+		if m == null or not m.should_send():
+			continue
+		# order=fire:*random 会展开成「一个随机员工一封」。
+		scripted += rm.current_random_name_list.size() if m.targets_all_random() else 1
+	return filler + scripted
 
 
 func _unread_signature() -> Array:

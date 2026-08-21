@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://tests/faction_test.gd" id="1_factiontest"]
+
+[node name="faction_test" type="Node"]
+script = ExtResource("1_factiontest")

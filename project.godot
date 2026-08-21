@@ -26,9 +26,16 @@ SceneTransition="*uid://dy1uutekf1p4u"
 RoundState="*uid://btrln84isgbh7"
 WindowManager="*uid://cm8x8nwqup0yt"
 SaveState="*uid://d06ejkfi6h0ms"
+GameState="*res://autoload/game_state.gd"
 MCPRuntimeProbe="*uid://bsg12huaf1u5i"
 Bgm="*res://addons/bgm/bgm_player.tscn"
 AudioSettings="*res://addons/audio_settings/audio_settings.gd"
+LocaleSettings="*res://addons/locale_settings/locale_settings.gd"
+
+[internationalization]
+
+locale/translations=PackedStringArray("res://locale/ui.zh.translation", "res://locale/ui.en.translation")
+locale/fallback="zh"
 
 [display]
 
@@ -37,7 +44,7 @@ window/stretch/aspect="ignore"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/godot_mcp/plugin.cfg", "res://addons/ui_polish/plugin.cfg", "res://addons/save_state/plugin.cfg")
+enabled=PackedStringArray("res://addons/godot_mcp/plugin.cfg", "res://addons/ui_polish/plugin.cfg", "res://addons/save_state/plugin.cfg", "res://addons/story_script/plugin.cfg")
 
 [file_customization]
 

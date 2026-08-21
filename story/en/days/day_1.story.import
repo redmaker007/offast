@@ -1,0 +1,15 @@
+[remap]
+
+importer="offast.story"
+importer_version=2
+type="Resource"
+uid="uid://cnvk7vrnxxk22"
+path="res://.godot/imported/day_1.story-5393b7e9cb79af841d24c8c3c5039f65.res"
+
+[deps]
+
+source_file="res://story/en/days/day_1.story"
+dest_files=["res://.godot/imported/day_1.story-5393b7e9cb79af841d24c8c3c5039f65.res"]
+
+[params]
+
