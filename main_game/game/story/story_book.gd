@@ -148,11 +148,14 @@ func profiles_for(clearance: int) -> Array[employee_profile]:
 
 
 ## 用户名 + 密码对得上的账户，对不上返回 null。
+##
+## 密码问 GameState 而不是读资源上那个字段——留空的账户每局随机摇一个密码
+## （见 `GameState.seed_account_passwords`），资源上存的只是「写死的那个」。
 func account_for(user: String, secret: String) -> account:
 	if world == null:
 		return null
 	for a in world.accounts:
-		if a != null and a.matches(user, secret):
+		if a != null and a.matches_user(user) and GameState.account_password(a.username) == secret:
 			return a
 	return null
 

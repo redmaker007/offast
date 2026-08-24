@@ -62,6 +62,11 @@ signal game_cleared()
 ## round_state_change 不能拿来干这个——它会连带触发发邮件之类的数据副作用。
 signal game_restored()
 
+## 新的一局开始了：这一局的随机东西（电话号码、电脑密码）都摇好了。
+## 场景里那些「开局印一份内容」的节点（记事本）要等这一下才知道该印什么——
+## 它们的 _ready 比 round_manager.start_game() 早。
+signal game_started()
+
 
 # ── 笔记本窗口 ───────────────────────────────────────────
 

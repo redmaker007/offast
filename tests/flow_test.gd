@@ -81,9 +81,14 @@ func _test_begin_workday() -> void:
 	_is_true("桌面可交互", RoundState.is_interactive())
 	_is_false("剧情层可见", _node("story_page").visible)
 
-	# 剧情角色不占随机名额：表 = 随机员工 employees_per_day 个 + 当天剧情涉及的人。
+	# 剧情角色不占随机名额：表 = 今天真收到指令的随机员工 + 当天剧情涉及的人。
+	# 随机员工最多抽 employees_per_day 个，谁都没提到的那些不上表（信少于人的日子会剩人）。
+	_is_true("随机员工不超过名额", rm.current_random_name_list.size() <= rm.employees_per_day)
 	_eq("点名人数", rm.current_round_employee_name_list.size(),
-		rm.employees_per_day + _story_roster_size())
+		rm.current_random_name_list.size() + _story_roster_size())
+	var box: Dictionary = _node("instruction_box").get_all()
+	for name in rm.current_random_name_list:
+		_is_true("表上的随机员工 %s 今天真收到了指令" % name, box.has(String(name)))
 	_eq("名单去重后人数", _unique(rm.current_round_employee_name_list).size(),
 		rm.current_round_employee_name_list.size())
 	_eq("收件箱封数", _node("email_reader").remaining(), _expected_mail_count())
@@ -132,6 +137,16 @@ func _test_personnel_rows() -> void:
 		var shown := (rows[i].get_child(0) as Label).text
 		_is_true("行 %s 上有名字" % who, not shown.is_empty())
 	_eq("行数覆盖整份名单", rows.size(), roster.size())
+
+	# 四个动作按钮印的符号：升职是职级的事用字母 P，加薪/减薪都是钱、靠箭头分方向。
+	var page := _node("Control/laptop_page/frame/pages/instruction_execute_page")
+	for i in range(pm.ACTIONS.size()):
+		var action: String = pm.ACTIONS[i]
+		var b := rows[0].get_child(1 + i) as Button
+		_eq("%s 按钮上的符号" % action, b.text, String(page.ACTION_LABELS[action]))
+	_eq("Promotion 是字母 P", String(page.ACTION_LABELS["Promotion"]), "P")
+	_eq("Raise 是 $ 加上箭头", String(page.ACTION_LABELS["Raise"]), "$↑")
+	_eq("Reduction 是 $ 加下箭头", String(page.ACTION_LABELS["Reduction"]), "$↓")
 
 	# UI 上按一下要真的写进 personnel_manager。
 	var first_row: HBoxContainer = rows[0]
@@ -222,7 +237,7 @@ func _test_settle_bad_day_costs_life() -> void:
 
 	_fill_wrong()
 	var wrong: int = int(_node("personnel_manager").grade()["wrong"])
-	_eq("判分器算出的错误数", wrong, _rm().employees_per_day)
+	_eq("判分器算出的错误数", wrong, _graded_count())
 	_is_true("错误数够扣命", wrong >= _rm().mistakes_per_life,
 		"wrong=%d, 阈值=%d" % [wrong, _rm().mistakes_per_life])
 
@@ -431,7 +446,18 @@ func _test_notes_pad() -> void:
 
 	# 第 1 页印着电脑的账号密码——邮件阅后即焚，这是玩家唯一查得回去的地方。
 	_eq("第 1 行是用户名", _node("%note_line_0").text, "hrtemp")
-	_eq("第 2 行是密码", _node("%note_line_1").text, "4471")
+
+	# 印的是这一局真正生效的那一组：用户名来自 world.story，
+	# 密码是开局摇出来的（每局都不一样，背不下来）。
+	# 场景 @export 会被编辑器重存抹掉（已中招两次），所以这两行不能另抄一份。
+	var first_user := String(_node("story_book").world.accounts[0].username)
+	var first_pass := GameState.account_password(_node("story_book").world.accounts[0].username)
+	_eq("用户名跟着 world.story 走", _node("%note_line_0").text, first_user)
+	_eq("密码是这一局的那个", _node("%note_line_1").text, first_pass)
+	_eq("密码是 4 位", first_pass.length(), 4)
+	_is_true("密码是数字", first_pass.is_valid_int())
+	_is_true("用户名塞得进一行", first_user.length() <= pad.MAX_CHARS)
+	_is_true("密码塞得进一行", first_pass.length() <= pad.MAX_CHARS)
 	_eq("每行最多 6 个字符", _node("%note_line_0").max_length, pad.MAX_CHARS)
 
 	# 记事本要能打开着看邮件——它不走 WindowManager，不会被笔记本顶掉。
@@ -536,7 +562,13 @@ func _test_fired_run() -> void:
 		await _frames(2)
 
 	_eq("命数", _rm().lives, 0)
-	_eq("撑到的天数", _rm().current_day, _rm().max_lives)
+	# **不是每天必掉一条命**：一天错够 mistakes_per_life 个人才扣命，而人事表上
+	# 只有「今天真被提到的人」——剧情信少、随机信也少的日子（第 4、5 天）判分的行
+	# 可能不到阈值，那天全错也不掉命。所以撑几天是浮动的，只能卡个范围。
+	_is_true("至少撑到第 %d 天" % _rm().max_lives, _rm().current_day >= _rm().max_lives,
+		"撑到第 %d 天" % _rm().current_day)
+	_is_true("撑不过最后一天", _rm().current_day <= _rm().days_to_win,
+		"撑到第 %d 天" % _rm().current_day)
 	_eq("开除信号次数", _game_over_count, 1)
 	_eq("通关信号次数", _game_cleared_count, 0)
 

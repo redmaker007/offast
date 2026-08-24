@@ -38,6 +38,29 @@ func is_playing() -> bool:
 	return _conversation != null
 
 
+## 现在演到哪一段的第几条。换语言时要用它把位置记下来。
+func position() -> Dictionary:
+	return {"dialogue": _dialogue.id if _dialogue != null else &"", "index": _index}
+
+
+## 换一份内容、**接着刚才那个位置演**（换语言用）。
+##
+## 两种语言的剧本结构是一样的（段落 id、气泡条数都对得上，story_script_test
+## 里逐条比过），所以按「第几段的第几条」就能接上。真要是对不上（作者改了一半），
+## 退回从头播，总比卡在半路强。
+func resume(c: conversation, at: Dictionary) -> void:
+	if c == null or c.is_empty():
+		return
+	_conversation = c
+	var d: dialogue = c.find(StringName(at.get("dialogue", &"")))
+	if d == null:
+		play(c)
+		return
+	_dialogue = d
+	_index = clampi(int(at.get("index", 0)), 0, maxi(0, d.bubbles.size() - 1))
+	_show_current()
+
+
 func _enter(d: dialogue) -> void:
 	_dialogue = d
 	_index = 0

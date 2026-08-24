@@ -32,11 +32,6 @@ Bgm="*res://addons/bgm/bgm_player.tscn"
 AudioSettings="*res://addons/audio_settings/audio_settings.gd"
 LocaleSettings="*res://addons/locale_settings/locale_settings.gd"
 
-[internationalization]
-
-locale/translations=PackedStringArray("res://locale/ui.zh.translation", "res://locale/ui.en.translation")
-locale/fallback="zh"
-
 [display]
 
 window/stretch/mode="canvas_items"
@@ -49,9 +44,19 @@ enabled=PackedStringArray("res://addons/godot_mcp/plugin.cfg", "res://addons/ui_
 [file_customization]
 
 folder_colors={
+"res://font/": "green",
 "res://sound/": "purple",
 "res://theme/": "orange"
 }
+
+[gui]
+
+theme/custom_font="res://font/NotoSansSC-Regular.ttf"
+
+[internationalization]
+
+locale/translations=PackedStringArray("res://locale/ui.zh.translation", "res://locale/ui.en.translation")
+locale/fallback="zh"
 
 [physics]
 

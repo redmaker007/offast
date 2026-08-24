@@ -74,7 +74,7 @@ func _on_open_request() -> void:
 
 ## 起手页：登录了是选择页，没登录是登录页。
 func _home_page() -> Control:
-	if GameState.is_logged_in(%round_manager.current_day):
+	if GameState.is_logged_in():
 		return %laptop_select_page
 	return %laptop_login_page
 
@@ -82,7 +82,7 @@ func _home_page() -> Control:
 ## 翻到某个 app。没登录时一律弹回登录页——信号是全局的，
 ## 别的地方（比如邮件里的「查档案」）也能发，这里是唯一的关口。
 func _show_app(page: Control) -> void:
-	if not GameState.is_logged_in(%round_manager.current_day):
+	if not GameState.is_logged_in():
 		_show_page(%laptop_login_page)
 		return
 	_show_page(page)

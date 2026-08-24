@@ -36,15 +36,15 @@ var levels: Dictionary = {}
 ## 剧情开关。隐藏结局的条件、桥段「今天已经触发过」都记在这里。
 var flags: Dictionary = {}
 
-## 当前登录的账户名，空串 = 没登录。**登录只在当天有效**（见 login_day）。
+## 当前登录的账户名，空串 = 没登录。**一直登着**，除非玩家自己 Sign out。
 var current_account: StringName = &""
 
 ## 当前账户的权限等级。存下来而不是每次回头查 story_book：
 ## 读档时不需要先把内容表准备好，权限就已经是对的。
 var account_clearance: int = 0
 
-## 哪一天登的。新的一天开工时 round_manager 会 logout()，
-## 这个字段是双保险：读档到另一天时不会莫名其妙还登着。
+## 哪一天登的。**只是留个记录**，不再拿来判「今天还算不算登着」——
+## 电脑不会每天早上自动锁上（用户拍板：只有第 1 天要敲密码）。
 var login_day: int = 0
 
 ## 人事调动日志，一天一批，第 5 天结局前整个摊给玩家看。
@@ -65,6 +65,10 @@ var called: Array = []
 ## 文案里写 `{caller:米拉}`，显示前由 story_text 换成真号码。
 var caller_numbers: Dictionary = {}
 
+## 每个账户这一局的密码。和电话号码同一个理由：**每局重新随机**，
+## 防止玩家背密码。内容文件里写死了 `pass:` 的就用写死的那个。
+var account_passwords: Dictionary = {}
+
 
 func _ready() -> void:
 	add_to_group(SaveState.GROUP)
@@ -80,6 +84,7 @@ func reset() -> void:
 	day = 0
 	called = []
 	caller_numbers = {}
+	account_passwords = {}
 	flags = {}
 	current_account = &""
 	account_clearance = 0
@@ -152,7 +157,7 @@ func has_flag(f: StringName) -> bool:
 
 # ── 登录 ────────────────────────────────────────────────
 
-## 登录成功。哪一天登的要一起记下来——电脑每天早上是锁着的。
+## 登录成功。哪一天登的顺手记一笔（只是记录，不影响判定）。
 func login(signed_in: account, day: int) -> void:
 	if signed_in == null:
 		return
@@ -162,7 +167,8 @@ func login(signed_in: account, day: int) -> void:
 	SignalBus.login_succeeded.emit(signed_in)
 
 
-## 退出登录。玩家自己按 Sign out，或者新的一天开工时自动调。
+## 退出登录。**只有玩家自己按 Sign out 才会走到这里**——
+## 开新的一天不再自动登出，昨天登着的号今天照样能用。
 func logout() -> void:
 	if String(current_account).is_empty():
 		return
@@ -172,9 +178,10 @@ func logout() -> void:
 	SignalBus.logged_out.emit()
 
 
-## 第 day 天现在是不是登着的。跨天不算——第 2 天要重新敲一遍。
-func is_logged_in(day: int) -> bool:
-	return not String(current_account).is_empty() and login_day == day
+## 现在是不是登着的。**跨天有效**：登过一次就一直登着，直到玩家自己 Sign out
+## （或者开新局）。所以密码只有第 1 天真的要敲一遍。
+func is_logged_in() -> bool:
+	return not String(current_account).is_empty()
 
 
 ## 当前权限。没登录就是 -1（比任何档案的 clearance 都低，什么都查不到）。
@@ -223,6 +230,38 @@ func seed_caller_numbers(book: world_book) -> void:
 ## 某人这一局的号码，没有就是空串。
 func caller_number(contact_name: StringName) -> String:
 	return str(caller_numbers.get(contact_name, ""))
+
+
+## 开局给每个账户定这一局的密码：内容里写死了 `pass:` 的用写死的，
+## 留空的随机摇 4 位（互不重复）。
+##
+## **每局重新随机**是设计要求——密码抄在记事本上，背下来就没意义了。
+## 4 位是因为记事本一行只写得下 6 个字符（见 notes_page）。
+func seed_account_passwords(book: world_book) -> void:
+	if book == null:
+		return
+	var used: Array = []
+	for a in book.accounts:
+		if a != null and not a.fixed_password.is_empty():
+			used.append(a.fixed_password)
+	for a in book.accounts:
+		if a == null or account_passwords.has(a.username):
+			continue
+		if not a.fixed_password.is_empty():
+			account_passwords[a.username] = a.fixed_password
+			continue
+		var secret := ""
+		for attempt in range(64):
+			secret = str(randi_range(1000, 9999))
+			if not used.has(secret):
+				break
+		used.append(secret)
+		account_passwords[a.username] = secret
+
+
+## 某个账户这一局的密码，没有就是空串（空串谁都登不进去）。
+func account_password(username: StringName) -> String:
+	return str(account_passwords.get(username, ""))
 
 
 func mark_called(contact_name: StringName) -> void:
@@ -314,6 +353,7 @@ func save_data() -> Dictionary:
 		"day": day,
 		"called": called,
 		"caller_numbers": caller_numbers,
+		"account_passwords": account_passwords,
 	}
 
 
@@ -332,4 +372,5 @@ func load_data(d: Dictionary) -> void:
 	day = int(d.get("day", 0))
 	called = d.get("called", [])
 	caller_numbers = d.get("caller_numbers", {})
+	account_passwords = d.get("account_passwords", {})
 	SignalBus.scores_changed.emit(scores.duplicate())

@@ -5,7 +5,8 @@
 # ── Accounts ────────────────────────────────────────────
 
 [account hrtemp]
-pass: 4471
+# 密码留空 = 每局随机 4 位（抄在桌上那本记事本第 1 页）。
+pass:
 name: HR Lead
 clearance: 2
 

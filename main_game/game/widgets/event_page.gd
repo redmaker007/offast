@@ -28,6 +28,11 @@ const EVENTS := {
 var _player: conversation_player
 var _playing := false
 
+## 正在演的是哪一段：桥段记 key（"caller"/"electricbox"/…），
+## 通话记联系人名。换语言时靠它把同一段的另一种语言找回来。
+var _source_kind := &""
+var _source_id := &""
+
 
 func _ready() -> void:
 	visible = false
@@ -35,6 +40,7 @@ func _ready() -> void:
 	_player.finished.connect(_on_finished)
 	for signal_name in EVENTS:
 		SignalBus.connect(signal_name, _on_event_requested.bind(EVENTS[signal_name]))
+	SignalBus.story_content_reloaded.connect(_on_content_reloaded)
 
 
 func _on_event_requested(key: StringName) -> void:
@@ -59,17 +65,40 @@ func try_play_day_event(key: StringName) -> bool:
 		return false
 	GameState.set_flag(flag_for(key, day))
 
-	play_conversation(c)
+	play_conversation(c, &"event", key)
 	return true
 
 
 ## 播任意一段对话（拨通电话之后用的就是这个）。
-func play_conversation(c: conversation) -> void:
+## kind/id 是给「换语言时找回同一段」用的，不传就只是不支持中途换语言。
+func play_conversation(c: conversation, kind := &"", id := &"") -> void:
 	if _playing or c == null or c.is_empty():
 		return
+	_source_kind = kind
+	_source_id = id
 	_playing = true
 	visible = true
 	_player.play(c)
+
+
+## 换语言：把正在演的这一段换成另一种语言的同一段，位置不变。
+func _on_content_reloaded(_locale: String) -> void:
+	if not _playing:
+		return
+	var c := _current_source()
+	if c != null:
+		_player.resume(c, _player.position())
+
+
+## 正在演的那一段，在**当前语言**的内容里对应的是哪一份。
+func _current_source() -> conversation:
+	match _source_kind:
+		&"event":
+			return %story_book.event_for(%round_manager.current_day, _source_id)
+		&"call":
+			var who: contact = %story_book.contact_by_name(_source_id)
+			return who.call if who != null else null
+	return null
 
 
 ## 「今天这个物件已经播过了」的 flag 名。测试要能拼出同一个名字。
@@ -81,4 +110,6 @@ func _on_finished() -> void:
 	if not _playing:
 		return
 	_playing = false
+	_source_kind = &""
+	_source_id = &""
 	visible = false

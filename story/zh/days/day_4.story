@@ -1,10 +1,12 @@
 # 第 4 天：两个头目按你第三天怎么处理瑞克各自反应。
 # 班纳暴怒版附一条 fire 掉鲍勃的 4 级命令 —— 那正是把鲍勃拉进人事表的唯一途径。
-# 主角自己这一行从今天起出现（给自己批 promotion = 结局 B 的钩子）。
+# 主角自己那一行**只有罗德里克真的暗示了「你也该为自己想想」才出现**——
+# 没人提起过的话，给自己批 promotion 不该是个摆在表上的选项。
 
 [day]
 filler: 2
-roster: Bob, me
+roster: Bob
+roster: me if=did(fire,Rick,day3)
 
 [story]
 them: 第四天。

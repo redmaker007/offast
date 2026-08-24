@@ -18,7 +18,13 @@ const LINES := 3
 const MAX_CHARS := 6
 
 ## 开局就印在本子上的内容，扁平存：下标 = 页 * 3 + 行。
-## 第 1 天的电脑账号密码就写在这儿（第 1 页前两行）。玩家可以擦掉重写。
+##
+## **留空（默认）就自动印开局那个账户的用户名和密码**（第 1 页前两行），
+## 用户名从 world.story 取，密码问 GameState（每局随机）——账号密码本来就在那儿，
+## 在场景里另抄一份的话，两边会不一致，而且**编辑器一重存这条 @export 就没了**
+## （已经被抹掉两次，玩家第 1 天直接登不进电脑）。内容只留一处才不会再丢。
+##
+## 想印别的东西（后面几天的备忘之类）就在 Inspector 里填，填了就完全按填的来。
 @export var initial_lines: PackedStringArray = []
 
 var save_id := "notes_page"
@@ -42,16 +48,40 @@ func _ready() -> void:
 	_reset()
 	SignalBus.open_notes_request.connect(_on_open_request)
 	SignalBus.game_restored.connect(_refresh)
+	# 开新局时再印一次：密码是那时候才摇出来的（这个节点的 _ready 比它早）。
+	SignalBus.game_started.connect(_reset)
 
 
 ## 灌初始内容。少写的行就是空的，多写的忽略。
 func _reset() -> void:
+	var seed_lines := initial_lines if not initial_lines.is_empty() else _printed_credentials()
 	lines = PackedStringArray()
 	for i in range(PAGES * LINES):
-		var text := String(initial_lines[i]) if i < initial_lines.size() else ""
+		var text := String(seed_lines[i]) if i < seed_lines.size() else ""
 		lines.append(text.substr(0, MAX_CHARS))
 	page = 0
 	_refresh()
+
+
+## 开局那个账户的用户名 + 密码，印在第 1 页前两行。
+##
+## 取的是 world.story 里**第一个** [account]——后面几天拿到的号是往下加的，
+## 开局手上这个永远是第一个。取不到就返回空的（本子就是空本子，不炸）。
+##
+## 用户名必须 <= MAX_CHARS 个字符，不然抄进本子会被截断、玩家照着敲登不进去。
+func _printed_credentials() -> PackedStringArray:
+	var book := get_node_or_null("%story_book")
+	if book == null or book.world == null or book.world.accounts.is_empty():
+		return PackedStringArray()
+	var first: account = book.world.accounts[0]
+	if first == null:
+		return PackedStringArray()
+	var user := String(first.username)
+	# 密码是**这一局摇出来的**（内容文件里 pass: 留空），所以问 GameState 不读资源。
+	var secret := GameState.account_password(first.username)
+	if user.length() > MAX_CHARS or secret.length() > MAX_CHARS:
+		push_warning("账户 %s 的用户名或密码超过 %d 个字符，记事本上会被截断" % [user, MAX_CHARS])
+	return PackedStringArray([user, secret])
 
 
 func _on_open_request() -> void:

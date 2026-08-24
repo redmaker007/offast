@@ -21,6 +21,7 @@ func _ready() -> void:
 	_player.finished.connect(_on_player_finished)
 	SignalBus.round_state_change.connect(_on_round_state_change)
 	SignalBus.game_restored.connect(_refresh)
+	SignalBus.story_content_reloaded.connect(_on_content_reloaded)
 
 
 func _on_round_state_change(_rs) -> void:
@@ -33,6 +34,14 @@ func _refresh() -> void:
 	visible = showing
 	if showing:
 		play(conversation_for_day(%round_manager.current_day))
+
+
+## 换语言之后内容整套换了一份：**正在演的那一句要就地换过来**，
+## 不能等下一句才生效，也不该从头重播。
+func _on_content_reloaded(_locale: String) -> void:
+	if not visible or not _player.is_playing():
+		return
+	_player.resume(conversation_for_day(%round_manager.current_day), _player.position())
 
 
 ## 第 day 天（从 1 开始）该播哪段剧情。没写就是 null，

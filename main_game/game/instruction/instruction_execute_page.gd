@@ -8,10 +8,12 @@ extends PanelContainer
 ##
 ## 行是按当天名单动态生成的，所以场景里只放一个空的 %personnel_list 容器。
 
+## 按钮上印的符号。**四个动作要一眼分得开**：升职是职级的事，用字母 P；
+## 加薪/减薪都是钱的事，所以共用 $、靠箭头分方向。
 const ACTION_LABELS := {
-	"Promotion": "↑",
-	"Reduction": "↓",
-	"Raise": "$",
+	"Promotion": "P",
+	"Reduction": "$↓",
+	"Raise": "$↑",
 	"Fire": "✕",
 }
 
@@ -19,6 +21,8 @@ const ACTION_LABELS := {
 func _ready() -> void:
 	SignalBus.round_state_change.connect(_on_round_state_change)
 	SignalBus.game_restored.connect(_rebuild)
+	# 换语言：表上显示的是档案里的名字，得重铺一遍。
+	SignalBus.story_content_reloaded.connect(func(_loc: String) -> void: _rebuild())
 
 
 func _on_round_state_change(rs) -> void:

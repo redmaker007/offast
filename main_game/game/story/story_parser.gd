@@ -14,6 +14,7 @@ class_name story_parser
 ##     [day]                      这一天的参数
 ##     filler: 4                    随机填充信封数
 ##     roster: Mira, Jack           强制进人事表的剧情角色
+##     roster: me if=did(fire,Rick,day3)   条件成立才进表
 ##
 ##     [story]                    开场剧情
 ##     them: 对方说的话
@@ -42,7 +43,7 @@ class_name story_parser
 ##     them: ...
 ##
 ##     [account hr_temp]
-##     pass: 4471
+##     pass:                   写死的密码；留空 = 每局随机 4 位
 ##     name: Temp HR
 ##     clearance: 1
 ##
@@ -464,12 +465,37 @@ func _day_field(line: String) -> void:
 				return
 			_day.filler_emails = int(kv[1])
 		"roster":
-			for name in kv[1].split(",", false):
-				var n := String(name).strip_edges()
-				if not n.is_empty():
-					_day.story_roster.append(StringName(n))
+			_roster_field(kv[1])
 		_:
 			_error("[day] 里不认识的字段：%s" % kv[0])
+
+
+## `roster: Bob, Mira` —— 无条件进人事表。
+## `roster: me if=did(fire,Rick,day3)` —— 条件成立才上表（条件管这一行所有名字）。
+##
+## 可以写多行，累加。条件里有空格照例要加引号：`roster: me if="not flag:x"`。
+func _roster_field(value: String) -> void:
+	var names := value
+	var cond := ""
+	var if_at := value.rfind(" if=")
+	if if_at >= 0:
+		names = value.substr(0, if_at)
+		cond = _unquote(value.substr(if_at + 4).strip_edges())
+		var problem := story_condition.validate(cond)
+		if not problem.is_empty():
+			_error(problem)
+
+	for name in names.split(",", false):
+		var n := String(name).strip_edges()
+		if n.is_empty():
+			continue
+		if cond.is_empty():
+			_day.story_roster.append(StringName(n))
+		else:
+			var rule := roster_rule.new()
+			rule.employee_name = StringName(n)
+			rule.condition = cond
+			_day.conditional_roster.append(rule)
 
 
 func _dialogue_line(line: String) -> void:
@@ -630,7 +656,8 @@ func _account_line(line: String) -> void:
 		return
 	match kv[0]:
 		"pass":
-			_account.password = kv[1]
+			# 留空 = 这一局随机摇一个（见 GameState.seed_account_passwords）。
+			_account.fixed_password = kv[1]
 		"name":
 			_account.display_name = kv[1]
 		"clearance":

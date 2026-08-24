@@ -39,7 +39,8 @@ func _shoot_game() -> void:
 	await _snap("login_failed")
 
 	login.get_node("%login_user").text = "hrtemp"
-	login.get_node("%login_pass").text = "4471"
+	# 密码每局随机，问 GameState 要这一局的那个。
+	login.get_node("%login_pass").text = GameState.account_password(&"hrtemp")
 	login._on_sign_in_pressed()
 	await _wait(0.4)
 	await _snap("laptop_select")
@@ -49,6 +50,11 @@ func _shoot_game() -> void:
 	scene.get_node("email_reader").read_next_email()
 	await _wait(0.4)
 	await _snap("email_reply")
+
+	# 人事表：四个动作按钮的符号（P / $↑ / $↓ / ✕）要一眼分得开。
+	SignalBus.open_instruction_page_request.emit()
+	await _wait(0.4)
+	await _snap("instruction_page")
 
 	# 档案页：低权限的号只查得到一部分人。
 	SignalBus.open_profile_page_request.emit()

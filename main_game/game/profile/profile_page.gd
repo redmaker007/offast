@@ -17,6 +17,8 @@ func _ready() -> void:
 	SignalBus.login_succeeded.connect(_on_login_changed)
 	SignalBus.logged_out.connect(_on_login_changed)
 	SignalBus.game_restored.connect(_rebuild)
+	# 换语言：名单和正文都跟着语言走。
+	SignalBus.story_content_reloaded.connect(func(_loc: String) -> void: _rebuild())
 	SignalBus.round_state_change.connect(_on_round_state_change)
 	_rebuild()
 

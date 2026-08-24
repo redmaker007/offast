@@ -153,6 +153,26 @@ them: Glass.
 
 	_eq("填充信封数", r.day.filler_emails, 2)
 	_eq("点名的剧情角色", r.day.story_roster, [&"Mira", &"Jack"] as Array[StringName])
+
+	# roster 可以带条件：条件成立才上表（第 4 天主角自己那一行就是这么写的）。
+	var cond_roster := story_parser.parse(
+		"[day]
+roster: Bob
+roster: me if=did(fire,Rick,day3)
+", "r.story")
+	_no_errors(cond_roster)
+	if cond_roster.day != null:
+		_eq("无条件的还在 story_roster 里",
+			cond_roster.day.story_roster, [&"Bob"] as Array[StringName])
+		_eq("带条件的进了 conditional_roster", cond_roster.day.conditional_roster.size(), 1)
+		if not cond_roster.day.conditional_roster.is_empty():
+			_eq("带条件那行的人", cond_roster.day.conditional_roster[0].employee_name, &"me")
+			_eq("带条件那行的条件",
+				cond_roster.day.conditional_roster[0].condition, "did(fire,Rick,day3)")
+	var bad_roster := story_parser.parse("[day]
+roster: me if=nonsense
+", "r.story")
+	_is_true("roster 的条件写错了会报错", not bad_roster.ok())
 	_is_true("电话有内容", r.day.caller != null and not r.day.caller.is_empty())
 	_is_true("电箱有内容", r.day.electricbox != null)
 	_is_true("窗户有内容", r.day.window != null)
@@ -195,12 +215,22 @@ Second paragraph.
 
 	var a: account = r.world.accounts[0]
 	_eq("用户名", a.username, &"hr_temp")
-	_eq("密码", a.password, "4471")
+	_eq("写死的密码", a.fixed_password, "4471")
 	_eq("显示名", a.display_name, "Temp HR")
 	_eq("权限等级", a.clearance, 1)
-	_is_true("密码对得上", a.matches("hr_temp", "4471"))
-	_is_true("用户名不分大小写", a.matches("HR_TEMP", "4471"))
-	_is_false("密码错了就是错了", a.matches("hr_temp", "4472"))
+	_is_true("用户名对得上", a.matches_user("hr_temp"))
+	_is_true("用户名不分大小写", a.matches_user("HR_TEMP"))
+	_is_true("用户名去首尾空格", a.matches_user("  hr_temp "))
+	_is_false("别人的号对不上", a.matches_user("someone"))
+
+	# pass: 留空 = 这一局随机摇一个（防止玩家背密码）。
+	var r2 := story_parser.parse("[account rolling]
+pass:
+clearance: 1
+", "w2.story")
+	_no_errors(r2)
+	if r2.world != null and not r2.world.accounts.is_empty():
+		_eq("留空就是没有写死的密码", r2.world.accounts[0].fixed_password, "")
 
 	var p: employee_profile = r.world.profiles[0]
 	_eq("员工名", p.employee_name, &"Mira")
@@ -466,7 +496,7 @@ func _test_real_files() -> void:
 			if String(a.username) == "hrtemp":
 				_eq("主角的号是 2 级", a.clearance, 2)
 				_is_true("用户名写得进记事本一行", String(a.username).length() <= 6)
-				_is_true("密码也写得下", a.password.length() <= 6)
+				_is_true("写死的密码也写得下", a.fixed_password.length() <= 6)
 
 	for i in range(1, 6):
 		var day := load("res://story/zh/days/day_%d.story" % i) as day_plan
@@ -541,6 +571,14 @@ func _test_locales_match() -> void:
 		_eq("第 %d 天的剧情信数一样" % i, en_day.scripted_emails.size(), zh_day.scripted_emails.size())
 		_eq("第 %d 天的填充信数一样" % i, en_day.filler_emails, zh_day.filler_emails)
 		_eq("第 %d 天点名的人一样" % i, en_day.story_roster, zh_day.story_roster)
+		_eq("第 %d 天带条件上表的人数一样" % i,
+			en_day.conditional_roster.size(), zh_day.conditional_roster.size())
+		for j in range(zh_day.conditional_roster.size()):
+			_eq("第 %d 天带条件上表的第 %d 个人一样" % [i, j + 1],
+				en_day.conditional_roster[j].employee_name,
+				zh_day.conditional_roster[j].employee_name)
+			_eq("第 %d 天带条件上表的第 %d 个条件一样" % [i, j + 1],
+				en_day.conditional_roster[j].condition, zh_day.conditional_roster[j].condition)
 		_eq("第 %d 天的结算规则数一样" % i, en_day.score_rules.size(), zh_day.score_rules.size())
 		for j in range(zh_day.scripted_emails.size()):
 			_eq("第 %d 天第 %d 封信的 id 一样" % [i, j + 1],

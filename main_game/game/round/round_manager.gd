@@ -83,6 +83,10 @@ func start_game() -> void:
 	GameState.seed_levels(%story_book.world)
 	# 电话号码每局重摇一次，防止玩家背号码。
 	GameState.seed_caller_numbers(%story_book.world)
+	# 电脑密码同理：抄在记事本上的那串每局都不一样。
+	GameState.seed_account_passwords(%story_book.world)
+	# 摇完了才广播：记事本要照着这一局的账号密码印第 1 页。
+	SignalBus.game_started.emit()
 	start_next_day()
 
 
@@ -155,9 +159,8 @@ func _begin_workday() -> void:
 	%email_reader.clear_inbox()
 	%instruction_box.clear_box()
 
-	# 新的一天电脑是锁着的：每天上班第一件事是登录。
-	GameState.logout()
-
+	# **电脑不会隔夜自动锁上**：第 1 天敲完密码就一直登着。
+	# 想换号（后面几天拿到别人的账户）得自己去选择页 Sign out。
 	var plan: day_plan = %story_book.plan_for(current_day)
 
 	# 剧情角色进表，但**不占随机员工的名额**：随机的永远抽满 employees_per_day 个。
@@ -194,6 +197,13 @@ func _begin_workday() -> void:
 		else:
 			SignalBus.send_email.emit(mail_def.make_email())
 
+	# **人事表上只留今天真的有事要办的人**：随机员工是先抽名字、再按名字发信的，
+	# 信少于人的日子（第 4 天两封、第 5 天一封都没有）就会剩下几个谁都没提过的人，
+	# 摆在表上纯属噪音——玩家得挨个确认「这人是不是我漏读了什么」。
+	# 剧情角色不在此列：他们是作者点名进表的，本来就可能「什么都不用做」。
+	current_random_name_list = _with_instructions(filler_names)
+	current_round_employee_name_list = story_names + current_random_name_list
+
 	# 随机信要是凑出了超过名额的升职，这一天就永远拿不到满分了——
 	# 玩家填不进去的答案不该出现在标准答案里。整批重掷（还没人读过，重掷是安全的）。
 	# 剧情信里作者故意让升职超额是另一回事，那是设计好的两难，所以只重掷随机信。
@@ -202,8 +212,23 @@ func _begin_workday() -> void:
 			_reroll_fillers(plan, filler_names, filler_count)
 			if _promotions_within_limit():
 				break
+		# 重掷换了一批信，收到指令的人跟着变了，表得按新的那批重铺。
+		current_random_name_list = _with_instructions(filler_names)
+		current_round_employee_name_list = story_names + current_random_name_list
 
 	%day_clock.start()
+
+
+## 这批随机员工里今天真的收到指令的那些（顺序不变）。
+## 查的是 instruction_box——它听的是「信发出去了」，不是「玩家读了」，
+## 所以开工那一刻就是全的。
+func _with_instructions(names: Array) -> Array:
+	var truth: Dictionary = %instruction_box.get_all()
+	var kept: Array = []
+	for n in names:
+		if truth.has(String(n)):
+			kept.append(n)
+	return kept
 
 
 ## 今天真正会发出去的剧情信：`if=` 条件不成立的直接不算数。
@@ -229,6 +254,15 @@ func _story_names(plan: day_plan, mails: Array) -> Array:
 		var s_name := String(n)
 		if not s_name.is_empty() and not names.has(s_name):
 			names.append(s_name)
+	# 带条件的那些：条件不成立就不上表。第四天主角自己那一行就是这么来的——
+	# 只有罗德里克真的暗示了「你也该为自己想想」，给自己批 promotion 才是个选项。
+	for rule in plan.conditional_roster:
+		if rule == null or String(rule.employee_name).is_empty():
+			continue
+		var c_name := String(rule.employee_name)
+		if names.has(c_name) or not story_condition.eval(rule.condition):
+			continue
+		names.append(c_name)
 	for mail_def in mails:
 		if mail_def.targets_all_random():
 			continue

@@ -59,4 +59,4 @@ func _dial() -> void:
 	# 记下打通过谁：条件 called(米拉) 查的就是这个。
 	GameState.mark_called(who.contact_name)
 	await close()
-	%event_page.play_conversation(who.call)
+	%event_page.play_conversation(who.call, &"call", who.contact_name)

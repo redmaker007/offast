@@ -31,6 +31,10 @@ class_name day_plan
 ## 不写的话玩家的表上没有这一行，收到命令也没处填。
 @export var story_roster: Array[StringName] = []
 
+## 条件成立才上表的角色（`roster: me if=did(fire,Rick,day3)`）。
+## 「今天有没有人提起过他」会变的角色写这儿，见 roster_rule。
+@export var conditional_roster: Array[roster_rule] = []
+
 @export_group("日终结算")
 
 ## 当天的「逻辑项」：条件成立就加对应的结局分。按写的顺序判，互不排斥。

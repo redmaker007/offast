@@ -1,10 +1,12 @@
 # Day 4: both bosses react to what you did to Rick on day 3.
 # Banner's angry version carries a level-4 order to fire Bob — the only way Bob
-# gets onto the form today. Your own row appears from today (self-promotion = ending B).
+# gets onto the form today. Your own row only shows up when Roderick actually hints
+# at it ("think about yourself for once") — nobody brings it up, it is not an option.
 
 [day]
 filler: 2
-roster: Bob, me
+roster: Bob
+roster: me if=did(fire,Rick,day3)
 
 [story]
 them: Day four.

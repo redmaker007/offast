@@ -49,6 +49,7 @@ func _ready() -> void:
 	await _test_filler_exclude()
 	await _test_conditional_mail()
 	await _test_score_rules()
+	await _test_roster_relevance()
 	await _test_caller_placeholder()
 	await _test_caller_numbers()
 	await _test_dialing()
@@ -57,6 +58,7 @@ func _ready() -> void:
 	await _test_event_once()
 	_test_scene_exports()
 	await _test_locale_switch()
+	await _test_locale_switch_mid_scene()
 	await _test_corner_button()
 
 	await _despawn_scene()
@@ -151,7 +153,7 @@ func _test_save_roundtrip() -> void:
 	_is_true("flag 读回来了", GameState.has_flag(&"blackout_lever"))
 	_eq("登录的账户读回来了", GameState.current_account, &"hrtemp")
 	_eq("权限也读回来了", GameState.clearance(), 2)
-	_is_true("读档回来还登着", GameState.is_logged_in(1))
+	_is_true("读档回来还登着", GameState.is_logged_in())
 	_is_true("已回复的邮件读回来了", GameState.is_email_answered(&"day1_welcome"))
 	_eq("日志条数", GameState.personnel_log.size(), 1)
 	_eq("日志带上了天数", int(GameState.personnel_log[0].get("day", 0)), 1)
@@ -170,8 +172,12 @@ func _test_day_one_content() -> void:
 
 	_eq("剧情信封数", plan.scripted_emails.size(), 3)
 	_is_true("鲍勃在当天名单里", "Bob" in _rm().current_round_employee_name_list)
-	# 剧情角色（米拉）不占随机名额，所以表上是「随机 3 个 + 剧情涉及的人」。
-	_eq("名单人数", _rm().current_round_employee_name_list.size(), _rm().employees_per_day + 1)
+	# 剧情角色（米拉）不占随机名额，所以表上是「今天真有指令的随机员工 + 剧情涉及的人」。
+	# 随机员工的上限是 employees_per_day，没收到信的那些不上表（第 1 天信比人多，通常刚好抽满）。
+	_is_true("随机员工不超过名额",
+		_rm().current_random_name_list.size() <= _rm().employees_per_day)
+	_eq("名单人数", _rm().current_round_employee_name_list.size(),
+		_rm().current_random_name_list.size() + 1)
 	_is_true("主角自己那一行不判对错", not _node("personnel_manager").is_graded(String(GameState.SELF)))
 	_eq("收件箱封数 = 剧情信 + 填充信",
 		_node("email_reader").remaining(), plan.scripted_emails.size() + plan.filler_emails)
@@ -202,7 +208,8 @@ func _test_login() -> void:
 	await _fresh_workday()
 
 	var laptop := _node("%laptop_page")
-	_is_false("开工时电脑是锁着的", GameState.is_logged_in(1))
+	GameState.logout()
+	_is_false("没登录时进不去", GameState.is_logged_in())
 	_eq("没登录时权限比谁都低", GameState.clearance(), -1)
 
 	SignalBus.open_laptop_request.emit()
@@ -212,7 +219,7 @@ func _test_login() -> void:
 	# 密码不对：卡在登录页，还给个说法。
 	_type_login("hrtemp", "0000")
 	await _frames(1)
-	_is_false("密码错了登不进去", GameState.is_logged_in(1))
+	_is_false("密码错了登不进去", GameState.is_logged_in())
 	_is_true("登录页还在", _node("%laptop_login_page").visible)
 	_is_true("给了错误提示", not String(_node("%login_error").text).is_empty())
 
@@ -222,9 +229,15 @@ func _test_login() -> void:
 	_is_false("没登录进不了邮件页", _node("%email_read_page").visible)
 	_is_true("被弹回登录页", _node("%laptop_login_page").visible)
 
-	_type_login("hrtemp", "4471")
+	# 密码每局随机（内容文件里 pass: 留空），所以问 GameState 要这一局的那个。
+	_is_true("内容里没写死密码",
+		_node("story_book").account_by_name(&"hrtemp").fixed_password.is_empty())
+	var secret := GameState.account_password(&"hrtemp")
+	_eq("密码是 4 位", secret.length(), 4)
+	_is_true("密码是数字", secret.is_valid_int())
+	_type_login("hrtemp", secret)
 	await _frames(2)
-	_is_true("密码对了就登进去了", GameState.is_logged_in(1))
+	_is_true("密码对了就登进去了", GameState.is_logged_in())
 	_eq("记下了是谁的号", GameState.current_account, &"hrtemp")
 	_eq("权限跟着账户走", GameState.clearance(), 2)
 	_is_true("自动翻到选择页", _node("%laptop_select_page").visible)
@@ -237,14 +250,18 @@ func _test_login() -> void:
 	# 换号：退出去重登。
 	_node("%laptop_select_page")._on_sign_out_button_pressed()
 	await _frames(2)
-	_is_false("退出登录后不算登着", GameState.is_logged_in(1))
+	_is_false("退出登录后不算登着", GameState.is_logged_in())
 	_is_true("退出后回到登录页", _node("%laptop_login_page").visible)
 
-	# 第二天电脑重新锁上：跨天不算登着。
-	_type_login("hrtemp", "4471")
+	# **电脑不会隔夜锁上**：第 1 天登进去之后一直登着，只有自己 Sign out 才退。
+	_type_login("hrtemp", secret)
 	await _frames(1)
 	await _next_day()
-	_is_false("第 2 天要重新登", GameState.is_logged_in(2))
+	_is_true("第 2 天还登着", GameState.is_logged_in())
+	_eq("还是同一个号", GameState.current_account, &"hrtemp")
+	SignalBus.open_email_page_request.emit()
+	await _frames(1)
+	_is_true("第 2 天不用重登就进得了邮件页", _node("%email_read_page").visible)
 	_eq("天数确实推进了", _rm().current_day, 2)
 	laptop.set_meta("checked", true)
 
@@ -522,12 +539,116 @@ watch yourself.
 	_is_false("另一封没发", ids.has("cold"), str(ids))
 
 
+## 人事表上只有「今天真的被提到的人」：没人提起的随机员工不上表，
+## 带条件的剧情角色（第 4 天的主角自己）要条件成立才上表。
+func _test_roster_relevance() -> void:
+	_section = "人事表只留相关的人"
+
+	# 一封信都不发的日子：表上一个随机员工都没有，只剩作者点名的剧情角色。
+	await _spawn_scene()
+	_swap_day_plan(1, """
+[day]
+filler: 0
+roster: Bob
+[story]
+them: quiet day.
+""")
+	SignalBus.story_finished.emit()
+	await _frames(2)
+	var rm := _rm()
+	_eq("没有信就没有随机员工", rm.current_random_name_list.size(), 0)
+	_eq("表上只剩剧情角色", rm.current_round_employee_name_list, ["Bob"])
+
+	# 信比人少的日子：抽了 employees_per_day 个名字，但只有收到信的才上表。
+	await _spawn_scene()
+	_swap_day_plan(1, """
+[day]
+filler: 1
+[story]
+them: one mail.
+""")
+	SignalBus.story_finished.emit()
+	await _frames(2)
+	rm = _rm()
+	var truth: Dictionary = _node("instruction_box").get_all()
+	_is_true("随机员工不多于信数", rm.current_random_name_list.size() <= 1)
+	for name in rm.current_random_name_list:
+		_is_true("%s 今天真收到了指令" % name, truth.has(String(name)))
+	_eq("表上的人 = 收到指令的人", rm.current_round_employee_name_list.size(), truth.size())
+
+	# `roster: X if=...`：条件不成立就不上表。
+	await _spawn_scene()
+	_swap_day_plan(1, """
+[day]
+filler: 0
+roster: Bob
+roster: me if=flag:invited
+[story]
+them: conditional.
+""")
+	SignalBus.story_finished.emit()
+	await _frames(2)
+	_is_false("条件不成立不上表", String(GameState.SELF) in _rm().current_round_employee_name_list)
+
+	await _spawn_scene()
+	_swap_day_plan(1, """
+[day]
+filler: 0
+roster: Bob
+roster: me if=flag:invited
+[story]
+them: conditional.
+""")
+	GameState.set_flag(&"invited")
+	SignalBus.story_finished.emit()
+	await _frames(2)
+	_is_true("条件成立就上表", String(GameState.SELF) in _rm().current_round_employee_name_list)
+
+	# 真正的第 4 天：只有罗德里克那封「你也该为自己想想」发得出去，
+	# 主角自己那一行才出现——没人提起过的话，给自己批 promotion 不该是个选项。
+	await _spawn_scene()
+	var book := _node("story_book")
+	var plan = book.plan_for(4)
+	_is_true("第 4 天有内容", plan != null)
+	if plan == null:
+		return
+	GameState.day = 4
+	var mails: Array = _rm()._mails_for_today(plan)
+	_is_false("没 fire 掉瑞克时主角不上表",
+		String(GameState.SELF) in _rm()._story_names(plan, mails))
+	GameState.log_personnel(3, {"employee": "Rick", "actual": {"Fire": true}})
+	mails = _rm()._mails_for_today(plan)
+	var mail_ids: Array = []
+	for m in mails:
+		mail_ids.append(String(m.id))
+	_is_true("fire 掉瑞克之后罗德里克那封信发得出去",
+		mail_ids.has("day4_roderick_c"), str(mail_ids))
+	_is_true("这时主角才上表",
+		String(GameState.SELF) in _rm()._story_names(plan, mails))
+
+	# 真正的第 5 天：一封填充信都不发（filler: 0），表上就该一个随机员工都没有。
+	await _spawn_scene()
+	_rm().current_day = 5
+	SignalBus.story_finished.emit()
+	await _frames(2)
+	_eq("第 5 天没有随机员工", _rm().current_random_name_list.size(), 0)
+	var day5_plan = _node("story_book").plan_for(5)
+	for name in _rm().current_round_employee_name_list:
+		_is_true("第 5 天表上的 %s 是剧情角色" % name,
+			_node("story_book").profile(StringName(name)) != null
+				or String(name) == String(GameState.SELF),
+			str(_rm().current_round_employee_name_list))
+	_is_true("第 5 天表上还是有人的", _rm().current_round_employee_name_list.size() > 0)
+
+
 ## `[score]`：日终按当天做过什么加结局分。
 func _test_score_rules() -> void:
 	_section = "[score] 日终结算"
+	# filler 要有信：随机员工是靠「今天有没有人提到他」上表的，
+	# 一封信都不发的日子表上根本没有随机员工，也就无所谓「全 fire 掉」。
 	var plan_text := """
 [day]
-filler: 0
+filler: 3
 [score]
 if did(fire,*random) -> A+2
 if not did(fire,*any) -> C+2
@@ -876,6 +997,55 @@ func _test_locale_switch() -> void:
 	await _frames(2)
 	_eq("换回中文", book.loaded_locale, "zh")
 	_eq("显示名也换回来", book.profile(&"Bob").label(), "鲍勃")
+
+
+## 换语言时**正在演的那一句**要就地换过来，不是等下一句、也不是从头重播。
+func _test_locale_switch_mid_scene() -> void:
+	_section = "演到一半换语言"
+	await _spawn_scene()
+	LocaleSettings.set_locale("zh", false)
+	await _frames(2)
+
+	# 开场剧情停在第三句上。
+	var page := _node("story_page")
+	var view := _node("%bubble_view")
+	view.chars_per_second = 0.0
+	_is_true("剧情层开着", page.visible)
+	_advance(view)
+	await _frames(1)
+	_advance(view)
+	await _frames(1)
+	var zh_line: String = view.get_node("%text_box").text
+	var at: Dictionary = page._player.position()
+	_is_false("中文这一句不是空的", zh_line.is_empty())
+
+	LocaleSettings.set_locale("en", false)
+	await _frames(2)
+	var en_line: String = view.get_node("%text_box").text
+	_is_true("这一句当场换成英文", en_line != zh_line, "%s / %s" % [zh_line, en_line])
+	_eq("停在同一个位置", page._player.position(), at)
+
+	# 换回去还是原来那一句。
+	LocaleSettings.set_locale("zh", false)
+	await _frames(2)
+	_eq("换回中文还是同一句", view.get_node("%text_box").text, zh_line)
+
+	# 桥段（电话/电箱）也一样。
+	SignalBus.story_finished.emit()
+	await _frames(2)
+	var event_page_node := _node("%event_page")
+	var event_view := _node("%event_bubble")
+	event_view.chars_per_second = 0.0
+	SignalBus.open_caller_request.emit()
+	await _frames(2)
+	if event_page_node.visible:
+		var zh_event: String = event_view.get_node("%text_box").text
+		LocaleSettings.set_locale("en", false)
+		await _frames(2)
+		_is_true("桥段这一句也换了", event_view.get_node("%text_box").text != zh_event,
+			zh_event)
+		LocaleSettings.set_locale("zh", false)
+		await _frames(2)
 
 
 ## 标题栏右上角那个键一个键两用：选择页/登录页上是红叉（关窗），

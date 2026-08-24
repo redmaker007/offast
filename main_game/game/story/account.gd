@@ -8,7 +8,10 @@ class_name account
 ## 后面几天推进剧情的主要方式就是拿到等级更高的号。
 
 @export var username: StringName = &""
-@export var password: String = ""
+
+## 写死的密码。**留空 = 每局随机 4 位**（和电话号码一个道理：防止玩家背密码）。
+## 这一局真正生效的密码问 `GameState.account_password(username)`，别直接读这个字段。
+@export var fixed_password: String = ""
 
 ## 登录后显示的名字，比如 "Temp HR"。
 @export var display_name: String = ""
@@ -16,6 +19,10 @@ class_name account
 @export_range(0, 9) var clearance: int = 0
 
 
-func matches(user: String, secret: String) -> bool:
-	# 用户名不区分大小写、去掉首尾空格；密码严格匹配。
-	return String(username).to_lower() == user.strip_edges().to_lower() and password == secret
+## 用户名对不对（不区分大小写、去掉首尾空格）。
+##
+## **密码不在这里比**：这一局的密码可能是随机摇出来的，只有 GameState 知道，
+## 而这个资源是 .story 导入产物、编辑器里也会加载，碰不到 autoload。
+## 完整的校验走 `story_book.account_for()`。
+func matches_user(user: String) -> bool:
+	return String(username).to_lower() == user.strip_edges().to_lower()

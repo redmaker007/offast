@@ -12,13 +12,29 @@ extends PanelContainer
 ## 当前这封信的定义（剧情信才有）。回复按钮按它生成。
 var _def: email_def = null
 
+## 当前这封信的运行时对象。换语言重排正文时还要用它拼那句人事指令。
+var _last_email: email = null
+
 
 func _ready() -> void:
 	SignalBus.show_email.connect(on_show_email)
 	SignalBus.inbox_empty.connect(_on_inbox_empty)
 	SignalBus.round_state_change.connect(_on_round_state_change)
 	SignalBus.game_restored.connect(_clear)
+	SignalBus.story_content_reloaded.connect(_on_content_reloaded)
 	_clear()
+
+
+## 换语言：正在看的这封信要就地换成另一种语言的同一封（回复选没选过不受影响）。
+func _on_content_reloaded(_locale: String) -> void:
+	if _def == null or not visible:
+		return
+	var again: email_def = %story_book.mail_def(_def.id)
+	if again == null:
+		return
+	_def = again
+	%sender_name_text.text = _def.sender_name
+	%email_content.text = story_text.resolve(_format_def(_def, _last_email))
 
 
 func _on_round_state_change(_rs) -> void:
@@ -40,6 +56,7 @@ func _on_inbox_empty() -> void:
 
 
 func on_show_email(e:email):
+	_last_email = e
 	_def = %story_book.mail_def(e.id) if e.is_scripted() else null
 	_clear_replies()
 

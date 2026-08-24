@@ -22,7 +22,7 @@
 [ext_resource type="Texture2D" uid="uid://d10xosxgf3efw" path="res://theme/items/5t.png" id="13_i2w82"]
 [ext_resource type="Texture2D" uid="uid://cydsvnuy4piet" path="res://theme/items/9t.png" id="14_g1emn"]
 [ext_resource type="Texture2D" uid="uid://3srrhri3mfdp" path="res://theme/false_mark2.png" id="15_0ogao"]
-[ext_resource type="Texture2D" path="res://theme/back_mark.png" id="15_back"]
+[ext_resource type="Texture2D" uid="uid://bmyntnv6wqji1" path="res://theme/back_mark.png" id="15_back"]
 [ext_resource type="Texture2D" uid="uid://b8ajguubnoaqo" path="res://theme/items/test-export.png" id="15_csskb"]
 [ext_resource type="Script" uid="uid://cd5gsxlwlycv5" path="res://main_game/game/widgets/cancel_button.gd" id="16_asovh"]
 [ext_resource type="Script" uid="uid://wkvk11jgmydc" path="res://main_game/game/widgets/back_to_menu_button.gd" id="17_back"]
@@ -47,14 +47,14 @@
 [ext_resource type="PackedScene" path="res://main_game/menu/settings_panel.tscn" id="47_settings"]
 [ext_resource type="Script" uid="uid://bkuloffj8na4p" path="res://addons/ui_polish/popup_window.gd" id="48_popup"]
 [ext_resource type="Script" uid="uid://4lqdul637odc" path="res://main_game/game/widgets/notice_dialog.gd" id="49_notice"]
+[ext_resource type="Script" uid="uid://b6quc6m5t24gh" path="res://main_game/game/story/story_book.gd" id="50_book"]
+[ext_resource type="Script" uid="uid://6mx4sfio6hy3" path="res://main_game/game/laptop_login_page.gd" id="51_login"]
+[ext_resource type="Script" uid="uid://tv4djpnsmprl" path="res://main_game/game/notes_page.gd" id="52_notes"]
+[ext_resource type="Script" uid="uid://cxikb27eb15ks" path="res://main_game/game/caller_page.gd" id="53_caller"]
 [ext_resource type="Script" uid="uid://klgb2f1kjeke" path="res://main_game/game/round/ending_director.gd" id="53_edir"]
 [ext_resource type="Script" uid="uid://csjp14vv4lbdx" path="res://main_game/game/profile/profile_page.gd" id="54_ppage"]
 [ext_resource type="Script" uid="uid://d2qt5cyu7hpol" path="res://main_game/game/widgets/event_page.gd" id="56_event"]
 [ext_resource type="Script" uid="uid://yl8oedsv8dfv" path="res://main_game/game/round/log_overlay.gd" id="57_log"]
-[ext_resource type="Script" path="res://main_game/game/story/story_book.gd" id="50_book"]
-[ext_resource type="Script" path="res://main_game/game/laptop_login_page.gd" id="51_login"]
-[ext_resource type="Script" path="res://main_game/game/notes_page.gd" id="52_notes"]
-[ext_resource type="Script" path="res://main_game/game/caller_page.gd" id="53_caller"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_gq25j"]
 shader = ExtResource("8_wxc6e")
@@ -169,7 +169,7 @@ script = ExtResource("7_6m4a6")
 unique_name_in_owner = true
 script = ExtResource("53_edir")
 
-[node name="story_book" type="Node" parent="."]
+[node name="story_book" type="Node" parent="." unique_id=167033838]
 unique_name_in_owner = true
 script = ExtResource("50_book")
 
@@ -604,66 +604,89 @@ text = "Files"
 hover_volume = 0.5
 click_sound = ExtResource("12_6xou6")
 
-[node name="laptop_login_page" type="PanelContainer" parent="Control/laptop_page/frame/pages"]
+[node name="signed_in_label" type="Label" parent="Control/laptop_page/frame/pages/laptop_select_page/VBoxContainer" unique_id=1143857396]
+unique_name_in_owner = true
+modulate = Color(1, 1, 1, 0.6)
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "signed in: -"
+horizontal_alignment = 1
+
+[node name="sign_out_button" type="Button" parent="Control/laptop_page/frame/pages/laptop_select_page/VBoxContainer" unique_id=2028698588]
+modulate = Color(0.9098039, 0.8352941, 0.6901961, 1)
+custom_minimum_size = Vector2(150, 44)
+layout_mode = 2
+size_flags_horizontal = 4
+theme = ExtResource("8_nggn0")
+theme_type_variation = &"LongButton"
+text = "Sign out"
+
+[node name="HoverScale" parent="Control/laptop_page/frame/pages/laptop_select_page/VBoxContainer/sign_out_button" unique_id=1412023384 instance=ExtResource("6_toloy")]
+hover_volume = 0.5
+click_sound = ExtResource("12_6xou6")
+
+[node name="laptop_login_page" type="PanelContainer" parent="Control/laptop_page/frame/pages" unique_id=828406174]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(780, 540)
 custom_maximum_size = Vector2(780, 540)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
+mouse_filter = 2
 theme = ExtResource("8_nggn0")
 theme_type_variation = &"systemPanel"
 script = ExtResource("51_login")
 
-[node name="column" type="VBoxContainer" parent="Control/laptop_page/frame/pages/laptop_login_page"]
+[node name="column" type="VBoxContainer" parent="Control/laptop_page/frame/pages/laptop_login_page" unique_id=907073615]
 layout_mode = 2
+mouse_filter = 2
 theme_override_constants/separation = 16
 alignment = 1
 
-[node name="login_title" type="Label" parent="Control/laptop_page/frame/pages/laptop_login_page/column"]
+[node name="login_title" type="Label" parent="Control/laptop_page/frame/pages/laptop_login_page/column" unique_id=81698383]
 layout_mode = 2
 theme_override_font_sizes/font_size = 28
 text = "NORTHGATE HR"
 horizontal_alignment = 1
 
-[node name="user_row" type="HBoxContainer" parent="Control/laptop_page/frame/pages/laptop_login_page/column"]
+[node name="user_row" type="HBoxContainer" parent="Control/laptop_page/frame/pages/laptop_login_page/column" unique_id=1250834353]
 layout_mode = 2
+mouse_filter = 2
 theme_override_constants/separation = 12
 alignment = 1
 
-[node name="user_label" type="Label" parent="Control/laptop_page/frame/pages/laptop_login_page/column/user_row"]
+[node name="user_label" type="Label" parent="Control/laptop_page/frame/pages/laptop_login_page/column/user_row" unique_id=1104483658]
 custom_minimum_size = Vector2(90, 0)
 layout_mode = 2
-size_flags_vertical = 4
 text = "user"
 horizontal_alignment = 2
 
-[node name="login_user" type="LineEdit" parent="Control/laptop_page/frame/pages/laptop_login_page/column/user_row"]
+[node name="login_user" type="LineEdit" parent="Control/laptop_page/frame/pages/laptop_login_page/column/user_row" unique_id=408636384]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(280, 44)
 layout_mode = 2
 theme = ExtResource("8_nggn0")
 
-[node name="pass_row" type="HBoxContainer" parent="Control/laptop_page/frame/pages/laptop_login_page/column"]
+[node name="pass_row" type="HBoxContainer" parent="Control/laptop_page/frame/pages/laptop_login_page/column" unique_id=707231938]
 layout_mode = 2
+mouse_filter = 2
 theme_override_constants/separation = 12
 alignment = 1
 
-[node name="pass_label" type="Label" parent="Control/laptop_page/frame/pages/laptop_login_page/column/pass_row"]
+[node name="pass_label" type="Label" parent="Control/laptop_page/frame/pages/laptop_login_page/column/pass_row" unique_id=652975545]
 custom_minimum_size = Vector2(90, 0)
 layout_mode = 2
-size_flags_vertical = 4
 text = "pass"
 horizontal_alignment = 2
 
-[node name="login_pass" type="LineEdit" parent="Control/laptop_page/frame/pages/laptop_login_page/column/pass_row"]
+[node name="login_pass" type="LineEdit" parent="Control/laptop_page/frame/pages/laptop_login_page/column/pass_row" unique_id=47947388]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(280, 44)
 layout_mode = 2
 theme = ExtResource("8_nggn0")
 secret = true
 
-[node name="sign_in_button" type="Button" parent="Control/laptop_page/frame/pages/laptop_login_page/column"]
+[node name="sign_in_button" type="Button" parent="Control/laptop_page/frame/pages/laptop_login_page/column" unique_id=1299031614]
 modulate = Color(0.9098039, 0.8352941, 0.6901961, 1)
 custom_minimum_size = Vector2(180, 52)
 layout_mode = 2
@@ -672,11 +695,11 @@ theme = ExtResource("8_nggn0")
 theme_type_variation = &"LongButton"
 text = "Sign in"
 
-[node name="HoverScale" parent="Control/laptop_page/frame/pages/laptop_login_page/column/sign_in_button" instance=ExtResource("6_toloy")]
+[node name="HoverScale" parent="Control/laptop_page/frame/pages/laptop_login_page/column/sign_in_button" unique_id=779764295 instance=ExtResource("6_toloy")]
 hover_volume = 0.5
 click_sound = ExtResource("12_6xou6")
 
-[node name="login_error" type="Label" parent="Control/laptop_page/frame/pages/laptop_login_page/column"]
+[node name="login_error" type="Label" parent="Control/laptop_page/frame/pages/laptop_login_page/column" unique_id=1665326779]
 unique_name_in_owner = true
 modulate = Color(0.7176471, 0.24705882, 0.18431373, 1)
 layout_mode = 2
@@ -1065,7 +1088,7 @@ size_flags_vertical = 3
 advance_text = "OK"
 type_sound = ExtResource("43_umbos")
 
-[node name="caller_page" type="PanelContainer" parent="."]
+[node name="caller_page" type="PanelContainer" parent="." unique_id=1244507158]
 unique_name_in_owner = true
 visible = false
 z_index = 15
@@ -1085,26 +1108,26 @@ theme = ExtResource("8_nggn0")
 theme_type_variation = &"systemPanel"
 script = ExtResource("53_caller")
 
-[node name="margin" type="MarginContainer" parent="caller_page"]
+[node name="margin" type="MarginContainer" parent="caller_page" unique_id=982448239]
 layout_mode = 2
 theme_override_constants/margin_left = 32
 theme_override_constants/margin_top = 26
 theme_override_constants/margin_right = 32
 theme_override_constants/margin_bottom = 26
 
-[node name="column" type="VBoxContainer" parent="caller_page/margin"]
+[node name="column" type="VBoxContainer" parent="caller_page/margin" unique_id=898400439]
 layout_mode = 2
 theme_override_constants/separation = 14
 alignment = 1
 
-[node name="dial_title" type="Label" parent="caller_page/margin/column"]
+[node name="dial_title" type="Label" parent="caller_page/margin/column" unique_id=1163046164]
 modulate = Color(1, 1, 1, 0.6)
 layout_mode = 2
 theme_override_font_sizes/font_size = 15
 text = "DIAL"
 horizontal_alignment = 1
 
-[node name="dial_input" type="LineEdit" parent="caller_page/margin/column"]
+[node name="dial_input" type="LineEdit" parent="caller_page/margin/column" unique_id=1255055864]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 52)
 layout_mode = 2
@@ -1112,14 +1135,14 @@ theme = ExtResource("8_nggn0")
 alignment = 1
 max_length = 6
 
-[node name="dial_status" type="Label" parent="caller_page/margin/column"]
+[node name="dial_status" type="Label" parent="caller_page/margin/column" unique_id=2026470605]
 unique_name_in_owner = true
 modulate = Color(0.7176471, 0.24705882, 0.18431373, 1)
 layout_mode = 2
 theme_override_font_sizes/font_size = 17
 horizontal_alignment = 1
 
-[node name="call_button" type="Button" parent="caller_page/margin/column"]
+[node name="call_button" type="Button" parent="caller_page/margin/column" unique_id=929065631]
 modulate = Color(0.9098039, 0.8352941, 0.6901961, 1)
 custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
@@ -1127,11 +1150,11 @@ theme = ExtResource("8_nggn0")
 theme_type_variation = &"LongButton"
 text = "Call"
 
-[node name="HoverScale" parent="caller_page/margin/column/call_button" instance=ExtResource("6_toloy")]
+[node name="HoverScale" parent="caller_page/margin/column/call_button" unique_id=1400975205 instance=ExtResource("6_toloy")]
 hover_volume = 0.5
 click_sound = ExtResource("12_6xou6")
 
-[node name="hang_up" type="Button" parent="caller_page/margin/column"]
+[node name="hang_up" type="Button" parent="caller_page/margin/column" unique_id=1340925549]
 modulate = Color(0.9098039, 0.8352941, 0.6901961, 1)
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
@@ -1139,11 +1162,11 @@ theme = ExtResource("8_nggn0")
 theme_type_variation = &"LongButton"
 text = "Hang up"
 
-[node name="HoverScale" parent="caller_page/margin/column/hang_up" instance=ExtResource("6_toloy")]
+[node name="HoverScale" parent="caller_page/margin/column/hang_up" unique_id=1017750457 instance=ExtResource("6_toloy")]
 hover_volume = 0.5
 click_sound = ExtResource("12_6xou6")
 
-[node name="notes_page" type="PanelContainer" parent="."]
+[node name="notes_page" type="PanelContainer" parent="." unique_id=174423905]
 unique_name_in_owner = true
 visible = false
 z_index = 15
@@ -1162,53 +1185,52 @@ grow_vertical = 0
 theme = ExtResource("8_nggn0")
 theme_type_variation = &"systemPanel"
 script = ExtResource("52_notes")
-initial_lines = PackedStringArray("hrtemp", "4471")
 
-[node name="margin" type="MarginContainer" parent="notes_page"]
+[node name="margin" type="MarginContainer" parent="notes_page" unique_id=882837791]
 layout_mode = 2
 theme_override_constants/margin_left = 26
 theme_override_constants/margin_top = 22
 theme_override_constants/margin_right = 26
 theme_override_constants/margin_bottom = 22
 
-[node name="column" type="VBoxContainer" parent="notes_page/margin"]
+[node name="column" type="VBoxContainer" parent="notes_page/margin" unique_id=2116267817]
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="note_title" type="Label" parent="notes_page/margin/column"]
+[node name="note_title" type="Label" parent="notes_page/margin/column" unique_id=204134816]
 modulate = Color(1, 1, 1, 0.6)
 layout_mode = 2
 theme_override_font_sizes/font_size = 15
 text = "NOTES"
 horizontal_alignment = 1
 
-[node name="note_line_0" type="LineEdit" parent="notes_page/margin/column"]
+[node name="note_line_0" type="LineEdit" parent="notes_page/margin/column" unique_id=161710263]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 42)
 layout_mode = 2
 theme = ExtResource("8_nggn0")
 max_length = 6
 
-[node name="note_line_1" type="LineEdit" parent="notes_page/margin/column"]
+[node name="note_line_1" type="LineEdit" parent="notes_page/margin/column" unique_id=1938873599]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 42)
 layout_mode = 2
 theme = ExtResource("8_nggn0")
 max_length = 6
 
-[node name="note_line_2" type="LineEdit" parent="notes_page/margin/column"]
+[node name="note_line_2" type="LineEdit" parent="notes_page/margin/column" unique_id=1527046994]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 42)
 layout_mode = 2
 theme = ExtResource("8_nggn0")
 max_length = 6
 
-[node name="nav" type="HBoxContainer" parent="notes_page/margin/column"]
+[node name="nav" type="HBoxContainer" parent="notes_page/margin/column" unique_id=1786889379]
 layout_mode = 2
 theme_override_constants/separation = 10
 alignment = 1
 
-[node name="note_prev" type="Button" parent="notes_page/margin/column/nav"]
+[node name="note_prev" type="Button" parent="notes_page/margin/column/nav" unique_id=261748023]
 unique_name_in_owner = true
 modulate = Color(0.9098039, 0.8352941, 0.6901961, 1)
 custom_minimum_size = Vector2(56, 40)
@@ -1217,19 +1239,18 @@ theme = ExtResource("8_nggn0")
 theme_type_variation = &"LongButton"
 text = "<"
 
-[node name="HoverScale" parent="notes_page/margin/column/nav/note_prev" instance=ExtResource("6_toloy")]
+[node name="HoverScale" parent="notes_page/margin/column/nav/note_prev" unique_id=561008075 instance=ExtResource("6_toloy")]
 hover_volume = 0.5
 click_sound = ExtResource("12_6xou6")
 
-[node name="note_page_label" type="Label" parent="notes_page/margin/column/nav"]
+[node name="note_page_label" type="Label" parent="notes_page/margin/column/nav" unique_id=710927715]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(64, 0)
 layout_mode = 2
-size_flags_vertical = 4
 text = "1 / 5"
 horizontal_alignment = 1
 
-[node name="note_next" type="Button" parent="notes_page/margin/column/nav"]
+[node name="note_next" type="Button" parent="notes_page/margin/column/nav" unique_id=1977796190]
 unique_name_in_owner = true
 modulate = Color(0.9098039, 0.8352941, 0.6901961, 1)
 custom_minimum_size = Vector2(56, 40)
@@ -1238,11 +1259,11 @@ theme = ExtResource("8_nggn0")
 theme_type_variation = &"LongButton"
 text = ">"
 
-[node name="HoverScale" parent="notes_page/margin/column/nav/note_next" instance=ExtResource("6_toloy")]
+[node name="HoverScale" parent="notes_page/margin/column/nav/note_next" unique_id=29773077 instance=ExtResource("6_toloy")]
 hover_volume = 0.5
 click_sound = ExtResource("12_6xou6")
 
-[node name="note_close" type="Button" parent="notes_page/margin/column"]
+[node name="note_close" type="Button" parent="notes_page/margin/column" unique_id=887940825]
 modulate = Color(0.9098039, 0.8352941, 0.6901961, 1)
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
@@ -1250,7 +1271,7 @@ theme = ExtResource("8_nggn0")
 theme_type_variation = &"LongButton"
 text = "Close"
 
-[node name="HoverScale" parent="notes_page/margin/column/note_close" instance=ExtResource("6_toloy")]
+[node name="HoverScale" parent="notes_page/margin/column/note_close" unique_id=619790321 instance=ExtResource("6_toloy")]
 hover_volume = 0.5
 click_sound = ExtResource("12_6xou6")
 
@@ -1395,27 +1416,6 @@ horizontal_alignment = 2
 script = ExtResource("32_ymimj")
 
 [connection signal="pressed" from="Control/laptop_page/frame/title_bar/Control/cancel_button" to="Control/laptop_page" method="_on_cancel_pressed"]
-
-[node name="signed_in_label" type="Label" parent="Control/laptop_page/frame/pages/laptop_select_page/VBoxContainer"]
-unique_name_in_owner = true
-modulate = Color(1, 1, 1, 0.6)
-layout_mode = 2
-theme_override_font_sizes/font_size = 16
-text = "signed in: -"
-horizontal_alignment = 1
-
-[node name="sign_out_button" type="Button" parent="Control/laptop_page/frame/pages/laptop_select_page/VBoxContainer"]
-modulate = Color(0.9098039, 0.8352941, 0.6901961, 1)
-custom_minimum_size = Vector2(150, 44)
-layout_mode = 2
-size_flags_horizontal = 4
-theme = ExtResource("8_nggn0")
-theme_type_variation = &"LongButton"
-text = "Sign out"
-
-[node name="HoverScale" parent="Control/laptop_page/frame/pages/laptop_select_page/VBoxContainer/sign_out_button" instance=ExtResource("6_toloy")]
-hover_volume = 0.5
-click_sound = ExtResource("12_6xou6")
 [connection signal="pressed" from="Control/laptop_page/frame/pages/email_read_page/VBoxContainer/HBoxContainer/profile_button" to="Control/laptop_page/frame/pages/email_read_page" method="_on_profile_button_pressed"]
 [connection signal="pressed" from="Control/laptop_page/frame/pages/email_read_page/VBoxContainer/HBoxContainer/next_email" to="email_reader" method="_on_button_pressed"]
 [connection signal="pressed" from="Control/laptop_page/frame/pages/laptop_select_page/VBoxContainer/HBoxContainer/email_button" to="Control/laptop_page/frame/pages/laptop_select_page" method="_on_email_button_pressed"]
@@ -1423,14 +1423,14 @@ click_sound = ExtResource("12_6xou6")
 [connection signal="pressed" from="Control/laptop_page/frame/pages/laptop_select_page/VBoxContainer/HBoxContainer/profile_button" to="Control/laptop_page/frame/pages/laptop_select_page" method="_on_profile_button_pressed"]
 [connection signal="pressed" from="Control/laptop_page/frame/pages/laptop_select_page/VBoxContainer/sign_out_button" to="Control/laptop_page/frame/pages/laptop_select_page" method="_on_sign_out_button_pressed"]
 [connection signal="pressed" from="Control/laptop_page/frame/pages/laptop_login_page/column/sign_in_button" to="Control/laptop_page/frame/pages/laptop_login_page" method="_on_sign_in_pressed"]
-[connection signal="pressed" from="notes_page/margin/column/nav/note_prev" to="notes_page" method="_on_prev_pressed"]
-[connection signal="pressed" from="notes_page/margin/column/nav/note_next" to="notes_page" method="_on_next_pressed"]
-[connection signal="pressed" from="notes_page/margin/column/note_close" to="notes_page" method="_on_close_pressed"]
-[connection signal="pressed" from="caller_page/margin/column/call_button" to="caller_page" method="_on_call_pressed"]
-[connection signal="pressed" from="caller_page/margin/column/hang_up" to="caller_page" method="_on_close_pressed"]
 [connection signal="pressed" from="Control/calendar_page/frame/window/VBoxContainer/close_button" to="Control/calendar_page/frame/window/VBoxContainer/close_button" method="_on_pressed"]
 [connection signal="pressed" from="result_overlay/card/margin/VBoxContainer/continue_button" to="result_overlay" method="_on_continue_pressed"]
 [connection signal="pressed" from="ending_overlay/card/margin/VBoxContainer/back_button" to="ending_overlay" method="_on_back_pressed"]
+[connection signal="pressed" from="caller_page/margin/column/call_button" to="caller_page" method="_on_call_pressed"]
+[connection signal="pressed" from="caller_page/margin/column/hang_up" to="caller_page" method="_on_close_pressed"]
+[connection signal="pressed" from="notes_page/margin/column/nav/note_prev" to="notes_page" method="_on_prev_pressed"]
+[connection signal="pressed" from="notes_page/margin/column/nav/note_next" to="notes_page" method="_on_next_pressed"]
+[connection signal="pressed" from="notes_page/margin/column/note_close" to="notes_page" method="_on_close_pressed"]
 [connection signal="pressed" from="log_overlay/card/margin/column/continue_button" to="log_overlay" method="_on_continue_pressed"]
 [connection signal="pressed" from="back_to_menu" to="back_to_menu" method="_on_pressed"]
 [connection signal="pressed" from="settings_button" to="." method="_on_settings_pressed"]

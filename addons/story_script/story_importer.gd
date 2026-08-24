@@ -34,7 +34,7 @@ func _get_resource_type() -> String:
 ## 导入格式版本。**改了解析器产出的资源结构就要 +1**，
 ## 否则 Godot 认为 .story 没变、继续用旧的 .res，跑起来是一堆空内容。
 func _get_format_version() -> int:
-	return 2
+	return 3
 
 
 func _get_priority() -> float:
