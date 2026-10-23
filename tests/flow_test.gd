@@ -139,7 +139,7 @@ func _test_personnel_rows() -> void:
 	_eq("行数覆盖整份名单", rows.size(), roster.size())
 
 	# 四个动作按钮印的符号：升职是职级的事用字母 P，加薪/减薪都是钱、靠箭头分方向。
-	var page := _node("Control/laptop_page/frame/pages/instruction_execute_page")
+	var page := _node("laptop_page/frame/pages/instruction_execute_page")
 	for i in range(pm.ACTIONS.size()):
 		var action: String = pm.ACTIONS[i]
 		var b := rows[0].get_child(1 + i) as Button
@@ -600,11 +600,11 @@ func _test_ingame_settings() -> void:
 	SignalBus.open_laptop_request.emit()
 	await _windows_settled()
 	_is_false("开笔记本时设置收起来了", panel.visible)
-	_eq("管理器改记笔记本", WindowManager.get_current(_scene), _node("Control/laptop_page"))
+	_eq("管理器改记笔记本", WindowManager.get_current(_scene), _node("laptop_page"))
 
 	WindowManager.close_current(_scene)
 	await _windows_settled()
-	_is_false("全关掉了", _node("Control/laptop_page").visible)
+	_is_false("全关掉了", _node("laptop_page").visible)
 
 
 ## 菜单往返。Resume 有两条路，都要走一遍：
@@ -748,7 +748,7 @@ func _rm() -> Node:
 
 
 func _personnel_rows() -> Array:
-	var list := _node("Control/laptop_page/frame/pages/instruction_execute_page/VBoxContainer/personnel_list")
+	var list := _node("laptop_page/frame/pages/instruction_execute_page/VBoxContainer/personnel_list")
 	var rows: Array = []
 	for c in list.get_children():
 		# queue_free 掉的旧行要到帧末才真的消失，这里只数活着的。

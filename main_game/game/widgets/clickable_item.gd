@@ -26,6 +26,7 @@ func _ready() -> void:
 	mouse_exited.connect(_on_mouse_exited)
 	# 状态切换时鼠标可能正停在物件上，得主动把发光同步一次。
 	SignalBus.round_state_change.connect(_on_round_state_change)
+	SignalBus.interaction_lock_changed.connect(_on_round_state_change)
 
 
 func _on_round_state_change(_rs) -> void:

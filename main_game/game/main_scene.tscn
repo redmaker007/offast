@@ -27,6 +27,7 @@
 [ext_resource type="Script" uid="uid://cd5gsxlwlycv5" path="res://main_game/game/widgets/cancel_button.gd" id="16_asovh"]
 [ext_resource type="Script" uid="uid://wkvk11jgmydc" path="res://main_game/game/widgets/back_to_menu_button.gd" id="17_back"]
 [ext_resource type="Texture2D" uid="uid://c25txihrqe3ks" path="res://theme/items/4t.png" id="19_6ccht"]
+[ext_resource type="Script" uid="uid://c7ad367daucgo" path="res://main_game/game/widgets/camera_focus.gd" id="19_uyg1v"]
 [ext_resource type="Script" uid="uid://c5ndbrui0xg15" path="res://main_game/game/widgets/calendar_face.gd" id="21_6m4a6"]
 [ext_resource type="Script" uid="uid://bs1r5jxjxddx6" path="res://main_game/game/laptop_page.gd" id="21_laptop"]
 [ext_resource type="Script" uid="uid://co27d22quswp5" path="res://main_game/game/laptop_select_page.gd" id="22_ac6o7"]
@@ -278,6 +279,10 @@ click_signal = "open_laptop_request"
 hover_volume = 0.5
 click_sound = ExtResource("12_6xou6")
 
+[node name="camera_focus" type="Node" parent="Control/laptop_control/laptop" unique_id=418628175]
+script = ExtResource("19_uyg1v")
+enabled = true
+
 [node name="notes_control" type="Control" parent="Control" unique_id=20847891]
 layout_mode = 2
 mouse_filter = 2
@@ -365,11 +370,14 @@ hover_volume = 0.5
 click_sound = ExtResource("12_6xou6")
 center_pivot = false
 
-[node name="laptop_page" type="PanelContainer" parent="Control" unique_id=1030673075]
+[node name="laptop_page" type="PanelContainer" parent="." unique_id=1030673075]
 unique_name_in_owner = true
 visible = false
 z_index = 10
-layout_mode = 2
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 mouse_filter = 2
 theme = ExtResource("8_nggn0")
 theme_type_variation = &"systemPanel"
@@ -378,23 +386,23 @@ script = ExtResource("21_laptop")
 close_icon = ExtResource("15_0ogao")
 back_icon = ExtResource("15_back")
 
-[node name="frame" type="VBoxContainer" parent="Control/laptop_page" unique_id=1693021771]
+[node name="frame" type="VBoxContainer" parent="laptop_page" unique_id=1693021771]
 layout_mode = 2
 mouse_filter = 2
 alignment = 1
 
-[node name="title_bar" type="HBoxContainer" parent="Control/laptop_page/frame" unique_id=279370429]
+[node name="title_bar" type="HBoxContainer" parent="laptop_page/frame" unique_id=279370429]
 custom_minimum_size = Vector2(780, 0)
 layout_mode = 2
 size_flags_horizontal = 4
 mouse_filter = 2
 
-[node name="Control" type="Control" parent="Control/laptop_page/frame/title_bar" unique_id=621260901]
+[node name="Control" type="Control" parent="laptop_page/frame/title_bar" unique_id=621260901]
 z_index = 5
 layout_mode = 2
 mouse_filter = 1
 
-[node name="cancel_button" type="Button" parent="Control/laptop_page/frame/title_bar/Control" unique_id=1655821474]
+[node name="cancel_button" type="Button" parent="laptop_page/frame/title_bar/Control" unique_id=1655821474]
 unique_name_in_owner = true
 modulate = Color(0.76862746, 0.47843137, 0.41568628, 1)
 z_index = 5
@@ -413,16 +421,16 @@ icon_alignment = 1
 expand_icon = true
 script = ExtResource("16_asovh")
 
-[node name="HoverScale" parent="Control/laptop_page/frame/title_bar/Control/cancel_button" unique_id=1737713058 instance=ExtResource("6_toloy")]
+[node name="HoverScale" parent="laptop_page/frame/title_bar/Control/cancel_button" unique_id=1737713058 instance=ExtResource("6_toloy")]
 hover_volume = 0.5
 click_sound = ExtResource("12_6xou6")
 
-[node name="pages" type="VBoxContainer" parent="Control/laptop_page/frame" unique_id=676030873]
+[node name="pages" type="VBoxContainer" parent="laptop_page/frame" unique_id=676030873]
 layout_mode = 2
 mouse_filter = 2
 alignment = 1
 
-[node name="instruction_execute_page" type="PanelContainer" parent="Control/laptop_page/frame/pages" unique_id=624460870]
+[node name="instruction_execute_page" type="PanelContainer" parent="laptop_page/frame/pages" unique_id=624460870]
 unique_name_in_owner = true
 visible = false
 custom_minimum_size = Vector2(780, 540)
@@ -434,17 +442,17 @@ theme = ExtResource("8_nggn0")
 theme_type_variation = &"systemPanel"
 script = ExtResource("9_17gcd")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Control/laptop_page/frame/pages/instruction_execute_page" unique_id=225978403]
+[node name="VBoxContainer" type="VBoxContainer" parent="laptop_page/frame/pages/instruction_execute_page" unique_id=225978403]
 layout_mode = 2
 mouse_filter = 2
 alignment = 1
 
-[node name="title" type="Label" parent="Control/laptop_page/frame/pages/instruction_execute_page/VBoxContainer" unique_id=825354049]
+[node name="title" type="Label" parent="laptop_page/frame/pages/instruction_execute_page/VBoxContainer" unique_id=825354049]
 layout_mode = 2
 text = "Personnel"
 horizontal_alignment = 1
 
-[node name="personnel_list" type="VBoxContainer" parent="Control/laptop_page/frame/pages/instruction_execute_page/VBoxContainer" unique_id=367391585]
+[node name="personnel_list" type="VBoxContainer" parent="laptop_page/frame/pages/instruction_execute_page/VBoxContainer" unique_id=367391585]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
@@ -452,7 +460,7 @@ mouse_filter = 2
 theme_override_constants/separation = 14
 alignment = 1
 
-[node name="email_read_page" type="PanelContainer" parent="Control/laptop_page/frame/pages" unique_id=518721048]
+[node name="email_read_page" type="PanelContainer" parent="laptop_page/frame/pages" unique_id=518721048]
 unique_name_in_owner = true
 visible = false
 custom_minimum_size = Vector2(780, 540)
@@ -465,11 +473,11 @@ theme = ExtResource("8_nggn0")
 theme_type_variation = &"emailPanel"
 script = ExtResource("12_ygwb2")
 
-[node name="Control" type="Control" parent="Control/laptop_page/frame/pages/email_read_page" unique_id=464092759]
+[node name="Control" type="Control" parent="laptop_page/frame/pages/email_read_page" unique_id=464092759]
 layout_mode = 2
 mouse_filter = 2
 
-[node name="sender_name_text" type="Label" parent="Control/laptop_page/frame/pages/email_read_page/Control" unique_id=2104584303]
+[node name="sender_name_text" type="Label" parent="laptop_page/frame/pages/email_read_page/Control" unique_id=2104584303]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(150, 30)
 custom_maximum_size = Vector2(150, 30)
@@ -480,30 +488,30 @@ offset_right = 169.0
 offset_bottom = 54.0
 offset_transform_enabled = true
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Control/laptop_page/frame/pages/email_read_page" unique_id=165542676]
+[node name="VBoxContainer" type="VBoxContainer" parent="laptop_page/frame/pages/email_read_page" unique_id=165542676]
 layout_mode = 2
 mouse_filter = 2
 alignment = 1
 
-[node name="email_content" type="Label" parent="Control/laptop_page/frame/pages/email_read_page/VBoxContainer" unique_id=1882389200]
+[node name="email_content" type="Label" parent="laptop_page/frame/pages/email_read_page/VBoxContainer" unique_id=1882389200]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 6
 horizontal_alignment = 1
 
-[node name="reply_list" type="VBoxContainer" parent="Control/laptop_page/frame/pages/email_read_page/VBoxContainer" unique_id=1806061274]
+[node name="reply_list" type="VBoxContainer" parent="laptop_page/frame/pages/email_read_page/VBoxContainer" unique_id=1806061274]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 theme_override_constants/separation = 8
 alignment = 1
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Control/laptop_page/frame/pages/email_read_page/VBoxContainer" unique_id=1363536124]
+[node name="HBoxContainer" type="HBoxContainer" parent="laptop_page/frame/pages/email_read_page/VBoxContainer" unique_id=1363536124]
 layout_mode = 2
 size_flags_vertical = 3
 alignment = 1
 
-[node name="profile_button" type="Button" parent="Control/laptop_page/frame/pages/email_read_page/VBoxContainer/HBoxContainer" unique_id=525950379]
+[node name="profile_button" type="Button" parent="laptop_page/frame/pages/email_read_page/VBoxContainer/HBoxContainer" unique_id=525950379]
 unique_name_in_owner = true
 visible = false
 modulate = Color(0.9098039, 0.8352941, 0.6901961, 1)
@@ -515,11 +523,11 @@ theme = ExtResource("8_nggn0")
 theme_type_variation = &"LongButton"
 text = "File"
 
-[node name="HoverScale" parent="Control/laptop_page/frame/pages/email_read_page/VBoxContainer/HBoxContainer/profile_button" unique_id=1187833450 instance=ExtResource("6_toloy")]
+[node name="HoverScale" parent="laptop_page/frame/pages/email_read_page/VBoxContainer/HBoxContainer/profile_button" unique_id=1187833450 instance=ExtResource("6_toloy")]
 hover_volume = 0.5
 click_sound = ExtResource("12_6xou6")
 
-[node name="next_email" type="Button" parent="Control/laptop_page/frame/pages/email_read_page/VBoxContainer/HBoxContainer" unique_id=42997686]
+[node name="next_email" type="Button" parent="laptop_page/frame/pages/email_read_page/VBoxContainer/HBoxContainer" unique_id=42997686]
 unique_name_in_owner = true
 modulate = Color(0.9098039, 0.8352941, 0.6901961, 1)
 custom_minimum_size = Vector2(120, 45)
@@ -534,11 +542,11 @@ icon = ExtResource("12_4j4se")
 icon_alignment = 1
 expand_icon = true
 
-[node name="HoverScale" parent="Control/laptop_page/frame/pages/email_read_page/VBoxContainer/HBoxContainer/next_email" unique_id=29391216 instance=ExtResource("6_toloy")]
+[node name="HoverScale" parent="laptop_page/frame/pages/email_read_page/VBoxContainer/HBoxContainer/next_email" unique_id=29391216 instance=ExtResource("6_toloy")]
 hover_volume = 0.5
 click_sound = ExtResource("12_6xou6")
 
-[node name="laptop_select_page" type="PanelContainer" parent="Control/laptop_page/frame/pages" unique_id=2029378928]
+[node name="laptop_select_page" type="PanelContainer" parent="laptop_page/frame/pages" unique_id=2029378928]
 unique_name_in_owner = true
 visible = false
 custom_minimum_size = Vector2(780, 540)
@@ -551,18 +559,18 @@ theme = ExtResource("8_nggn0")
 theme_type_variation = &"systemPanel"
 script = ExtResource("22_ac6o7")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Control/laptop_page/frame/pages/laptop_select_page" unique_id=2095806268]
+[node name="VBoxContainer" type="VBoxContainer" parent="laptop_page/frame/pages/laptop_select_page" unique_id=2095806268]
 layout_mode = 2
 mouse_filter = 2
 alignment = 1
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Control/laptop_page/frame/pages/laptop_select_page/VBoxContainer" unique_id=1003122919]
+[node name="HBoxContainer" type="HBoxContainer" parent="laptop_page/frame/pages/laptop_select_page/VBoxContainer" unique_id=1003122919]
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 24
 alignment = 1
 
-[node name="email_button" type="Button" parent="Control/laptop_page/frame/pages/laptop_select_page/VBoxContainer/HBoxContainer" unique_id=1194393537]
+[node name="email_button" type="Button" parent="laptop_page/frame/pages/laptop_select_page/VBoxContainer/HBoxContainer" unique_id=1194393537]
 modulate = Color(0.9098039, 0.8352941, 0.6901961, 1)
 custom_minimum_size = Vector2(150, 60)
 layout_mode = 2
@@ -572,11 +580,11 @@ theme = ExtResource("8_nggn0")
 theme_type_variation = &"LongButton"
 text = "Email"
 
-[node name="HoverScale" parent="Control/laptop_page/frame/pages/laptop_select_page/VBoxContainer/HBoxContainer/email_button" unique_id=187088467 instance=ExtResource("6_toloy")]
+[node name="HoverScale" parent="laptop_page/frame/pages/laptop_select_page/VBoxContainer/HBoxContainer/email_button" unique_id=187088467 instance=ExtResource("6_toloy")]
 hover_volume = 0.5
 click_sound = ExtResource("12_6xou6")
 
-[node name="instruction_button" type="Button" parent="Control/laptop_page/frame/pages/laptop_select_page/VBoxContainer/HBoxContainer" unique_id=9763939]
+[node name="instruction_button" type="Button" parent="laptop_page/frame/pages/laptop_select_page/VBoxContainer/HBoxContainer" unique_id=9763939]
 modulate = Color(0.9098039, 0.8352941, 0.6901961, 1)
 custom_minimum_size = Vector2(150, 60)
 layout_mode = 2
@@ -586,11 +594,11 @@ theme = ExtResource("8_nggn0")
 theme_type_variation = &"LongButton"
 text = "Personnel"
 
-[node name="HoverScale" parent="Control/laptop_page/frame/pages/laptop_select_page/VBoxContainer/HBoxContainer/instruction_button" unique_id=887912541 instance=ExtResource("6_toloy")]
+[node name="HoverScale" parent="laptop_page/frame/pages/laptop_select_page/VBoxContainer/HBoxContainer/instruction_button" unique_id=887912541 instance=ExtResource("6_toloy")]
 hover_volume = 0.5
 click_sound = ExtResource("12_6xou6")
 
-[node name="profile_button" type="Button" parent="Control/laptop_page/frame/pages/laptop_select_page/VBoxContainer/HBoxContainer" unique_id=586419824]
+[node name="profile_button" type="Button" parent="laptop_page/frame/pages/laptop_select_page/VBoxContainer/HBoxContainer" unique_id=586419824]
 modulate = Color(0.9098039, 0.8352941, 0.6901961, 1)
 custom_minimum_size = Vector2(150, 60)
 layout_mode = 2
@@ -600,11 +608,11 @@ theme = ExtResource("8_nggn0")
 theme_type_variation = &"LongButton"
 text = "Files"
 
-[node name="HoverScale" parent="Control/laptop_page/frame/pages/laptop_select_page/VBoxContainer/HBoxContainer/profile_button" unique_id=2118633306 instance=ExtResource("6_toloy")]
+[node name="HoverScale" parent="laptop_page/frame/pages/laptop_select_page/VBoxContainer/HBoxContainer/profile_button" unique_id=2118633306 instance=ExtResource("6_toloy")]
 hover_volume = 0.5
 click_sound = ExtResource("12_6xou6")
 
-[node name="signed_in_label" type="Label" parent="Control/laptop_page/frame/pages/laptop_select_page/VBoxContainer" unique_id=1143857396]
+[node name="signed_in_label" type="Label" parent="laptop_page/frame/pages/laptop_select_page/VBoxContainer" unique_id=1143857396]
 unique_name_in_owner = true
 modulate = Color(1, 1, 1, 0.6)
 layout_mode = 2
@@ -612,7 +620,7 @@ theme_override_font_sizes/font_size = 16
 text = "signed in: -"
 horizontal_alignment = 1
 
-[node name="sign_out_button" type="Button" parent="Control/laptop_page/frame/pages/laptop_select_page/VBoxContainer" unique_id=2028698588]
+[node name="sign_out_button" type="Button" parent="laptop_page/frame/pages/laptop_select_page/VBoxContainer" unique_id=2028698588]
 modulate = Color(0.9098039, 0.8352941, 0.6901961, 1)
 custom_minimum_size = Vector2(150, 44)
 layout_mode = 2
@@ -621,11 +629,11 @@ theme = ExtResource("8_nggn0")
 theme_type_variation = &"LongButton"
 text = "Sign out"
 
-[node name="HoverScale" parent="Control/laptop_page/frame/pages/laptop_select_page/VBoxContainer/sign_out_button" unique_id=1412023384 instance=ExtResource("6_toloy")]
+[node name="HoverScale" parent="laptop_page/frame/pages/laptop_select_page/VBoxContainer/sign_out_button" unique_id=1412023384 instance=ExtResource("6_toloy")]
 hover_volume = 0.5
 click_sound = ExtResource("12_6xou6")
 
-[node name="laptop_login_page" type="PanelContainer" parent="Control/laptop_page/frame/pages" unique_id=828406174]
+[node name="laptop_login_page" type="PanelContainer" parent="laptop_page/frame/pages" unique_id=828406174]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(780, 540)
 custom_maximum_size = Vector2(780, 540)
@@ -637,56 +645,56 @@ theme = ExtResource("8_nggn0")
 theme_type_variation = &"systemPanel"
 script = ExtResource("51_login")
 
-[node name="column" type="VBoxContainer" parent="Control/laptop_page/frame/pages/laptop_login_page" unique_id=907073615]
+[node name="column" type="VBoxContainer" parent="laptop_page/frame/pages/laptop_login_page" unique_id=907073615]
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 16
 alignment = 1
 
-[node name="login_title" type="Label" parent="Control/laptop_page/frame/pages/laptop_login_page/column" unique_id=81698383]
+[node name="login_title" type="Label" parent="laptop_page/frame/pages/laptop_login_page/column" unique_id=81698383]
 layout_mode = 2
 theme_override_font_sizes/font_size = 28
-text = "NORTHGATE HR"
+text = "UI_LOGIN_TITLE"
 horizontal_alignment = 1
 
-[node name="user_row" type="HBoxContainer" parent="Control/laptop_page/frame/pages/laptop_login_page/column" unique_id=1250834353]
+[node name="user_row" type="HBoxContainer" parent="laptop_page/frame/pages/laptop_login_page/column" unique_id=1250834353]
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 12
 alignment = 1
 
-[node name="user_label" type="Label" parent="Control/laptop_page/frame/pages/laptop_login_page/column/user_row" unique_id=1104483658]
+[node name="user_label" type="Label" parent="laptop_page/frame/pages/laptop_login_page/column/user_row" unique_id=1104483658]
 custom_minimum_size = Vector2(90, 0)
 layout_mode = 2
 text = "user"
 horizontal_alignment = 2
 
-[node name="login_user" type="LineEdit" parent="Control/laptop_page/frame/pages/laptop_login_page/column/user_row" unique_id=408636384]
+[node name="login_user" type="LineEdit" parent="laptop_page/frame/pages/laptop_login_page/column/user_row" unique_id=408636384]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(280, 44)
 layout_mode = 2
 theme = ExtResource("8_nggn0")
 
-[node name="pass_row" type="HBoxContainer" parent="Control/laptop_page/frame/pages/laptop_login_page/column" unique_id=707231938]
+[node name="pass_row" type="HBoxContainer" parent="laptop_page/frame/pages/laptop_login_page/column" unique_id=707231938]
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 12
 alignment = 1
 
-[node name="pass_label" type="Label" parent="Control/laptop_page/frame/pages/laptop_login_page/column/pass_row" unique_id=652975545]
+[node name="pass_label" type="Label" parent="laptop_page/frame/pages/laptop_login_page/column/pass_row" unique_id=652975545]
 custom_minimum_size = Vector2(90, 0)
 layout_mode = 2
 text = "pass"
 horizontal_alignment = 2
 
-[node name="login_pass" type="LineEdit" parent="Control/laptop_page/frame/pages/laptop_login_page/column/pass_row" unique_id=47947388]
+[node name="login_pass" type="LineEdit" parent="laptop_page/frame/pages/laptop_login_page/column/pass_row" unique_id=47947388]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(280, 44)
 layout_mode = 2
 theme = ExtResource("8_nggn0")
 secret = true
 
-[node name="sign_in_button" type="Button" parent="Control/laptop_page/frame/pages/laptop_login_page/column" unique_id=1299031614]
+[node name="sign_in_button" type="Button" parent="laptop_page/frame/pages/laptop_login_page/column" unique_id=1299031614]
 modulate = Color(0.9098039, 0.8352941, 0.6901961, 1)
 custom_minimum_size = Vector2(180, 52)
 layout_mode = 2
@@ -695,18 +703,18 @@ theme = ExtResource("8_nggn0")
 theme_type_variation = &"LongButton"
 text = "Sign in"
 
-[node name="HoverScale" parent="Control/laptop_page/frame/pages/laptop_login_page/column/sign_in_button" unique_id=779764295 instance=ExtResource("6_toloy")]
+[node name="HoverScale" parent="laptop_page/frame/pages/laptop_login_page/column/sign_in_button" unique_id=779764295 instance=ExtResource("6_toloy")]
 hover_volume = 0.5
 click_sound = ExtResource("12_6xou6")
 
-[node name="login_error" type="Label" parent="Control/laptop_page/frame/pages/laptop_login_page/column" unique_id=1665326779]
+[node name="login_error" type="Label" parent="laptop_page/frame/pages/laptop_login_page/column" unique_id=1665326779]
 unique_name_in_owner = true
 modulate = Color(0.7176471, 0.24705882, 0.18431373, 1)
 layout_mode = 2
 theme_override_font_sizes/font_size = 17
 horizontal_alignment = 1
 
-[node name="profile_page" type="PanelContainer" parent="Control/laptop_page/frame/pages" unique_id=1363062365]
+[node name="profile_page" type="PanelContainer" parent="laptop_page/frame/pages" unique_id=1363062365]
 unique_name_in_owner = true
 visible = false
 custom_minimum_size = Vector2(780, 540)
@@ -719,7 +727,7 @@ theme = ExtResource("8_nggn0")
 theme_type_variation = &"systemPanel"
 script = ExtResource("54_ppage")
 
-[node name="margin" type="MarginContainer" parent="Control/laptop_page/frame/pages/profile_page" unique_id=1201294632]
+[node name="margin" type="MarginContainer" parent="laptop_page/frame/pages/profile_page" unique_id=1201294632]
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/margin_left = 28
@@ -727,35 +735,35 @@ theme_override_constants/margin_top = 24
 theme_override_constants/margin_right = 28
 theme_override_constants/margin_bottom = 24
 
-[node name="row" type="HBoxContainer" parent="Control/laptop_page/frame/pages/profile_page/margin" unique_id=1069662730]
+[node name="row" type="HBoxContainer" parent="laptop_page/frame/pages/profile_page/margin" unique_id=1069662730]
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 24
 
-[node name="names" type="ScrollContainer" parent="Control/laptop_page/frame/pages/profile_page/margin/row" unique_id=1412672641]
+[node name="names" type="ScrollContainer" parent="laptop_page/frame/pages/profile_page/margin/row" unique_id=1412672641]
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 horizontal_scroll_mode = 0
 
-[node name="profile_list" type="VBoxContainer" parent="Control/laptop_page/frame/pages/profile_page/margin/row/names" unique_id=1703529308]
+[node name="profile_list" type="VBoxContainer" parent="laptop_page/frame/pages/profile_page/margin/row/names" unique_id=1703529308]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 mouse_filter = 2
 theme_override_constants/separation = 8
 
-[node name="detail" type="VBoxContainer" parent="Control/laptop_page/frame/pages/profile_page/margin/row" unique_id=995553328]
+[node name="detail" type="VBoxContainer" parent="laptop_page/frame/pages/profile_page/margin/row" unique_id=995553328]
 layout_mode = 2
 size_flags_horizontal = 3
 mouse_filter = 2
 theme_override_constants/separation = 12
 
-[node name="head" type="HBoxContainer" parent="Control/laptop_page/frame/pages/profile_page/margin/row/detail" unique_id=376545586]
+[node name="head" type="HBoxContainer" parent="laptop_page/frame/pages/profile_page/margin/row/detail" unique_id=376545586]
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 16
 
-[node name="profile_avatar" type="TextureRect" parent="Control/laptop_page/frame/pages/profile_page/margin/row/detail/head" unique_id=1475409113]
+[node name="profile_avatar" type="TextureRect" parent="laptop_page/frame/pages/profile_page/margin/row/detail/head" unique_id=1475409113]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(96, 96)
 layout_mode = 2
@@ -764,31 +772,31 @@ mouse_filter = 2
 expand_mode = 1
 stretch_mode = 5
 
-[node name="titles" type="VBoxContainer" parent="Control/laptop_page/frame/pages/profile_page/margin/row/detail/head" unique_id=1604983654]
+[node name="titles" type="VBoxContainer" parent="laptop_page/frame/pages/profile_page/margin/row/detail/head" unique_id=1604983654]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
 mouse_filter = 2
 theme_override_constants/separation = 4
 
-[node name="profile_name" type="Label" parent="Control/laptop_page/frame/pages/profile_page/margin/row/detail/head/titles" unique_id=1300742194]
+[node name="profile_name" type="Label" parent="laptop_page/frame/pages/profile_page/margin/row/detail/head/titles" unique_id=1300742194]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 26
 
-[node name="profile_meta" type="Label" parent="Control/laptop_page/frame/pages/profile_page/margin/row/detail/head/titles" unique_id=901940509]
+[node name="profile_meta" type="Label" parent="laptop_page/frame/pages/profile_page/margin/row/detail/head/titles" unique_id=901940509]
 unique_name_in_owner = true
 modulate = Color(1, 1, 1, 0.7)
 layout_mode = 2
 theme_override_font_sizes/font_size = 17
 autowrap_mode = 3
 
-[node name="body_scroll" type="ScrollContainer" parent="Control/laptop_page/frame/pages/profile_page/margin/row/detail" unique_id=726663944]
+[node name="body_scroll" type="ScrollContainer" parent="laptop_page/frame/pages/profile_page/margin/row/detail" unique_id=726663944]
 layout_mode = 2
 size_flags_vertical = 3
 horizontal_scroll_mode = 0
 
-[node name="profile_body" type="Label" parent="Control/laptop_page/frame/pages/profile_page/margin/row/detail/body_scroll" unique_id=15922447]
+[node name="profile_body" type="Label" parent="laptop_page/frame/pages/profile_page/margin/row/detail/body_scroll" unique_id=15922447]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(440, 0)
 layout_mode = 2
@@ -796,11 +804,22 @@ size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 18
 autowrap_mode = 3
 
-[node name="calendar_page" type="PanelContainer" parent="Control" unique_id=277804419]
+[node name="calendar_page" type="PanelContainer" parent="." unique_id=277804419]
 unique_name_in_owner = true
 visible = false
 z_index = 10
-layout_mode = 2
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -220.0
+offset_top = -160.0
+offset_right = 220.0
+offset_bottom = 160.0
+grow_horizontal = 2
+grow_vertical = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 mouse_filter = 2
@@ -808,12 +827,12 @@ theme = ExtResource("8_nggn0")
 theme_override_styles/panel = SubResource("StyleBoxEmpty_3p1ss")
 script = ExtResource("28_c0ovc")
 
-[node name="frame" type="VBoxContainer" parent="Control/calendar_page" unique_id=729706275]
+[node name="frame" type="VBoxContainer" parent="calendar_page" unique_id=729706275]
 layout_mode = 2
 mouse_filter = 2
 alignment = 1
 
-[node name="window" type="PanelContainer" parent="Control/calendar_page/frame" unique_id=1480867431]
+[node name="window" type="PanelContainer" parent="calendar_page/frame" unique_id=1480867431]
 custom_minimum_size = Vector2(440, 320)
 layout_mode = 2
 size_flags_horizontal = 4
@@ -821,17 +840,17 @@ size_flags_vertical = 4
 theme = ExtResource("8_nggn0")
 theme_type_variation = &"systemPanel"
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Control/calendar_page/frame/window" unique_id=1517996313]
+[node name="VBoxContainer" type="VBoxContainer" parent="calendar_page/frame/window" unique_id=1517996313]
 layout_mode = 2
 theme_override_constants/separation = 20
 alignment = 1
 
-[node name="calendar_day" type="Label" parent="Control/calendar_page/frame/window/VBoxContainer" unique_id=449819202]
+[node name="calendar_day" type="Label" parent="calendar_page/frame/window/VBoxContainer" unique_id=449819202]
 unique_name_in_owner = true
 layout_mode = 2
 horizontal_alignment = 1
 
-[node name="calendar_lives" type="TextureRect" parent="Control/calendar_page/frame/window/VBoxContainer" unique_id=1500680587]
+[node name="calendar_lives" type="TextureRect" parent="calendar_page/frame/window/VBoxContainer" unique_id=1500680587]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(260, 200)
 layout_mode = 2
@@ -840,7 +859,7 @@ mouse_filter = 2
 expand_mode = 1
 stretch_mode = 5
 
-[node name="close_button" type="Button" parent="Control/calendar_page/frame/window/VBoxContainer" unique_id=1064474720]
+[node name="close_button" type="Button" parent="calendar_page/frame/window/VBoxContainer" unique_id=1064474720]
 custom_minimum_size = Vector2(160, 48)
 layout_mode = 2
 size_flags_horizontal = 4
@@ -1368,7 +1387,7 @@ click_sound = ExtResource("12_6xou6")
 modulate = Color(0.9098039, 0.8352941, 0.6901961, 1)
 z_index = 20
 custom_minimum_size = Vector2(120, 45)
-layout_mode = 1
+layout_mode = 0
 offset_left = 24.0
 offset_top = 24.0
 offset_right = 144.0
@@ -1415,15 +1434,15 @@ theme = ExtResource("8_nggn0")
 horizontal_alignment = 2
 script = ExtResource("32_ymimj")
 
-[connection signal="pressed" from="Control/laptop_page/frame/title_bar/Control/cancel_button" to="Control/laptop_page" method="_on_cancel_pressed"]
-[connection signal="pressed" from="Control/laptop_page/frame/pages/email_read_page/VBoxContainer/HBoxContainer/profile_button" to="Control/laptop_page/frame/pages/email_read_page" method="_on_profile_button_pressed"]
-[connection signal="pressed" from="Control/laptop_page/frame/pages/email_read_page/VBoxContainer/HBoxContainer/next_email" to="email_reader" method="_on_button_pressed"]
-[connection signal="pressed" from="Control/laptop_page/frame/pages/laptop_select_page/VBoxContainer/HBoxContainer/email_button" to="Control/laptop_page/frame/pages/laptop_select_page" method="_on_email_button_pressed"]
-[connection signal="pressed" from="Control/laptop_page/frame/pages/laptop_select_page/VBoxContainer/HBoxContainer/instruction_button" to="Control/laptop_page/frame/pages/laptop_select_page" method="_on_instruction_button_pressed"]
-[connection signal="pressed" from="Control/laptop_page/frame/pages/laptop_select_page/VBoxContainer/HBoxContainer/profile_button" to="Control/laptop_page/frame/pages/laptop_select_page" method="_on_profile_button_pressed"]
-[connection signal="pressed" from="Control/laptop_page/frame/pages/laptop_select_page/VBoxContainer/sign_out_button" to="Control/laptop_page/frame/pages/laptop_select_page" method="_on_sign_out_button_pressed"]
-[connection signal="pressed" from="Control/laptop_page/frame/pages/laptop_login_page/column/sign_in_button" to="Control/laptop_page/frame/pages/laptop_login_page" method="_on_sign_in_pressed"]
-[connection signal="pressed" from="Control/calendar_page/frame/window/VBoxContainer/close_button" to="Control/calendar_page/frame/window/VBoxContainer/close_button" method="_on_pressed"]
+[connection signal="pressed" from="laptop_page/frame/title_bar/Control/cancel_button" to="laptop_page" method="_on_cancel_pressed"]
+[connection signal="pressed" from="laptop_page/frame/pages/email_read_page/VBoxContainer/HBoxContainer/profile_button" to="laptop_page/frame/pages/email_read_page" method="_on_profile_button_pressed"]
+[connection signal="pressed" from="laptop_page/frame/pages/email_read_page/VBoxContainer/HBoxContainer/next_email" to="email_reader" method="_on_button_pressed"]
+[connection signal="pressed" from="laptop_page/frame/pages/laptop_select_page/VBoxContainer/HBoxContainer/email_button" to="laptop_page/frame/pages/laptop_select_page" method="_on_email_button_pressed"]
+[connection signal="pressed" from="laptop_page/frame/pages/laptop_select_page/VBoxContainer/HBoxContainer/instruction_button" to="laptop_page/frame/pages/laptop_select_page" method="_on_instruction_button_pressed"]
+[connection signal="pressed" from="laptop_page/frame/pages/laptop_select_page/VBoxContainer/HBoxContainer/profile_button" to="laptop_page/frame/pages/laptop_select_page" method="_on_profile_button_pressed"]
+[connection signal="pressed" from="laptop_page/frame/pages/laptop_select_page/VBoxContainer/sign_out_button" to="laptop_page/frame/pages/laptop_select_page" method="_on_sign_out_button_pressed"]
+[connection signal="pressed" from="laptop_page/frame/pages/laptop_login_page/column/sign_in_button" to="laptop_page/frame/pages/laptop_login_page" method="_on_sign_in_pressed"]
+[connection signal="pressed" from="calendar_page/frame/window/VBoxContainer/close_button" to="calendar_page/frame/window/VBoxContainer/close_button" method="_on_pressed"]
 [connection signal="pressed" from="result_overlay/card/margin/VBoxContainer/continue_button" to="result_overlay" method="_on_continue_pressed"]
 [connection signal="pressed" from="ending_overlay/card/margin/VBoxContainer/back_button" to="ending_overlay" method="_on_back_pressed"]
 [connection signal="pressed" from="caller_page/margin/column/call_button" to="caller_page" method="_on_call_pressed"]

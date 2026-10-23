@@ -23,6 +23,10 @@ signal inbox_empty()
 
 signal round_state_change(rs:RoundState.Round_State)
 
+## RoundState 的交互锁整体上锁 / 解锁了（比如 cutscene 播放期间）。
+## 只影响 is_interactive()，不改 current_round_state，所以不会触发发邮件之类的副作用。
+signal interaction_lock_changed(locked:bool)
+
 ## 这一天的剧情播完了，可以开始上班。
 signal story_finished()
 
@@ -66,6 +70,10 @@ signal game_restored()
 ## 场景里那些「开局印一份内容」的节点（记事本）要等这一下才知道该印什么——
 ## 它们的 _ready 比 round_manager.start_game() 早。
 signal game_started()
+
+## 这一局被挂起了（回主菜单，SceneTransition 只挂起不销毁）。
+## 发在存盘之后、场景停掉之前。播到一半的东西（cutscene）据此退回开始前的样子。
+signal game_suspended()
 
 
 # ── 笔记本窗口 ───────────────────────────────────────────

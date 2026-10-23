@@ -937,7 +937,7 @@ func _create_main_screen_panel() -> void:
 func _on_server_started() -> void:
 	_log_info("MCP Server started")
 	if _main_panel and _main_panel.has_method("refresh"):
-		if Thread.is_main_thread():
+		if OS.get_thread_caller_id() == OS.get_main_thread_id():
 			_main_panel.refresh()
 		else:
 			_main_panel.call_deferred("refresh")
@@ -945,7 +945,7 @@ func _on_server_started() -> void:
 func _on_server_stopped() -> void:
 	_log_info("MCP Server stopped")
 	if _main_panel and _main_panel.has_method("refresh"):
-		if Thread.is_main_thread():
+		if OS.get_thread_caller_id() == OS.get_main_thread_id():
 			_main_panel.refresh()
 		else:
 			_main_panel.call_deferred("refresh")

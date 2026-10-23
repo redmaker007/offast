@@ -13,7 +13,7 @@ UI_SIGN_IN,登录,Sign in
 UI_SIGN_OUT,退出登录,Sign out
 UI_USER,账号,user
 UI_PASS,密码,pass
-UI_LOGIN_TITLE,OFFAST 人事系统,NORTHGATE HR
+UI_LOGIN_TITLE,OFFAST 人事系统,OFFAST HR
 UI_LOGIN_FAILED,账号或密码不对,wrong user or password
 UI_SIGNED_IN,当前账号：%s,signed in: %s
 UI_NOTES,记事本,NOTES

@@ -25,6 +25,9 @@ const LABELS := {
 
 const DEFAULT := "zh"
 
+## GM 模式：开着时放出测试用的东西和可视化剧情编辑器。功能还没接，现在只是个开关。
+@export var gm_mode: bool = false
+
 var current := DEFAULT
 
 

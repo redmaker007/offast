@@ -832,7 +832,7 @@ func _on_debounce_timeout() -> void:
 	_save_settings()
 
 func update_log(message: String) -> void:
-	if Thread.is_main_thread():
+	if OS.get_thread_caller_id() == OS.get_main_thread_id():
 		_append_log(message)
 	else:
 		call_deferred("_append_log", message)
@@ -881,7 +881,7 @@ func _flush_log_to_file() -> void:
 
 
 func refresh() -> void:
-	if Thread.is_main_thread():
+	if OS.get_thread_caller_id() == OS.get_main_thread_id():
 		_update_ui_state()
 		_refresh_tools_list()
 	else:

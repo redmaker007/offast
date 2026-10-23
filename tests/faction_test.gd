@@ -1054,7 +1054,7 @@ func _test_corner_button() -> void:
 	_section = "标题栏那个键一键两用"
 	await _fresh_workday()
 
-	var laptop := _node("Control/laptop_page")
+	var laptop := _node("laptop_page")
 	var corner := _node("%cancel_button")
 
 	SignalBus.open_laptop_request.emit()

@@ -14,6 +14,11 @@ func _ready() -> void:
 	%round_manager.start_game()
 
 
+## SceneTransition 挂起这个场景时调用（回主菜单）。
+func _scene_suspended() -> void:
+	SignalBus.game_suspended.emit()
+
+
 ## 右上角的齿轮。和菜单里是同一个 settings_panel.tscn，
 ## 走 WindowManager 是为了和笔记本/日历排队——它们不能同时开着。
 func _on_settings_pressed() -> void:

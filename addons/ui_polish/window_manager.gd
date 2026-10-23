@@ -14,11 +14,19 @@ extends Node
 ## 用法（窗口自己不要互相 close）：
 ##     WindowManager.open_window(self)
 ##     WindowManager.close_current(scene_root)
+##     WindowManager.popup_state_changed.connect(func(root, has_window): ...)  # 比如暂停/恢复游戏
 
-## scene_root -> {"current": popup_window, "target": popup_window, "running": bool}
+## 某个 scene_root 下"有没有窗口开着"发生翻转时发出（一轮 open/close 链只会各发一次，
+## 中途换窗口不会重复触发）。用来把"开/关弹窗"和"暂停/恢复游戏"这类跟着走的状态
+## 集中钩在一处，不用在每个窗口脚本里各自散着写。
+signal popup_state_changed(scene_root: Node, has_window: bool)
+
+## scene_root -> {"current": popup_window, "target": popup_window, "running": bool, "has_popup": bool}
 ##   current：当前开着（或正在弹出）的窗口
 ##   target ：期望的最终状态，null 表示全关。切换途中又来新请求时只改这个值，
 ##            由正在跑的那一轮自己去看，不会起第二轮。
+##   has_popup：上一次发出的 popup_state_changed 是 true 还是 false，避免同一轮里
+##              连续换好几个窗口时，每次换窗口都误发一次"没有弹窗了"。
 var _states: Dictionary = {}
 
 
@@ -26,12 +34,13 @@ var _states: Dictionary = {}
 func open_window(w: popup_window) -> void:
 	if not is_instance_valid(w):
 		return
-	await _request(_state_for(scene_root_of(w)), w)
+	var root := scene_root_of(w)
+	await _request(root, _state_for(root), w)
 
 
 ## 关掉指定场景当前开着的窗口。
 func close_current(scene_root: Node) -> void:
-	await _request(_state_for(scene_root), null)
+	await _request(scene_root, _state_for(scene_root), null)
 
 
 ## 指定场景当前开着的窗口，没有就是 null。
@@ -63,7 +72,7 @@ func scene_root_of(w: Node) -> Node:
 func _state_for(root: Node) -> Dictionary:
 	_prune()
 	if not _states.has(root):
-		_states[root] = {"current": null, "target": null, "running": false}
+		_states[root] = {"current": null, "target": null, "running": false, "has_popup": false}
 	return _states[root]
 
 
@@ -74,17 +83,17 @@ func _prune() -> void:
 			_states.erase(root)
 
 
-func _request(st: Dictionary, w: popup_window) -> void:
+func _request(root: Node, st: Dictionary, w: popup_window) -> void:
 	st["target"] = w
 	if st["running"]:
 		# 正在跑的那一轮结束前会重新读 target，这里直接搭车就行。
 		return
 	st["running"] = true
-	await _run(st)
+	await _run(root, st)
 	st["running"] = false
 
 
-func _run(st: Dictionary) -> void:
+func _run(root: Node, st: Dictionary) -> void:
 	# 每次只走一步（关一个 / 开一个），走完回到循环顶上重新判断，
 	# 这样动画期间进来的新请求能立刻接上，不会排成一长串。
 	while true:
@@ -97,11 +106,15 @@ func _run(st: Dictionary) -> void:
 			await st["current"].close()
 			st["current"] = null
 
-		if st["target"] == null:
-			return
-		if not is_instance_valid(st["target"]):
+		if st["target"] == null or not is_instance_valid(st["target"]):
 			st["target"] = null
+			if st["has_popup"]:
+				st["has_popup"] = false
+				popup_state_changed.emit(root, false)
 			return
 
+		if not st["has_popup"]:
+			st["has_popup"] = true
+			popup_state_changed.emit(root, true)
 		st["current"] = st["target"]
 		await st["current"].open()
