@@ -281,7 +281,6 @@ click_sound = ExtResource("12_6xou6")
 
 [node name="camera_focus" type="Node" parent="Control/laptop_control/laptop" unique_id=418628175]
 script = ExtResource("19_uyg1v")
-enabled = true
 
 [node name="notes_control" type="Control" parent="Control" unique_id=20847891]
 layout_mode = 2
@@ -378,6 +377,8 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
 theme = ExtResource("8_nggn0")
 theme_type_variation = &"systemPanel"
