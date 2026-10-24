@@ -213,7 +213,7 @@
 |---|---|---|
 | 2a | 数据：条件语法扩展、`if` / `clock_out` / `show_ending`、`non_blocking`；转换器为现有 5 天生成**完整的显式天内图** | 完成 |
 | 2b | 执行：天内图解释器接管一天的流程（取代 `round_manager` 的三段状态机），物件点击、门、电话都改走图 | 完成 |
-| 2c | 内容搬家：剧情、邮件的文字从 `.story` 搬进节点 | 未开始 |
+| 2c | 内容搬家：剧情、邮件的文字从 `.story` 搬进节点 | 完成（世界设定除外） |
 
 2a 之后的约定：
 - 剧情 bubble / 发信节点暂时用 `props.source` 引用 `.story` 里的内容（`{"plan": 3, "part": "story"}`、
@@ -238,6 +238,21 @@
 - 结局天的「日志 → 结局对话 → 结局卡」也由图走；`ending_director` 只在直接发 `game_cleared` /
   `game_over` 信号（测试、调试）时才自己串一遍。
 - 测试换剧本（`_swap_day_plan`）时用 `round_manager.replace_day_body()` 同时换掉当天的天内图。
+
+2c 之后，**每天的内容都在关卡文件里**，不再从 `day_N.story` 读：
+- 剧情 bubble：`props.layer` 决定在哪层播——`notice`（一句话提示框，`script` 是纯文字）、
+  `story`（全屏剧情层：开场剧情；结局对话暂时还是 `source.ending`）、`event`（桌面桥段层）。
+  `props.script` 是每种语言一份的对话文字，写法和 `.story` 的对话一样，可以带 `[dialogue x]` 分支。
+- 发信节点：`filler`、`filler_exclude`、`roster`、`conditional_roster`（`[{"name", "if"}]`）是结构化字段；
+  `mails` 是 `[{"id", "script": {"zh": "[mail id …]\n…", "en": …}}]`，一封一条。
+- 运行时由 `level_content` 当场用 `story_parser` 解析，按「节点 + 语言」缓存；中途换语言再要一次就是另一种语言。
+  按 id 找剧情信走 `round_manager.mail_def()`（关卡里找，找不到再问 `story_book`）。
+- 校验器多了 `BAD_LAYER`、`BAD_SCRIPT`（带 `locale`，说明是哪种语言写错）、`DUP_MAIL_ID`。
+  注意：剧情文字解析报错的行号比节点里的文字多 1（解析时前面补了一行 `[story]`）。
+- `day_N.story` 现在只是转换器的输入。改剧情要么改关卡文件，要么改 `.story` 再重新转一遍
+  （重新转会覆盖关卡文件里手改的部分）。
+- **还没搬的**：`world.story` 的账户、档案、联系人和通话、名字池、结局规则以外的结局文字（结局对话、结局卡）。
+  这些属于世界数据表，留到做表单编辑时一起迁。
 - 天数跳转器的语义：`set N` → 下一个天节点就是第 N 天；`add N` → 下一个天节点是「本来的天数 + N」。
 - 历史流水账已经在记，但条件里的 `day3` 还是按天数查日志；等真有时空跳跃时再改成「最近一次」。
 

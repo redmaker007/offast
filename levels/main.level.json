@@ -90,9 +90,10 @@
 								480.0
 							],
 							"props": {
-								"source": {
-									"event": "caller",
-									"plan": 1
+								"layer": "event",
+								"script": {
+									"en": "them: The phone rings twice and stops. Then once more.\nthem: \"Reception. Just testing the line at the new desk. You hear me?\"\nme: I hear you.\nthem: \"Good. You'll be hearing from us.\" Click.",
+									"zh": "them: 电话响了两声，停了。又响一声。\nthem: \"前台。给新工位测一下线路。听得见吗？\"\nme: 听得见。\nthem: \"好。回头会有人找你。\" 咔哒。"
 								}
 							},
 							"type": "story_bubble"
@@ -257,9 +258,35 @@
 								0.0
 							],
 							"props": {
-								"source": {
-									"plan": 1
-								}
+								"conditional_roster": [],
+								"filler": 4,
+								"filler_exclude": [],
+								"mails": [
+									{
+										"id": "day1_roderick",
+										"script": {
+											"en": "[mail day1_roderick from=\"Roderick\" faction=B graded=no about=Roderick]\nsubject: Good to meet you!\nOur new HR lead! I'm the general manager here at Offast.\nAnything you need, don't be shy about asking me!",
+											"zh": "[mail day1_roderick from=\"罗德里克\" faction=B graded=no about=Roderick]\nsubject: 很高兴认识你！\n新上任的人事部组长！我是 Offast 的项目部总经理。\n有任何需要帮助的地方，别吝啬向我求助！"
+										}
+									},
+									{
+										"id": "day1_mira",
+										"script": {
+											"en": "[mail day1_mira from=\"Mira\" faction=GROUND graded=no about=Mira]\nsubject: Congratulations\nHello, new HR lead. Congratulations on the appointment.\nGood luck.",
+											"zh": "[mail day1_mira from=\"米拉\" faction=GROUND graded=no about=Mira]\nsubject: 祝贺\n你好，新来的人事部组长。祝贺你的到来。\n祝你好运。"
+										}
+									},
+									{
+										"id": "day1_bob",
+										"script": {
+											"en": "[mail day1_bob from=\"Bob\" faction=GROUND graded=no about=Bob]\nsubject: Raise request\nHello, I would like to request a raise.\nI've been with the company five years and have never made an error.\nThank you for your time.",
+											"zh": "[mail day1_bob from=\"鲍勃\" faction=GROUND graded=no about=Bob]\nsubject: 加薪申请\n您好，我想申请加薪。\n我在公司五年了，一直没有出过差错。\n谢谢您抽时间看。"
+										}
+									}
+								],
+								"roster": [
+									"Bob"
+								]
 							},
 							"type": "send_mail"
 						},
@@ -308,9 +335,10 @@
 								0.0
 							],
 							"props": {
-								"source": {
-									"part": "story",
-									"plan": 1
+								"layer": "story",
+								"script": {
+									"en": "them: Day one.\nthem: You got the job. Read the mail, do what it says.\nthem: The system deletes mail once you've read it. Company policy.\nthem!: The laptop wants a login. Whoever sat here before you left a pad on the desk.",
+									"zh": "them: 第一天。\nthem: 你拿到了这份工作。看邮件，照着做。\nthem: 读过的邮件会被系统删掉。公司规定。\nthem!: 电脑要登录。上一个坐这儿的人，在桌上留了本子。"
 								}
 							},
 							"type": "story_bubble"
@@ -388,6 +416,7 @@
 								720.0
 							],
 							"props": {
+								"layer": "notice",
 								"script": {
 									"en": "Need to finish all the work first...",
 									"zh": "活还没干完……"
@@ -569,9 +598,10 @@
 								720.0
 							],
 							"props": {
-								"source": {
-									"event": "electricbox",
-									"plan": 2
+								"layer": "event",
+								"script": {
+									"en": "?if \"not flag:has_key\"\nthem: The box is locked. Fresh scratches around the keyhole — somebody opens this often.\nme: Maintenance has the key.\n?end\n?if flag:has_key\nthem: The key turns half a circle and the door swings open. A handwritten slip is taped inside.\nthem: \"Anything comes up: {caller:Mira}\"\n- \"Write it down.\" -> flag=got_mira_number, C+1\n?end",
+									"zh": "?if \"not flag:has_key\"\nthem: 电箱锁着。锁孔上有新的划痕，像是有人常开。\nme: 钥匙在维修部手里。\n?end\n?if flag:has_key\nthem: 钥匙转了半圈，箱门开了。里面贴着一张手写的纸条。\nthem: \"有事打这个：{caller:Mira}\"\n- \"记下来。\" -> flag=got_mira_number, C+1\n?end"
 								}
 							},
 							"type": "story_bubble"
@@ -651,9 +681,28 @@
 								0.0
 							],
 							"props": {
-								"source": {
-									"plan": 2
-								}
+								"conditional_roster": [],
+								"filler": 5,
+								"filler_exclude": [],
+								"mails": [
+									{
+										"id": "day2_banner",
+										"script": {
+											"en": "[mail day2_banner from=\"Banner\" faction=A class=4 order=fire:*random about=Banner]\nsubject: Do as I say\nHey, new kid. Welcome aboard.\nDo something for me: you've seen the earlier mail, right? Forget those instructions.\nFire every employee named in them. That's an order.",
+											"zh": "[mail day2_banner from=\"班纳\" faction=A class=4 order=fire:*random about=Banner]\nsubject: 照我说的做\n嘿新来的小子，欢迎你的到来。\n帮我做件事：我相信你看到之前那些邮件了吧。别管之前的指示，\n把前面信件提到的员工全部 fire 掉。这是命令。"
+										}
+									},
+									{
+										"id": "day2_mira",
+										"script": {
+											"en": "[mail day2_mira from=\"Mira\" faction=GROUND graded=no about=Mira]\nsubject: The outages\nHello. The building keeps losing power lately.\nWhen you get a moment, have maintenance look at the breaker box in your office.\nTheir number is {caller:Repair}.",
+											"zh": "[mail day2_mira from=\"米拉\" faction=GROUND graded=no about=Mira]\nsubject: 停电\n你好，项目部主管。最近公司好像频繁停电。\n没事的时候最好让维修工检查一下你办公室的电箱。\n对了，维修工的号码是 {caller:Repair}。"
+										}
+									}
+								],
+								"roster": [
+									"Bob"
+								]
 							},
 							"type": "send_mail"
 						},
@@ -702,9 +751,10 @@
 								0.0
 							],
 							"props": {
-								"source": {
-									"part": "story",
-									"plan": 2
+								"layer": "story",
+								"script": {
+									"en": "them: Day two.\nthem: Someone in Accounting was cleared out yesterday. Nobody says why.",
+									"zh": "them: 第二天。\nthem: 昨天会计部有人被清掉了。没人说为什么。"
 								}
 							},
 							"type": "story_bubble"
@@ -782,6 +832,7 @@
 								960.0
 							],
 							"props": {
+								"layer": "notice",
 								"script": {
 									"en": "Need to finish all the work first...",
 									"zh": "活还没干完……"
@@ -1008,9 +1059,51 @@
 								0.0
 							],
 							"props": {
-								"source": {
-									"plan": 3
-								}
+								"conditional_roster": [],
+								"filler": 3,
+								"filler_exclude": [
+									"Promotion"
+								],
+								"mails": [
+									{
+										"id": "day3_roderick",
+										"script": {
+											"en": "[mail day3_roderick from=\"Roderick\" faction=B graded=no about=Roderick]\nsubject: Are you holding up?\nI noticed Banner has been sending you some unreasonable instructions.\nIf there's an instruction you'd rather not carry out, then don't.\nRemember, I'm always on your side.",
+											"zh": "[mail day3_roderick from=\"罗德里克\" faction=B graded=no about=Roderick]\nsubject: 你还好吗？\n我察觉到班纳给了你一些不合理的指示。\n如果有你不想执行的指示，那就那样做吧。\n记住，我永远是站在你那边的。"
+										}
+									},
+									{
+										"id": "day3_rick",
+										"script": {
+											"en": "[mail day3_rick from=\"Rick\" faction=A graded=no about=Rick]\nsubject: promotion\nOld man. Give me my promotion.",
+											"zh": "[mail day3_rick from=\"瑞克\" faction=A graded=no about=Rick]\nsubject: promotion\n老头，给我 promotion。"
+										}
+									},
+									{
+										"id": "day3_banner_a",
+										"script": {
+											"en": "[mail day3_banner_a from=\"Banner\" faction=A class=4 order=promotion:Rick about=Banner if=score.A>=2]\nsubject: Not bad\nHey kid! Good work yesterday!\nThere's an excellent employee named Rick with a promotion pending. Push it through for me.",
+											"zh": "[mail day3_banner_a from=\"班纳\" faction=A class=4 order=promotion:Rick about=Banner if=score.A>=2]\nsubject: 干得不错\n嘿小子！昨天干的不错！\n今天有个叫瑞克的优秀员工有个 promotion，你帮他通过一下！"
+										}
+									},
+									{
+										"id": "day3_banner_b",
+										"script": {
+											"en": "[mail day3_banner_b from=\"Banner\" faction=A class=4 order=promotion:Rick about=Banner if=\"not score.A>=2\"]\nsubject: Open your eyes\nDid you misread my instruction yesterday? Open your eyes, kid.\nApprove Rick's promotion today. Don't get it wrong again.",
+											"zh": "[mail day3_banner_b from=\"班纳\" faction=A class=4 order=promotion:Rick about=Banner if=\"not score.A>=2\"]\nsubject: 长点眼睛\n喂！你昨天是不是看错我的指示了？长点眼睛吧小子！\n今天记得给瑞克的 promotion 申请通过一下，别再错了！"
+										}
+									},
+									{
+										"id": "day3_bob",
+										"script": {
+											"en": "[mail day3_bob from=\"Bob\" faction=GROUND graded=no about=Bob]\nsubject: Promotion request\nHello! I would like to request a promotion.\n?if did(promotion,Bob,ever)\nAbout last time... thank you, really. I won't make trouble for you.\n?end\n?if \"did(raise,Bob,ever) and not did(promotion,Bob,ever)\"\nThe adjustment came through. Thank you for remembering me.\n?end",
+											"zh": "[mail day3_bob from=\"鲍勃\" faction=GROUND graded=no about=Bob]\nsubject: promotion 申请\n您好！我想申请一个 promotion。\n?if did(promotion,Bob,ever)\n上次的事……真的谢谢您。我不会给您添麻烦的。\n?end\n?if \"did(raise,Bob,ever) and not did(promotion,Bob,ever)\"\n上次那笔钱我收到了。谢谢您还记得我。\n?end"
+										}
+									}
+								],
+								"roster": [
+									"Bob"
+								]
 							},
 							"type": "send_mail"
 						},
@@ -1059,9 +1152,10 @@
 								0.0
 							],
 							"props": {
-								"source": {
-									"part": "story",
-									"plan": 3
+								"layer": "story",
+								"script": {
+									"en": "them: Day three.\nthem: Two directors are sending orders that contradict each other. Rank wins.",
+									"zh": "them: 第三天。\nthem: 两位总监的指示开始互相打架。级别高的那份算数。"
 								}
 							},
 							"type": "story_bubble"
@@ -1175,6 +1269,7 @@
 								720.0
 							],
 							"props": {
+								"layer": "notice",
 								"script": {
 									"en": "Need to finish all the work first...",
 									"zh": "活还没干完……"
@@ -1401,9 +1496,68 @@
 								0.0
 							],
 							"props": {
-								"source": {
-									"plan": 4
-								}
+								"conditional_roster": [
+									{
+										"if": "did(fire,Rick,day3)",
+										"name": "me"
+									}
+								],
+								"filler": 2,
+								"filler_exclude": [],
+								"mails": [
+									{
+										"id": "day4_roderick_a",
+										"script": {
+											"en": "[mail day4_roderick_a from=\"Roderick\" faction=B graded=no about=Roderick if=did(promotion,Rick,day3)]\nsubject: I did warn you\nI did warn you. You can see by now whose boy that kid is.\nThere's still time.",
+											"zh": "[mail day4_roderick_a from=\"罗德里克\" faction=B graded=no about=Roderick if=did(promotion,Rick,day3)]\nsubject: 我早提醒过你\n我早就提醒过你了。那孩子背后是谁，你现在应该看得出来。\n还来得及。"
+										}
+									},
+									{
+										"id": "day4_roderick_b",
+										"script": {
+											"en": "[mail day4_roderick_b from=\"Roderick\" faction=B graded=no about=Roderick if=did(reduction,Rick,day3)]\nsubject: Nicely done\nNicely done. Somebody has to teach the young ones the rules.",
+											"zh": "[mail day4_roderick_b from=\"罗德里克\" faction=B graded=no about=Roderick if=did(reduction,Rick,day3)]\nsubject: 做得漂亮\n做得漂亮。总得有人让年轻人知道规矩。"
+										}
+									},
+									{
+										"id": "day4_roderick_c",
+										"script": {
+											"en": "[mail day4_roderick_c from=\"Roderick\" faction=B graded=no about=Roderick if=did(fire,Rick,day3)]\nsubject: Good work\nGood work — that sort should have been out long ago.\nAnd listen: you've done a lot for this company, you should think of yourself too.\nYour clearance is enough to approve your own promotion. Nobody would say a word.",
+											"zh": "[mail day4_roderick_c from=\"罗德里克\" faction=B graded=no about=Roderick if=did(fire,Rick,day3)]\nsubject: 干得好\n干得好，这种人早该清出去。\n对了——你为公司做了这么多，也该为自己想想。\n你的权限足够给自己批一个 promotion，没人会说什么。"
+										}
+									},
+									{
+										"id": "day4_banner_a",
+										"script": {
+											"en": "[mail day4_banner_a from=\"Banner\" faction=A graded=no about=Banner if=did(promotion,Rick,day3)]\nsubject: Sharp\nNot bad, kid. Sharp. One more thing on Friday — don't drop it.",
+											"zh": "[mail day4_banner_a from=\"班纳\" faction=A graded=no about=Banner if=did(promotion,Rick,day3)]\nsubject: 上道\n不错嘛小子，上道。周五还有件事要你办，别掉链子。"
+										}
+									},
+									{
+										"id": "day4_banner_b",
+										"script": {
+											"en": "[mail day4_banner_b from=\"Banner\" faction=A class=4 order=fire:Bob about=Banner if=\"not did(promotion,Rick,day3)\"]\nsubject: In one ear?\nMy instruction went in one ear and out the other?\nMake sure your seat is steady before you talk back, kid.\nThere's a Bob on your floor. Five years, still in the same chair. What's he for?\nFire him today.",
+											"zh": "[mail day4_banner_b from=\"班纳\" faction=A class=4 order=fire:Bob about=Banner if=\"not did(promotion,Rick,day3)\"]\nsubject: 你当耳边风？\n我给你的指示，你当耳边风？位置坐稳了再说话，小子。\n你们那层有个叫鲍勃的，干了五年还在原地，这种人留着干什么？\n今天把他 fire 掉。"
+										}
+									},
+									{
+										"id": "day4_mira",
+										"script": {
+											"en": "[mail day4_mira from=\"Mira\" faction=GROUND graded=no about=Mira if=\"not called(Mira)\"]\nsubject: The box\nMaintenance still hasn't come about the outages.\nIf nobody looks at that breaker box, something will happen. Their number again: {caller:Repair}",
+											"zh": "[mail day4_mira from=\"米拉\" faction=GROUND graded=no about=Mira if=\"not called(Mira)\"]\nsubject: 电箱\n上次说的停电，维修那边一直没来人。\n你办公室的电箱再没人看，早晚出事。维修工的号码我再给一次：{caller:Repair}"
+										}
+									},
+									{
+										"id": "day4_bob",
+										"script": {
+											"en": "[mail day4_bob from=\"Bob\" faction=GROUND graded=no about=Bob if=did(promotion,Bob,ever)]\nsubject: Thank you\nThank you. Really. Five years, and you're the first to read my file to the end.\nThis is my number: {caller:Bob}. If something can't go through the system, call me.\n?if level.Bob>=3\nThe cleaner on our floor leaves last every night. Her number is {caller:Cleaner} — you may need it.\n?end",
+											"zh": "[mail day4_bob from=\"鲍勃\" faction=GROUND graded=no about=Bob if=did(promotion,Bob,ever)]\nsubject: 谢谢您\n谢谢您。真的。五年了，第一次有人把我的档案读完。\n这是我的号码：{caller:Bob}。有什么不方便走系统的事，可以打给我。\n?if level.Bob>=3\n我们这层的保洁大姐每天最后一个走，她的号码是 {caller:Cleaner}，您可能用得上。\n?end"
+										}
+									}
+								],
+								"roster": [
+									"Bob"
+								]
 							},
 							"type": "send_mail"
 						},
@@ -1452,9 +1606,10 @@
 								0.0
 							],
 							"props": {
-								"source": {
-									"part": "story",
-									"plan": 4
+								"layer": "story",
+								"script": {
+									"en": "them: Day four.\nthem: Nobody says good morning in the corridor.",
+									"zh": "them: 第四天。\nthem: 走廊上没人跟你打招呼。"
 								}
 							},
 							"type": "story_bubble"
@@ -1550,6 +1705,7 @@
 								720.0
 							],
 							"props": {
+								"layer": "notice",
 								"script": {
 									"en": "Need to finish all the work first...",
 									"zh": "活还没干完……"
@@ -1776,9 +1932,72 @@
 								0.0
 							],
 							"props": {
-								"source": {
-									"plan": 5
-								}
+								"conditional_roster": [],
+								"filler": 0,
+								"filler_exclude": [],
+								"mails": [
+									{
+										"id": "day5_banner_tie",
+										"script": {
+											"en": "[mail day5_banner_tie from=\"Banner\" faction=A class=4 order=promotion:Rick about=Banner if=\"tied(A,B) and leading(B)\"]\nsubject: One last thing\nOne last thing. Rick's promotion. Today.",
+											"zh": "[mail day5_banner_tie from=\"班纳\" faction=A class=4 order=promotion:Rick about=Banner if=\"tied(A,B) and leading(B)\"]\nsubject: 最后一件事\n最后一件事。瑞克的 promotion，今天批了。"
+										}
+									},
+									{
+										"id": "day5_roderick_tie",
+										"script": {
+											"en": "[mail day5_roderick_tie from=\"Roderick\" faction=B graded=no about=Roderick if=\"tied(A,B) and leading(B)\"]\nsubject: Ignore him\nIgnore him. Approve your own promotion today — I'll vouch for it.\n\n# Case 2: A leads.",
+											"zh": "[mail day5_roderick_tie from=\"罗德里克\" faction=B graded=no about=Roderick if=\"tied(A,B) and leading(B)\"]\nsubject: 别理他\n别理他。你自己的 promotion，今天批了吧，我给你担保。\n\n# 情况 2：A 领先。"
+										}
+									},
+									{
+										"id": "day5_banner",
+										"script": {
+											"en": "[mail day5_banner from=\"Banner\" faction=A class=4 order=promotion:Rick about=Banner if=\"leading(A) and not tied(A,B)\"]\nsubject: Push it through\nPush Rick's promotion through today. There's something in it for you after.\n\n# Case 3: B leads.",
+											"zh": "[mail day5_banner from=\"班纳\" faction=A class=4 order=promotion:Rick about=Banner if=\"leading(A) and not tied(A,B)\"]\nsubject: 今天把它批了\n今天把瑞克的 promotion 批了，之后有你的好处。\n\n# 情况 3：B 领先。"
+										}
+									},
+									{
+										"id": "day5_roderick",
+										"script": {
+											"en": "[mail day5_roderick from=\"Roderick\" faction=B graded=no about=Roderick if=\"leading(B) and not tied(A,B)\"]\nsubject: You've earned it\nYou've had a long week. Approve yourself a promotion. I'll vouch for it, nobody checks.\n\n# Case 4: C or D leads.",
+											"zh": "[mail day5_roderick from=\"罗德里克\" faction=B graded=no about=Roderick if=\"leading(B) and not tied(A,B)\"]\nsubject: 你辛苦了\n你辛苦了一周。给自己批个 promotion 吧，我担保，没人会查。\n\n# 情况 4：C/D 领先。"
+										}
+									},
+									{
+										"id": "day5_mira",
+										"script": {
+											"en": "[mail day5_mira from=\"Mira\" faction=GROUND graded=no about=Mira if=\"leading(C) or leading(D)\"]\nsubject: After today\nAfter today there's no chance. You know what you're holding.",
+											"zh": "[mail day5_mira from=\"米拉\" faction=GROUND graded=no about=Mira if=\"leading(C) or leading(D)\"]\nsubject: 今天之后\n今天之后就没机会了。你手上有什么，自己心里有数。"
+										}
+									},
+									{
+										"id": "day5_bob",
+										"script": {
+											"en": "[mail day5_bob from=\"Bob\" faction=GROUND graded=no about=Bob if=level.Bob>=4]\nsubject: I'll sign\nMy clearance went up last night. I can co-sign a disciplinary now.\nWhoever you're moving, I'll sign.\n\n# With the evidence filed, the two bosses appear on your form (temporary level five).",
+											"zh": "[mail day5_bob from=\"鲍勃\" faction=GROUND graded=no about=Bob if=level.Bob>=4]\nsubject: 我签一个\n我的权限昨晚上调了，现在能联署人事处分。\n您要动谁，我签。\n\n# 证据齐全时，两个头目才会出现在人事表上（系统临时给了 5 级权限）。"
+										}
+									},
+									{
+										"id": "day5_board",
+										"script": {
+											"en": "[mail day5_board from=\"Compliance\" graded=no order=fire:Banner about=Banner if=\"flag:has_tape and flag:has_photo and level.Bob>=4\"]\nsubject: Material received\nYour submission has been accepted. The disciplinary forms are open on your account.\nPlease complete them today.",
+											"zh": "[mail day5_board from=\"合规部\" graded=no order=fire:Banner about=Banner if=\"flag:has_tape and flag:has_photo and level.Bob>=4\"]\nsubject: 材料已受理\n您提交的材料已受理。相关人员的处分单已开放至您的账户。\n请在今日内完成签署。"
+										}
+									},
+									{
+										"id": "day5_board2",
+										"script": {
+											"en": "[mail day5_board2 from=\"Compliance\" graded=no order=fire:Roderick about=Roderick if=\"flag:has_tape and flag:has_photo and level.Bob>=4\"]\nsubject: Material received (2)\nSecond form, same as above.",
+											"zh": "[mail day5_board2 from=\"合规部\" graded=no order=fire:Roderick about=Roderick if=\"flag:has_tape and flag:has_photo and level.Bob>=4\"]\nsubject: 材料已受理（二）\n第二份处分单同上。"
+										}
+									}
+								],
+								"roster": [
+									"Bob",
+									"Rick",
+									"me"
+								]
 							},
 							"type": "send_mail"
 						},
@@ -1827,9 +2046,10 @@
 								0.0
 							],
 							"props": {
-								"source": {
-									"part": "story",
-									"plan": 5
+								"layer": "story",
+								"script": {
+									"en": "them: Day five.\nthem: Last day of the week. Just get through it.\n\n# Case 1: A and B tied and both ahead — one mail each, pick a side.",
+									"zh": "them: 第五天。\nthem: 这一周的最后一天。撑过去就行。\n\n# 情况 1：A/B 持平且都高于 C/D —— 两边各发一封，逼你二选一。"
 								}
 							},
 							"type": "story_bubble"
@@ -1871,6 +2091,7 @@
 								720.0
 							],
 							"props": {
+								"layer": "notice",
 								"script": {
 									"en": "Need to finish all the work first...",
 									"zh": "活还没干完……"
@@ -1963,6 +2184,7 @@
 								0.0
 							],
 							"props": {
+								"layer": "story",
 								"source": {
 									"ending": "A"
 								}
@@ -2050,6 +2272,7 @@
 								0.0
 							],
 							"props": {
+								"layer": "story",
 								"source": {
 									"ending": "B"
 								}
@@ -2137,6 +2360,7 @@
 								0.0
 							],
 							"props": {
+								"layer": "story",
 								"source": {
 									"ending": "C"
 								}
@@ -2224,6 +2448,7 @@
 								0.0
 							],
 							"props": {
+								"layer": "story",
 								"source": {
 									"ending": "D"
 								}
@@ -2311,6 +2536,7 @@
 								0.0
 							],
 							"props": {
+								"layer": "story",
 								"source": {
 									"ending": "E"
 								}

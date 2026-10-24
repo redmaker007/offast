@@ -33,7 +33,7 @@ func _refresh() -> void:
 	var showing: bool = RoundState.current_round_state == RoundState.Round_State.STORY
 	visible = showing
 	if showing:
-		play(conversation_for_day(%round_manager.current_plan_day()))
+		play(%round_manager.current_story())
 
 
 ## 换语言之后内容整套换了一份：**正在演的那一句要就地换过来**，
@@ -41,7 +41,7 @@ func _refresh() -> void:
 func _on_content_reloaded(_locale: String) -> void:
 	if not visible or not _player.is_playing():
 		return
-	_player.resume(conversation_for_day(%round_manager.current_plan_day()), _player.position())
+	_player.resume(%round_manager.current_story(), _player.position())
 
 
 ## 第 day 天的剧本（从 1 开始）该播哪段剧情。没写就是 null，

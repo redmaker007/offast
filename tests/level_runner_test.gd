@@ -149,7 +149,7 @@ func _jump_doc(mode1: String, value1: int, mode2: String, value2: int) -> level_
 	for id in ["day_1", "day_2", "day_3", "end"]:
 		var n := g.add(flow_node.new(id, "day"))
 		n.props = {"role": "normal"}
-		n.body = level_converter.work_day_body(1, null)
+		n.body = level_converter.work_day_body(1, {})
 	g.node("day_1").props["role"] = "start"
 	g.node("end").props["role"] = "ending"
 	g.node("end").body = level_converter.ending_body("C")
@@ -203,6 +203,41 @@ func _check_day_bodies(doc: level_doc, day_count: int) -> void:
 			if fx:
 				_eq("%s：第 %d 条 [score] 条件照抄" % [tag, r + 1], fx.props["if"], plan.score_rules[r].condition)
 		_is_false("%s：没有多出来的效果节点" % tag, b.has("score_%d" % (plan.score_rules.size() + 1)))
+		_check_day_text(b, i, tag)
+
+
+## 节点里存的文字（每种语言）解析出来，要和原来 .story 导入的那份一模一样。
+func _check_day_text(b: flow_graph, day_no: int, tag: String) -> void:
+	var content := level_content.new()
+	for loc in ["zh", "en"]:
+		var plan := load("res://story/%s/days/day_%d.story" % [loc, day_no]) as day_plan
+		var t := "%s %s" % [tag, loc]
+		_eq("%s：开场剧情的结构" % t, _shape(content.conversation_for(b.node("opening"), loc)), _shape(plan.story))
+		if b.has("caller_event"):
+			_eq("%s：来电桥段的结构" % t, _shape(content.conversation_for(b.node("caller_event"), loc)),
+				_shape(plan.caller))
+		if b.has("electricbox_event"):
+			_eq("%s：电箱桥段的结构" % t, _shape(content.conversation_for(b.node("electricbox_event"), loc)),
+				_shape(plan.electricbox))
+		var mails := content.plan_for_mail(b.node("mail"), loc)
+		_eq("%s：随机信数量" % t, mails.filler_emails, plan.filler_emails)
+		_eq("%s：名单" % t, mails.story_roster, plan.story_roster)
+		_eq("%s：剧情信" % t, mails.scripted_emails.map(_mail_shape), plan.scripted_emails.map(_mail_shape))
+
+
+## 对话的「形状」：每段分支有几句、各有几个选项。文字本身由解析器保证，这里只核对没丢东西。
+func _shape(c: conversation) -> Array:
+	if c == null:
+		return []
+	var result: Array = []
+	for d in c.dialogues:
+		result.append([d.id, d.bubbles.map(func(bb): return [bb.text, bb.choices.size(), bb.condition])])
+	return result
+
+
+func _mail_shape(m: email_def) -> Array:
+	return [m.id, m.sender_name, m.subject, m.condition, m.order, m.target_employee, m.graded,
+		m.body_blocks.size(), m.replies.size(), m.about_employee]
 
 
 func _test_jumper() -> void:
@@ -232,7 +267,7 @@ func _test_branch_loop_guard() -> void:
 	var g := doc.graph
 	var d1 := g.add(flow_node.new("day_1", "day"))
 	d1.props = {"role": "start"}
-	d1.body = level_converter.work_day_body(1, null)
+	d1.body = level_converter.work_day_body(1, {})
 	var e := g.add(flow_node.new("end", "day"))
 	e.props = {"role": "ending"}
 	e.body = level_converter.ending_body("C")

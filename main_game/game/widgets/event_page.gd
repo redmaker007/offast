@@ -63,8 +63,9 @@ func _on_content_reloaded(_locale: String) -> void:
 ## 正在演的那一段，在**当前语言**的内容里对应的是哪一份。
 func _current_source() -> conversation:
 	match _source_kind:
-		&"event":
-			return %story_book.event_for(%round_manager.current_plan_day(), _source_id)
+		&"node":
+			# 天内图里的桥段：按节点 id 找回同一段（当前语言）。
+			return %round_manager.conversation_for_node(_source_id)
 		&"call":
 			var who: contact = %story_book.contact_by_name(_source_id)
 			return who.call if who != null else null

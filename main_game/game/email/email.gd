@@ -16,7 +16,7 @@ var id: StringName = &""
 
 ## 对应 email_def 的 id。**存 id 不存 Resource**：存档的 object_packer 会把
 ## Resource 深拷贝一份；而且剧情信的定义现在是 .story 导入出来的内嵌子资源，
-## 根本没有独立路径可存。要拿回定义去问 story_book.mail_def(id)。
+## 根本没有独立路径可存。要拿回定义去问 round_manager.mail_def(id)（关卡发信节点里找，找不到再问 story_book）。
 
 ## 发件人属于哪一派（faction.KEY_*）。随机信是空串。
 var faction_key: StringName = &""

@@ -1143,7 +1143,7 @@ func _swap_day_plan(day: int, text: String) -> void:
 		return
 	_node("story_book").days[day - 1] = parsed.day
 	# 天内图是照剧本转出来的（有没有电箱、[score] 有几条），剧本换了图也要跟着重转。
-	_rm().replace_day_body(level_converter.work_day_body(day, parsed.day))
+	_rm().replace_day_body(level_converter.work_day_body(day, {"zh": text}))
 
 
 ## 让某一派往某个员工身上下一道命令（等级 4，盖得过随机信）。

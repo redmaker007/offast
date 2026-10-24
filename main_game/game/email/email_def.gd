@@ -104,7 +104,7 @@ func targets_all_random() -> bool:
 ## override_target 用来把 *random 展开成具体某个人。
 ## 只带 id，不带这个 Resource 本身——存档的 object_packer 会把 Resource 深拷贝
 ## 一份，而且这些定义是 .story 导入出来的内嵌子资源，没有独立路径。
-## 要拿回定义去问 story_book.mail_def(id)。
+## 要拿回定义去问 round_manager.mail_def(id)（关卡发信节点里找，找不到再问 story_book）。
 func make_email(override_target := &"") -> email:
 	var e := email.new()
 	var target := override_target if not String(override_target).is_empty() else target_employee

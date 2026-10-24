@@ -15,6 +15,7 @@ static func validate(doc: level_doc) -> Array[level_error]:
 	_check_outer(doc, errs)
 	for n in doc.graph.of_type("day"):
 		_check_body(doc, n, errs)
+	_check_mail_ids(doc, errs)
 	return errs
 
 
@@ -137,6 +138,19 @@ static func _check_body(doc: level_doc, day: flow_node, errs: Array[level_error]
 				_check_condition(str(n.props.get("unlock", "")), variables, d, id, errs)
 			"window_bubble":
 				_check_object(n, objects, d, errs)
+			"story_bubble":
+				var layer := str(n.props.get("layer", "event"))
+				if not layer in node_types.STORY_LAYERS:
+					errs.append(level_error.new("BAD_LAYER", {"layer": layer}, d, id))
+				elif layer != "notice":
+					_check_scripts(n.props.get("script", {}), "", d, id, errs)
+			"send_mail":
+				for m in n.props.get("mails", []):
+					if m is Dictionary:
+						_check_scripts(m.get("script", {}), str(m.get("id", "")), d, id, errs)
+				for c in n.props.get("conditional_roster", []):
+					if c is Dictionary:
+						_check_condition(str(c.get("if", "")), variables, d, id, errs)
 			"if":
 				_check_cases(n, variables, d, errs)
 			"effect":
@@ -254,6 +268,39 @@ static func _check_ports(kind: String, g: flow_graph, n: flow_node, d: String,
 			elif not allowed.is_empty() and not g.node(t).type in allowed:
 				errs.append(level_error.new("WRONG_TARGET_TYPE",
 					{"port": port, "target": t, "target_type": g.node(t).type}, d, n.id))
+
+
+## 剧情 / 邮件文字每种语言各解析一遍。mail_id 为空表示是剧情对话。
+static func _check_scripts(script: Variant, mail_id: String, d: String, id: String,
+		errs: Array[level_error]) -> void:
+	if not script is Dictionary:
+		return
+	for loc in script:
+		var text := str(script[loc])
+		var detail := level_content.check_dialogue(text) if mail_id.is_empty() \
+			else level_content.check_mail(text, mail_id)
+		if not detail.is_empty():
+			var params := {"locale": loc, "detail": detail}
+			if not mail_id.is_empty():
+				params["mail"] = mail_id
+			errs.append(level_error.new("BAD_SCRIPT", params, d, id))
+
+
+## 邮件 id 整份关卡里唯一：读档恢复收件箱、换语言重画都按 id 找。
+static func _check_mail_ids(doc: level_doc, errs: Array[level_error]) -> void:
+	var seen := {}
+	for day in doc.graph.of_type("day"):
+		if day.body == null:
+			continue
+		for n in day.body.of_type("send_mail"):
+			for m in n.props.get("mails", []):
+				if not m is Dictionary:
+					continue
+				var mid := str(m.get("id", ""))
+				if seen.has(mid):
+					errs.append(level_error.new("DUP_MAIL_ID", {"id": mid, "other": seen[mid]}, day.id, n.id))
+				else:
+					seen[mid] = "%s/%s" % [day.id, n.id]
 
 
 ## 分化器 / 条件分支的每一条条件。

@@ -66,6 +66,9 @@ var _waiting := ""
 ## 下班元件算好的当天结果，结算画面元件拿去显示。
 var _last_result: Dictionary = {}
 
+## 节点里的文字 → conversation / email_def（按语言缓存）。
+var content := level_content.new()
+
 
 func _ready() -> void:
 	add_to_group(SaveState.GROUP)
@@ -154,6 +157,7 @@ func replace_day_body(body: flow_graph) -> void:
 	if n == null:
 		return
 	n.body = body
+	content.clear()
 	day.attach(body, self)
 
 
@@ -241,8 +245,7 @@ func run_step(n: flow_node) -> bool:
 		"story_bubble":
 			return _run_story(n)
 		"send_mail":
-			var src: Dictionary = n.props.get("source", {})
-			_send_mails(%story_book.plan_for(int(src.get("plan", current_plan_day()))))
+			_send_mails(content.plan_for_mail(n))
 		"window_bubble":
 			_open_window(str(n.props.get("object", "")))
 		"clock_out":
@@ -262,37 +265,69 @@ func run_step(n: flow_node) -> bool:
 	return false
 
 
-## 剧情 bubble：内联文字（一句提示）/ 当天开场剧情 / 物件桥段 / 结局对话。
+## 剧情 bubble，按 layer 放在不同的层上播：
+##   notice  一句话提示框（「活还没干完」）
+##   story   全屏剧情层：当天开场剧情（进 STORY 模式），或者结局对话（source.ending）
+##   event   桌面桥段层（电话、电箱……）
 ## 返回「还在等」——剧情是空的会同步播完（已经 _resume 过了），那时就不用等了。
 func _run_story(n: flow_node) -> bool:
-	if n.props.has("script"):
-		SignalBus.notice_requested.emit(level_doc.loc_text(n.props["script"]))
-		return false
+	match str(n.props.get("layer", "event")):
+		"notice":
+			SignalBus.notice_requested.emit(level_doc.loc_text(n.props.get("script", "")))
+			return false
+		"story":
+			if n.props.has("source"):
+				var c := _ending_story(n)
+				if c == null or c.is_empty():
+					return false
+				# 借剧情层来播：结局对话和开场剧情长得就该一样。
+				_waiting = "ending_story"
+				%story_page.visible = true
+				%story_page.play(c)
+				return _waiting == "ending_story"
+			# 开场剧情：进 STORY 模式，story_page 问 current_story() 拿对话来播。
+			_waiting = "story"
+			_change_state(RoundState.Round_State.STORY)
+			return _waiting == "story"
+		_:
+			var c := content.conversation_for(n)
+			if c == null or c.is_empty():
+				return false
+			_waiting = "event"
+			%event_page.play_conversation(c, &"node", StringName(n.id))
+			return _waiting == "event"
+
+
+## 剧情层现在该播的那一段（当前语言）：图正停在的那个剧情 bubble。换语言时 story_page 也问这里。
+func current_story() -> conversation:
+	if day == null or day.graph == null:
+		return null
+	var n := day.graph.node(day.current)
+	if n == null or n.type != "story_bubble":
+		return null
+	if n.props.has("source"):
+		return _ending_story(n)
+	return content.conversation_for(n)
+
+
+## 桥段层换语言时按节点 id 找回同一段。
+func conversation_for_node(id: StringName) -> conversation:
+	if day == null or day.graph == null:
+		return null
+	return content.conversation_for(day.graph.node(String(id)))
+
+
+## 按 id 找剧情信的定义（当前语言）：先在关卡的发信节点里找，找不到再问 story_book。
+func mail_def(id: StringName) -> email_def:
+	var def := content.mail_def(level.doc if level != null else null, id)
+	return def if def != null else %story_book.mail_def(id)
+
+
+## 结局对话还在 world.story 里（世界表迁移之前）。
+func _ending_story(n: flow_node) -> conversation:
 	var src: Dictionary = n.props.get("source", {})
-	if src.has("part"):
-		# 开场剧情：进 STORY 模式，story_page 自己按当天剧本播。
-		_waiting = "story"
-		_change_state(RoundState.Round_State.STORY)
-		return _waiting == "story"
-	if src.has("event"):
-		var key := StringName(str(src["event"]))
-		var c: conversation = %story_book.event_for(int(src.get("plan", current_plan_day())), key)
-		if c == null or c.is_empty():
-			return false
-		_waiting = "event"
-		%event_page.play_conversation(c, &"event", key)
-		return _waiting == "event"
-	if src.has("ending"):
-		var d: ending_def = %ending_director.def_for(StringName(str(src["ending"])))
-		if d == null or d.story == null or d.story.is_empty():
-			return false
-		# 借剧情层来播：结局对话和开场剧情长得就该一样。
-		_waiting = "ending_story"
-		%story_page.visible = true
-		%story_page.play(d.story)
-		return _waiting == "ending_story"
-	push_warning("剧情 bubble %s 既没有 script 也没有 source" % n.id)
-	return false
+	var d: ending_def = %ending_director.def_for(StringName(str(src.get("ending", ""))))
+	return d.story if d != null else null
 
 
 ## 视窗 bubble：打开物件自带的弹窗。第 3 阶段房间数据化之后，物件开什么窗写在世界表里。

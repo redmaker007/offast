@@ -29,7 +29,7 @@ func _ready() -> void:
 func _on_content_reloaded(_locale: String) -> void:
 	if _def == null or not visible:
 		return
-	var again: email_def = %story_book.mail_def(_def.id)
+	var again: email_def = %round_manager.mail_def(_def.id)
 	if again == null:
 		return
 	_def = again
@@ -57,7 +57,7 @@ func _on_inbox_empty() -> void:
 
 func on_show_email(e:email):
 	_last_email = e
-	_def = %story_book.mail_def(e.id) if e.is_scripted() else null
+	_def = %round_manager.mail_def(e.id) if e.is_scripted() else null
 	_clear_replies()
 
 	if _def == null:

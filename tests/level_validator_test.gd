@@ -24,6 +24,7 @@ func _ready() -> void:
 	_test_inner_chains()
 	_test_inner_props()
 	_test_logic()
+	_test_scripts()
 	_test_conditions()
 	_test_error_text()
 	_test_round_trip()
@@ -365,6 +366,49 @@ func _test_logic() -> void:
 	_expect_exactly("下班元件能接进结算链", doc, [])
 
 
+## 节点里的文字（2c）：剧情 / 邮件写错要报出是哪种语言、哪个节点。
+func _test_scripts() -> void:
+	_section = "节点里的文字"
+	var doc := _valid()
+	var g := _body(doc)
+	g.node("s1").props = {"layer": "story", "script": {"zh": "them: 早。", "en": "them: Morning."}}
+	_expect_exactly("合法的剧情文字", doc, [])
+
+	g.node("s1").props["script"]["en"] = "them: hi\n[weird]"
+	_expect_exactly("英文那份写错", doc, ["BAD_SCRIPT@day_1/s1"])
+	var errs := level_validator.validate(doc)
+	_eq("报出是哪种语言", errs[0].params.get("locale", "") if not errs.is_empty() else "", "en")
+
+	g.node("s1").props = {"layer": "popup", "script": {}}
+	_expect_exactly("layer 不认识", doc, ["BAD_LAYER@day_1/s1"])
+
+	g.node("s1").props = {"layer": "notice", "script": {"zh": "[不是剧本也没关系]"}}
+	_expect_exactly("提示框是纯文字，不按剧本解析", doc, [])
+
+	doc = _valid()
+	g = _body(doc)
+	var mail := _inner(g, "mail", "send_mail")
+	mail.props = {"mails": [{"id": "hello", "script": {"zh": "[mail hello from=\"A\"]\nsubject: 嗨\n正文"}}]}
+	mail.link("next", "fp")
+	g.node("s1").link("next", "mail")
+	_expect_exactly("合法的邮件", doc, [])
+
+	mail.props["mails"][0]["script"]["zh"] = "[mail other from=\"A\"]\nsubject: 嗨"
+	_expect_exactly("块头 id 和登记的不一样", doc, ["BAD_SCRIPT@day_1/mail"])
+
+	mail.props["mails"][0]["script"]["zh"] = "[mail hello from=\"A\"]\nsubject: 嗨"
+	mail.props["conditional_roster"] = [{"name": "Bob", "if": "flag:"}]
+	_expect_exactly("条件名单的条件写错", doc, ["BAD_CONDITION@day_1/mail"])
+
+	mail.props.erase("conditional_roster")
+	var g2 := _body(doc, "day_2")
+	var mail2 := _inner(g2, "mail", "send_mail")
+	mail2.props = mail.props.duplicate(true)
+	mail2.link("next", "fp")
+	g2.node("s1").link("next", "mail")
+	_expect_exactly("两天里有同一个邮件 id", doc, ["DUP_MAIL_ID@day_2/mail"])
+
+
 ## 条件语法的新原子：自定义变量、收件箱。
 func _test_conditions() -> void:
 	_section = "条件原子"
@@ -391,7 +435,7 @@ func _test_error_text() -> void:
 		_is_false("模板里没有漏掉的占位符：%s" % code,
 			level_error.new(code, {"count": 0, "role": "", "mode": "", "target": "", "value": 0,
 				"options": "", "id": "", "table": "", "object": "", "type": "", "port": "",
-				"target_type": "", "detail": ""}, "d", "n").describe().contains("{"))
+				"target_type": "", "detail": "", "layer": "", "locale": "", "other": ""}, "d", "n").describe().contains("{"))
 
 
 func _test_round_trip() -> void:

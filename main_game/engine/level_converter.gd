@@ -20,11 +20,22 @@ class_name level_converter
 ##                                   └time_up → 下班结算链
 ##   下班结算链：下班（判分、记日志、扣命）→ 当天的 [score] 效果… → 结算画面 → 天结束
 ##
-## 剧情和邮件的**文字**这一步还留在 .story 里，节点用 source 引用（第 2c 步再搬进节点）。
+## 剧情和邮件的**文字**直接存进节点（第 2c 步起），每种语言一份：
+## 转换器读 res://story/<语言>/days/day_N.story 的原文，按块切开，原样塞进去。
+## 结构（有没有电箱、[score] 有几条、名单）按中文那份定。
+## 结局对话和结局卡文字属于世界设定，还在 world.story（等世界表迁移）。
 ##
 ## 生成文件：godot --headless -s res://tools/convert_story_to_level.gd
 
+const STORY_ROOT := "res://story"
 const STORY_DIR := "res://story/zh"
+
+## 结构按哪种语言定（各语言的块应该一一对应）。
+const BASE_LOCALE := "zh"
+const LOCALES := ["zh", "en"]
+
+## 跟在剧情 / 桥段后面的分支块，切块时并进前一段对话里。
+const DIALOGUE_OWNERS := ["story", "caller", "electricbox", "window"]
 const UI_CSV := "res://locale/ui.csv"
 
 ## 原来 ending_director 的兜底结局，和被开除去的结局。
@@ -53,22 +64,30 @@ const COLUMN := 260.0
 const ROW := 120.0
 
 
-## 按 res://story/zh 现有的内容转。
-static func from_story_dir(dir := STORY_DIR) -> level_doc:
-	var world := load(dir + "/world.story") as world_book
-	var plans: Array[day_plan] = []
-	while ResourceLoader.exists("%s/days/day_%d.story" % [dir, plans.size() + 1]):
-		plans.append(load("%s/days/day_%d.story" % [dir, plans.size() + 1]) as day_plan)
-	return from_world(world, plans)
+## 按 res://story 现有的内容转：每天一份「语言 -> 原文」。
+static func from_story_dir(root := STORY_ROOT) -> level_doc:
+	var world := load("%s/%s/world.story" % [root, BASE_LOCALE]) as world_book
+	var days: Array[Dictionary] = []
+	while true:
+		var texts := {}
+		for loc in LOCALES:
+			var path := "%s/%s/days/day_%d.story" % [root, loc, days.size() + 1]
+			if FileAccess.file_exists(path):
+				texts[loc] = FileAccess.get_file_as_string(path)
+		if not texts.has(BASE_LOCALE):
+			break
+		days.append(texts)
+	return from_world(world, days)
 
 
-static func from_world(world: world_book, plans: Array[day_plan]) -> level_doc:
+## days：每天一份 {"zh": 原文, "en": 原文}。
+static func from_world(world: world_book, days: Array[Dictionary]) -> level_doc:
 	var doc := level_doc.create()
 	doc.settings["fired_ending"] = FIRED_NODE
 	doc.world["objects"] = room_objects()
 
 	var g := doc.graph
-	var day_count := plans.size()
+	var day_count := days.size()
 	for i in range(1, day_count + 1):
 		var n := g.add(flow_node.new("day_%d" % i, "day"))
 		n.pos = Vector2((i - 1) * COLUMN, 0)
@@ -77,7 +96,7 @@ static func from_world(world: world_book, plans: Array[day_plan]) -> level_doc:
 			"name": {"zh": "第 %d 天" % i, "en": "Day %d" % i},
 			"plan": i,
 		}
-		n.body = work_day_body(i, plans[i - 1])
+		n.body = work_day_body(i, days[i - 1])
 		if i < day_count:
 			n.link("next", "day_%d" % (i + 1))
 
@@ -119,14 +138,27 @@ static func _ending_id(e: String) -> String:
 	return "end_" + e
 
 
-## 第 day 天（用 plan 这份剧本）的完整天内图，见文件头的图。plan 为 null 也能转：没有桥段而已。
-static func work_day_body(day: int, plan: day_plan) -> flow_graph:
+## 第 day 天的完整天内图，见文件头的图。texts 是 {"zh": 原文, "en": 原文}；
+## 空的 {} 也能转（一天什么剧情都没有，只有物件和下班）。
+static func work_day_body(day: int, texts: Dictionary) -> flow_graph:
+	var plan: day_plan = null
+	if texts.has(BASE_LOCALE):
+		var parsed := story_parser.parse(texts[BASE_LOCALE], "day_%d.story" % day)
+		if parsed.ok():
+			plan = parsed.day
+		else:
+			push_error("第 %d 天的剧本解析失败：%s" % [day, parsed.errors])
+	var blocks := {}
+	for loc in texts:
+		blocks[loc] = split_blocks(texts[loc])
+
 	var g := flow_graph.new()
 	var b := _Builder.new(g)
 
 	b.put("start", "start", 0, 0).link("next", "opening")
-	b.put("opening", "story_bubble", 1, 0, {"source": {"plan": day, "part": "story"}}).link("next", "mail")
-	b.put("mail", "send_mail", 2, 0, {"source": {"plan": day}}).link("next", "free_play")
+	b.put("opening", "story_bubble", 1, 0,
+		{"layer": "story", "script": _block_text(blocks, "story")}).link("next", "mail")
+	b.put("mail", "send_mail", 2, 0, _mail_props(plan, blocks)).link("next", "free_play")
 	var fp := b.put("free_play", "free_play", 3, 0)
 
 	# 只有自带弹窗、点了就开的物件：物件 → 视窗 → 回自由环节。
@@ -147,7 +179,8 @@ static func work_day_body(day: int, plan: day_plan) -> flow_graph:
 		check.link("case_1", "caller_mark")
 		check.link("else", "caller_window")
 		b.put("caller_mark", "effect", 6, row, {"set_flags": [flag]}).link("next", "caller_event")
-		b.put("caller_event", "story_bubble", 7, row, {"source": {"plan": day, "event": "caller"}}).link("next", "free_play")
+		b.put("caller_event", "story_bubble", 7, row,
+			{"layer": "event", "script": _block_text(blocks, "caller")}).link("next", "free_play")
 	else:
 		phone.link("next", "caller_window")
 	row += 2
@@ -156,7 +189,7 @@ static func work_day_body(day: int, plan: day_plan) -> flow_graph:
 	if _has_event(plan, &"electricbox"):
 		var box := b.listen(fp, "electricbox", 4, row, {"repeat": plan.repeats(&"electricbox")})
 		b.put("electricbox_event", "story_bubble", 6, row,
-			{"source": {"plan": day, "event": "electricbox"}}).link("next", "free_play")
+			{"layer": "event", "script": _block_text(blocks, "electricbox")}).link("next", "free_play")
 		if plan.repeats(&"electricbox"):
 			box.link("next", "electricbox_event")
 		else:
@@ -174,7 +207,8 @@ static func work_day_body(day: int, plan: day_plan) -> flow_graph:
 	door.link("next", door_check.id)
 	door_check.link("case_1", "clock_out")
 	door_check.link("else", "unfinished")
-	b.put("unfinished", "story_bubble", 6, row, {"script": _ui_text("UI_UNFINISHED")}).link("next", "free_play")
+	b.put("unfinished", "story_bubble", 6, row,
+		{"layer": "notice", "script": _ui_text("UI_UNFINISHED")}).link("next", "free_play")
 
 	# 到点和点门共用一条下班结算链。
 	fp.link("time_up", "clock_out")
@@ -197,7 +231,7 @@ static func ending_body(ending: String) -> flow_graph:
 	var b := _Builder.new(g)
 	b.put("start", "start", 0, 0).link("next", "log")
 	b.put("log", "show_log", 1, 0).link("next", "story")
-	b.put("story", "story_bubble", 2, 0, {"source": {"ending": ending}}).link("next", "card")
+	b.put("story", "story_bubble", 2, 0, {"layer": "story", "source": {"ending": ending}}).link("next", "card")
 	b.put("card", "show_ending", 3, 0, {"ending": ending}).link("next", "end")
 	b.put("end", "day_end", 4, 0)
 	return g
@@ -211,6 +245,66 @@ static func fired_body(ending: String) -> flow_graph:
 	b.put("card", "show_ending", 1, 0, {"ending": ending}).link("next", "end")
 	b.put("end", "day_end", 2, 0)
 	return g
+
+
+## 把一份 .story 原文按块切开：[{"kind": "mail", "id": "day3_rick", "header": "[mail day3_rick …]", "body": "…"}]。
+## 跟在剧情 / 桥段后面的 [dialogue x] 并进前一段的 body（连块头一起），解析时它们还挂在同一段对话上。
+## 第一个块之前的注释丢掉。
+static func split_blocks(text: String) -> Array[Dictionary]:
+	var result: Array[Dictionary] = []
+	var current: Dictionary = {}
+	for raw in text.replace("\r\n", "\n").split("\n"):
+		var line := String(raw)
+		var stripped := line.strip_edges()
+		if stripped.begins_with("[") and stripped.ends_with("]"):
+			var parts := stripped.substr(1, stripped.length() - 2).strip_edges().split(" ", false)
+			var kind := String(parts[0]).to_lower() if parts.size() > 0 else ""
+			if kind == "dialogue" and not current.is_empty() and current["kind"] in DIALOGUE_OWNERS:
+				current["lines"].append(line)
+				continue
+			current = {"kind": kind, "id": String(parts[1]) if parts.size() > 1 else "",
+				"header": stripped, "lines": PackedStringArray()}
+			result.append(current)
+		elif not current.is_empty():
+			current["lines"].append(line)
+	for blk in result:
+		blk["body"] = "\n".join(blk["lines"]).strip_edges()
+		blk.erase("lines")
+	return result
+
+
+## 某种块（[story] / [caller] / …）在每种语言里的 body：{"zh": …, "en": …}。哪种语言没有就不写。
+static func _block_text(blocks: Dictionary, kind: String) -> Dictionary:
+	var result := {}
+	for loc in blocks:
+		for blk in blocks[loc]:
+			if blk["kind"] == kind:
+				result[loc] = blk["body"]
+				break
+	return result
+
+
+## 发信节点的参数：名单、随机信配置（按中文那份剧本），加上每封剧情信每种语言的原文。
+static func _mail_props(plan: day_plan, blocks: Dictionary) -> Dictionary:
+	var props := {"filler": -1, "filler_exclude": [], "roster": [], "conditional_roster": [], "mails": []}
+	if plan != null:
+		props["filler"] = plan.filler_emails
+		props["filler_exclude"] = Array(plan.filler_exclude).map(func(a): return String(a))
+		props["roster"] = Array(plan.story_roster).map(func(a): return String(a))
+		for rule in plan.conditional_roster:
+			props["conditional_roster"].append({"name": String(rule.employee_name), "if": rule.condition})
+	var base: Array = blocks.get(BASE_LOCALE, [])
+	for blk in base:
+		if blk["kind"] != "mail":
+			continue
+		var script := {}
+		for loc in blocks:
+			for other in blocks[loc]:
+				if other["kind"] == "mail" and other["id"] == blk["id"]:
+					script[loc] = other["header"] + "\n" + other["body"]
+					break
+		props["mails"].append({"id": blk["id"], "script": script})
+	return props
 
 
 ## 桥段「今天播过了」的 flag，和 event_page.flag_for 拼出来的名字一样。

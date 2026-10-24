@@ -20,6 +20,9 @@ const ROLES := ["start", "normal", "ending"]
 ## 天数跳转器的 mode。
 const JUMP_MODES := ["set", "add"]
 
+## 剧情 bubble 放在哪层播：一句话提示框 / 全屏剧情层 / 桌面桥段层。
+const STORY_LAYERS := ["notice", "story", "event"]
+
 ## 强制元件：播放期间锁交互，一个接一个跑，最后必须收在自由环节或 day_end 上。
 const FORCED := ["story_bubble", "window_bubble", "send_mail", "effect", "clock_out",
 	"show_result", "show_log", "show_ending"]
