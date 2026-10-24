@@ -153,9 +153,9 @@ func _test_outer_isolated_and_trapped() -> void:
 	doc = _valid()
 	_day(doc.graph, "day_3", "normal").link("next", "day_3")
 	doc.graph.node("br").link("else", "day_3")
-	# day_2 → jump → end_b 这一支被切掉了，跟着报孤立是对的。
+	# day_2 → jump 这一支被切掉了，跟着报孤立是对的；end_b 是被开除的去处，算入口。
 	_expect_exactly("自己绕圈、走不到结局的天", doc,
-		["NO_PATH_TO_END@day_3", "UNREACHABLE@day_2", "UNREACHABLE@jump", "UNREACHABLE@end_b"])
+		["NO_PATH_TO_END@day_3", "UNREACHABLE@day_2", "UNREACHABLE@jump"])
 
 
 func _test_outer_nodes() -> void:
@@ -163,7 +163,7 @@ func _test_outer_nodes() -> void:
 	var doc := _valid()
 	doc.graph.node("br").unlink("else")
 	_expect_exactly("分化器缺 else（原来接在 else 后面的那一支跟着孤立）", doc,
-		["PORT_MISSING@br", "UNREACHABLE@day_2", "UNREACHABLE@jump", "UNREACHABLE@end_b"])
+		["PORT_MISSING@br", "UNREACHABLE@day_2", "UNREACHABLE@jump"])
 
 	doc = _valid()
 	doc.graph.node("br").props["cases"] = [{"if": "score.Z>=2"}]
@@ -195,6 +195,11 @@ func _test_settings_and_world() -> void:
 	var doc := _valid()
 	doc.settings["fired_ending"] = ""
 	_expect_exactly("没填被开除去哪", doc, ["FIRED_ENDING_MISSING@"])
+
+	doc = _valid()
+	_day(doc.graph, "end_fired", "ending")
+	doc.settings["fired_ending"] = "end_fired"
+	_expect_exactly("只有被开除才去得了的结局不算孤立", doc, [])
 
 	doc = _valid()
 	doc.settings["fired_ending"] = "day_2"

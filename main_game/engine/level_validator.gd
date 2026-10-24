@@ -99,7 +99,12 @@ static func _check_outer(doc: level_doc, errs: Array[level_error]) -> void:
 	if endings.is_empty():
 		errs.append(level_error.new("NO_ENDING"))
 
-	_check_flow(g, starts, endings, "", {}, errs)
+	# 被开除随时可能发生，跳去的那个结局天也算一个入口，不能报成孤立。
+	var extra := {}
+	var fired := str(doc.settings.get("fired_ending", ""))
+	if g.has(fired):
+		extra = g.reachable_from(fired)
+	_check_flow(g, starts, endings, "", extra, errs)
 
 
 # ── 内层 ─────────────────────────────────────────────────

@@ -125,6 +125,7 @@
 
 | 代码 | 含义 |
 |---|---|
+| `LOAD_FAILED` | 关卡文件读不进来（找不到、JSON 坏了、版本太新），`detail` 是原因 |
 | `START_COUNT` | 初始天不是恰好一个 |
 | `NO_ENDING` | 没有结局天 |
 | `UNREACHABLE` | 从入口走不到的节点（孤立节点） |
@@ -175,7 +176,20 @@
 | 4 | GM 编辑器：外层画布 → 天内画布 → 表单 → 房间布局 → 剧本文字编辑框（即时语法检查） |
 | 5 | 隐藏入口 |
 
-## 10. 代码位置（第 0 阶段）
+## 10. 第 1 阶段现状
+
+- `res://levels/main.level.json` 由转换器生成：
+  `godot --headless --path <项目> -s res://tools/convert_story_to_level.gd`。
+  结构是 day_1 → … → day_5 → `ending_branch`（条件照抄 `world.story` 的 `[ending]`，else 走 C）→ `end_A`…`end_E`，
+  被开除去 `end_E`。天节点的 `props.plan` 指向用第几天的剧本，结局天的 `props.ending` 是结局 id。
+- `round_manager` 开局前校验关卡，有错就弹出全部原因、不开局；每天结束问 `level_runner.advance()`
+  要下一个天节点，走到结局天就通关；命掉光调 `fire()`。命数来自背景设定。
+- `ending_director` 直接用关卡图走到的结局。直接发 `game_cleared` 信号（测试、调试）时才退回查规则表。
+- 剧情、邮件、桥段仍然从 `day_N.story` 读；天内图是占位，还不执行（第 2 阶段）。
+- 天数跳转器的语义：`set N` → 下一个天节点就是第 N 天；`add N` → 下一个天节点是「本来的天数 + N」。
+- 历史流水账已经在记，但条件里的 `day3` 还是按天数查日志；等真有时空跳跃时再改成「最近一次」。
+
+## 11. 代码位置
 
 `main_game/engine/`：
 
@@ -185,3 +199,5 @@
 - `level_error.gd`：一条校验错误（代码 + 参数 + 位置），以及转成文字。
 - `level_validator.gd`：校验器。
 - `level_store.gd`：读写 JSON，`res://` / `user://` 覆盖，版本检查。
+- `level_runner.gd`：外层解释器（第 1 阶段）。
+- `level_converter.gd`：把 `.story` 转成关卡图（第 1 阶段），工具脚本在 `tools/convert_story_to_level.gd`。

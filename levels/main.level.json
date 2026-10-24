@@ -1,0 +1,787 @@
+{
+	"format": "offast-level",
+	"graph": {
+		"nodes": {
+			"day_1": {
+				"body": {
+					"nodes": {
+						"end": {
+							"outs": {},
+							"pos": [
+								660.0,
+								0.0
+							],
+							"props": {},
+							"type": "day_end"
+						},
+						"free_play": {
+							"outs": {
+								"time_up": [
+									"result"
+								]
+							},
+							"pos": [
+								220.0,
+								0.0
+							],
+							"props": {},
+							"type": "free_play"
+						},
+						"result": {
+							"outs": {
+								"next": [
+									"end"
+								]
+							},
+							"pos": [
+								440.0,
+								0.0
+							],
+							"props": {},
+							"type": "show_result"
+						},
+						"start": {
+							"outs": {
+								"next": [
+									"free_play"
+								]
+							},
+							"pos": [
+								0.0,
+								0.0
+							],
+							"props": {},
+							"type": "start"
+						}
+					}
+				},
+				"outs": {
+					"next": [
+						"day_2"
+					]
+				},
+				"pos": [
+					0.0,
+					0.0
+				],
+				"props": {
+					"name": {
+						"en": "Day 1",
+						"zh": "第 1 天"
+					},
+					"plan": 1,
+					"role": "start"
+				},
+				"type": "day"
+			},
+			"day_2": {
+				"body": {
+					"nodes": {
+						"end": {
+							"outs": {},
+							"pos": [
+								660.0,
+								0.0
+							],
+							"props": {},
+							"type": "day_end"
+						},
+						"free_play": {
+							"outs": {
+								"time_up": [
+									"result"
+								]
+							},
+							"pos": [
+								220.0,
+								0.0
+							],
+							"props": {},
+							"type": "free_play"
+						},
+						"result": {
+							"outs": {
+								"next": [
+									"end"
+								]
+							},
+							"pos": [
+								440.0,
+								0.0
+							],
+							"props": {},
+							"type": "show_result"
+						},
+						"start": {
+							"outs": {
+								"next": [
+									"free_play"
+								]
+							},
+							"pos": [
+								0.0,
+								0.0
+							],
+							"props": {},
+							"type": "start"
+						}
+					}
+				},
+				"outs": {
+					"next": [
+						"day_3"
+					]
+				},
+				"pos": [
+					260.0,
+					0.0
+				],
+				"props": {
+					"name": {
+						"en": "Day 2",
+						"zh": "第 2 天"
+					},
+					"plan": 2,
+					"role": "normal"
+				},
+				"type": "day"
+			},
+			"day_3": {
+				"body": {
+					"nodes": {
+						"end": {
+							"outs": {},
+							"pos": [
+								660.0,
+								0.0
+							],
+							"props": {},
+							"type": "day_end"
+						},
+						"free_play": {
+							"outs": {
+								"time_up": [
+									"result"
+								]
+							},
+							"pos": [
+								220.0,
+								0.0
+							],
+							"props": {},
+							"type": "free_play"
+						},
+						"result": {
+							"outs": {
+								"next": [
+									"end"
+								]
+							},
+							"pos": [
+								440.0,
+								0.0
+							],
+							"props": {},
+							"type": "show_result"
+						},
+						"start": {
+							"outs": {
+								"next": [
+									"free_play"
+								]
+							},
+							"pos": [
+								0.0,
+								0.0
+							],
+							"props": {},
+							"type": "start"
+						}
+					}
+				},
+				"outs": {
+					"next": [
+						"day_4"
+					]
+				},
+				"pos": [
+					520.0,
+					0.0
+				],
+				"props": {
+					"name": {
+						"en": "Day 3",
+						"zh": "第 3 天"
+					},
+					"plan": 3,
+					"role": "normal"
+				},
+				"type": "day"
+			},
+			"day_4": {
+				"body": {
+					"nodes": {
+						"end": {
+							"outs": {},
+							"pos": [
+								660.0,
+								0.0
+							],
+							"props": {},
+							"type": "day_end"
+						},
+						"free_play": {
+							"outs": {
+								"time_up": [
+									"result"
+								]
+							},
+							"pos": [
+								220.0,
+								0.0
+							],
+							"props": {},
+							"type": "free_play"
+						},
+						"result": {
+							"outs": {
+								"next": [
+									"end"
+								]
+							},
+							"pos": [
+								440.0,
+								0.0
+							],
+							"props": {},
+							"type": "show_result"
+						},
+						"start": {
+							"outs": {
+								"next": [
+									"free_play"
+								]
+							},
+							"pos": [
+								0.0,
+								0.0
+							],
+							"props": {},
+							"type": "start"
+						}
+					}
+				},
+				"outs": {
+					"next": [
+						"day_5"
+					]
+				},
+				"pos": [
+					780.0,
+					0.0
+				],
+				"props": {
+					"name": {
+						"en": "Day 4",
+						"zh": "第 4 天"
+					},
+					"plan": 4,
+					"role": "normal"
+				},
+				"type": "day"
+			},
+			"day_5": {
+				"body": {
+					"nodes": {
+						"end": {
+							"outs": {},
+							"pos": [
+								660.0,
+								0.0
+							],
+							"props": {},
+							"type": "day_end"
+						},
+						"free_play": {
+							"outs": {
+								"time_up": [
+									"result"
+								]
+							},
+							"pos": [
+								220.0,
+								0.0
+							],
+							"props": {},
+							"type": "free_play"
+						},
+						"result": {
+							"outs": {
+								"next": [
+									"end"
+								]
+							},
+							"pos": [
+								440.0,
+								0.0
+							],
+							"props": {},
+							"type": "show_result"
+						},
+						"start": {
+							"outs": {
+								"next": [
+									"free_play"
+								]
+							},
+							"pos": [
+								0.0,
+								0.0
+							],
+							"props": {},
+							"type": "start"
+						}
+					}
+				},
+				"outs": {
+					"next": [
+						"ending_branch"
+					]
+				},
+				"pos": [
+					1040.0,
+					0.0
+				],
+				"props": {
+					"name": {
+						"en": "Day 5",
+						"zh": "第 5 天"
+					},
+					"plan": 5,
+					"role": "normal"
+				},
+				"type": "day"
+			},
+			"end_A": {
+				"body": {
+					"nodes": {
+						"end": {
+							"outs": {},
+							"pos": [
+								440.0,
+								0.0
+							],
+							"props": {},
+							"type": "day_end"
+						},
+						"log": {
+							"outs": {
+								"next": [
+									"end"
+								]
+							},
+							"pos": [
+								220.0,
+								0.0
+							],
+							"props": {},
+							"type": "show_log"
+						},
+						"start": {
+							"outs": {
+								"next": [
+									"log"
+								]
+							},
+							"pos": [
+								0.0,
+								0.0
+							],
+							"props": {},
+							"type": "start"
+						}
+					}
+				},
+				"outs": {},
+				"pos": [
+					1560.0,
+					0.0
+				],
+				"props": {
+					"ending": "A",
+					"name": {
+						"en": "Ending A",
+						"zh": "结局 A"
+					},
+					"role": "ending"
+				},
+				"type": "day"
+			},
+			"end_B": {
+				"body": {
+					"nodes": {
+						"end": {
+							"outs": {},
+							"pos": [
+								440.0,
+								0.0
+							],
+							"props": {},
+							"type": "day_end"
+						},
+						"log": {
+							"outs": {
+								"next": [
+									"end"
+								]
+							},
+							"pos": [
+								220.0,
+								0.0
+							],
+							"props": {},
+							"type": "show_log"
+						},
+						"start": {
+							"outs": {
+								"next": [
+									"log"
+								]
+							},
+							"pos": [
+								0.0,
+								0.0
+							],
+							"props": {},
+							"type": "start"
+						}
+					}
+				},
+				"outs": {},
+				"pos": [
+					1560.0,
+					140.0
+				],
+				"props": {
+					"ending": "B",
+					"name": {
+						"en": "Ending B",
+						"zh": "结局 B"
+					},
+					"role": "ending"
+				},
+				"type": "day"
+			},
+			"end_C": {
+				"body": {
+					"nodes": {
+						"end": {
+							"outs": {},
+							"pos": [
+								440.0,
+								0.0
+							],
+							"props": {},
+							"type": "day_end"
+						},
+						"log": {
+							"outs": {
+								"next": [
+									"end"
+								]
+							},
+							"pos": [
+								220.0,
+								0.0
+							],
+							"props": {},
+							"type": "show_log"
+						},
+						"start": {
+							"outs": {
+								"next": [
+									"log"
+								]
+							},
+							"pos": [
+								0.0,
+								0.0
+							],
+							"props": {},
+							"type": "start"
+						}
+					}
+				},
+				"outs": {},
+				"pos": [
+					1560.0,
+					280.0
+				],
+				"props": {
+					"ending": "C",
+					"name": {
+						"en": "Ending C",
+						"zh": "结局 C"
+					},
+					"role": "ending"
+				},
+				"type": "day"
+			},
+			"end_D": {
+				"body": {
+					"nodes": {
+						"end": {
+							"outs": {},
+							"pos": [
+								440.0,
+								0.0
+							],
+							"props": {},
+							"type": "day_end"
+						},
+						"log": {
+							"outs": {
+								"next": [
+									"end"
+								]
+							},
+							"pos": [
+								220.0,
+								0.0
+							],
+							"props": {},
+							"type": "show_log"
+						},
+						"start": {
+							"outs": {
+								"next": [
+									"log"
+								]
+							},
+							"pos": [
+								0.0,
+								0.0
+							],
+							"props": {},
+							"type": "start"
+						}
+					}
+				},
+				"outs": {},
+				"pos": [
+					1560.0,
+					420.0
+				],
+				"props": {
+					"ending": "D",
+					"name": {
+						"en": "Ending D",
+						"zh": "结局 D"
+					},
+					"role": "ending"
+				},
+				"type": "day"
+			},
+			"end_E": {
+				"body": {
+					"nodes": {
+						"end": {
+							"outs": {},
+							"pos": [
+								440.0,
+								0.0
+							],
+							"props": {},
+							"type": "day_end"
+						},
+						"log": {
+							"outs": {
+								"next": [
+									"end"
+								]
+							},
+							"pos": [
+								220.0,
+								0.0
+							],
+							"props": {},
+							"type": "show_log"
+						},
+						"start": {
+							"outs": {
+								"next": [
+									"log"
+								]
+							},
+							"pos": [
+								0.0,
+								0.0
+							],
+							"props": {},
+							"type": "start"
+						}
+					}
+				},
+				"outs": {},
+				"pos": [
+					1560.0,
+					560.0
+				],
+				"props": {
+					"ending": "E",
+					"name": {
+						"en": "Ending E",
+						"zh": "结局 E"
+					},
+					"role": "ending"
+				},
+				"type": "day"
+			},
+			"ending_branch": {
+				"outs": {
+					"case_1": [
+						"end_A"
+					],
+					"case_2": [
+						"end_B"
+					],
+					"case_3": [
+						"end_E"
+					],
+					"case_4": [
+						"end_E"
+					],
+					"case_5": [
+						"end_D"
+					],
+					"else": [
+						"end_C"
+					]
+				},
+				"pos": [
+					1300.0,
+					0.0
+				],
+				"props": {
+					"cases": [
+						{
+							"if": "leading(A) and did(promotion,Rick,day5)"
+						},
+						{
+							"if": "leading(B) and did(promotion,me,day5)"
+						},
+						{
+							"if": "leading(A)"
+						},
+						{
+							"if": "leading(B)"
+						},
+						{
+							"if": "flag:has_tape and flag:has_photo and level.Bob>=4 and did(fire,Banner,day5) and did(fire,Roderick,day5)"
+						}
+					]
+				},
+				"type": "brancher"
+			}
+		}
+	},
+	"settings": {
+		"fired_ending": "end_E",
+		"lives": 3,
+		"variables": [
+			{
+				"id": "A",
+				"kind": "score",
+				"name": {
+					"en": "A",
+					"zh": "A"
+				}
+			},
+			{
+				"id": "B",
+				"kind": "score",
+				"name": {
+					"en": "B",
+					"zh": "B"
+				}
+			},
+			{
+				"id": "C",
+				"kind": "score",
+				"name": {
+					"en": "C",
+					"zh": "C"
+				}
+			},
+			{
+				"id": "D",
+				"kind": "score",
+				"name": {
+					"en": "D",
+					"zh": "D"
+				}
+			}
+		]
+	},
+	"version": 1,
+	"world": {
+		"objects": [
+			{
+				"id": "door",
+				"name": {
+					"en": "Door",
+					"zh": "门"
+				}
+			},
+			{
+				"id": "light",
+				"name": {
+					"en": "Light",
+					"zh": "灯"
+				}
+			},
+			{
+				"id": "electricbox",
+				"name": {
+					"en": "Electric box",
+					"zh": "电箱"
+				}
+			},
+			{
+				"id": "laptop",
+				"name": {
+					"en": "Laptop",
+					"zh": "电脑"
+				}
+			},
+			{
+				"id": "notes",
+				"name": {
+					"en": "Notes",
+					"zh": "便签"
+				}
+			},
+			{
+				"id": "caller",
+				"name": {
+					"en": "Phone",
+					"zh": "电话"
+				}
+			},
+			{
+				"id": "table",
+				"name": {
+					"en": "Table",
+					"zh": "桌子"
+				}
+			},
+			{
+				"id": "calendar",
+				"name": {
+					"en": "Calendar",
+					"zh": "日历"
+				}
+			}
+		]
+	}
+}

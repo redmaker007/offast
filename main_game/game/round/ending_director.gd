@@ -45,8 +45,13 @@ func _on_game_cleared() -> void:
 	SignalBus.log_review_requested.emit()
 
 
-## 按 world.story 里那张规则表定结局。
+## 走的是哪个结局：关卡图走到了结局天就用它的（正常通关都走这条）。
+## 没走到结局天就发了 game_cleared（测试、调试直接发信号）时，退回按 world.story
+## 那张规则表查——关卡图的结局分化器就是照这张表转出来的，两边结果一致。
 func _decide() -> StringName:
+	var level: level_runner = %round_manager.level
+	if level != null and level.is_ending():
+		return level.ending_id()
 	var world: world_book = %story_book.world
 	if world != null:
 		for rule in world.ending_rules:
@@ -58,7 +63,10 @@ func _decide() -> StringName:
 func _on_game_over() -> void:
 	_pending = &""
 	_awaiting_story = false
-	SignalBus.ending_ready.emit(&"E")
+	# 被开除去哪个结局写在关卡图的背景设定里（round_manager 已经让关卡图跳过去了）。
+	var level: level_runner = %round_manager.level
+	var id := level.ending_id() if level != null and level.is_ending() else &"E"
+	SignalBus.ending_ready.emit(id)
 
 
 func _on_log_review_finished() -> void:

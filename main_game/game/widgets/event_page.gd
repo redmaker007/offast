@@ -52,14 +52,15 @@ func _on_event_requested(key: StringName) -> void:
 func try_play_day_event(key: StringName) -> bool:
 	if _playing:
 		return false
+	# flag 按「第几天」记，内容按「用第几天的剧本」取：有了关卡图，两者可以不一样。
 	var day: int = %round_manager.current_day
-	var c: conversation = %story_book.event_for(day, key)
+	var c: conversation = %story_book.event_for(%round_manager.current_plan_day(), key)
 	if c == null or c.is_empty():
 		return false
 
 	# 默认每天每个物件只播一次。电箱是例外（repeat=yes）：
 	# 没钥匙时点开只看到「锁着」，拿到钥匙当天还得能再开一次。
-	var plan: day_plan = %story_book.plan_for(day)
+	var plan: day_plan = %round_manager.current_plan()
 	var repeatable: bool = plan != null and plan.repeats(key)
 	if not repeatable and GameState.has_flag(flag_for(key, day)):
 		return false
@@ -94,7 +95,7 @@ func _on_content_reloaded(_locale: String) -> void:
 func _current_source() -> conversation:
 	match _source_kind:
 		&"event":
-			return %story_book.event_for(%round_manager.current_day, _source_id)
+			return %story_book.event_for(%round_manager.current_plan_day(), _source_id)
 		&"call":
 			var who: contact = %story_book.contact_by_name(_source_id)
 			return who.call if who != null else null

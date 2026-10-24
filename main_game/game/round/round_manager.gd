@@ -7,12 +7,19 @@ class_name round_manager
 ##   STORY  --story_finished-->        GAME
 ##   GAME   --day_time_up / 点门-->    RESULT
 ##   RESULT --玩家点继续-->            下一天 / 被开除 / 通关
+##
+## 「下一天是哪一天、什么时候通关、走哪个结局」不归这里管，归关卡图（level_runner，
+## 文件在 res://levels/main.level.json，设计见 docs/level_engine.md）。
+## 这里只负责一天里面怎么玩，每天结束问关卡图要下一个天节点。
 
-## 简单模式：扛过这么多天就算赢。
-@export var days_to_win: int = 5
+## 读哪一份关卡。
+const LEVEL_NAME := "main"
 
-## 一开始有几条命。
-@export var max_lives: int = 3
+## 「第 N 天 / 共 M 天」里的 M，开局时从关卡图算出来。有分支时只是个参考值。
+var days_to_win: int = 0
+
+## 一开始有几条命，来自关卡图的背景设定。
+var max_lives: int = 3
 
 ## 一天错几个人就扣一条命。
 @export var mistakes_per_life: int = 3
@@ -48,9 +55,19 @@ var current_random_name_list = []
 
 var save_id := "round_manager"
 
+## 外层关卡图的解释器。关卡有错时 is_valid() 为假，不让开局。
+var level: level_runner
+
 
 func _ready() -> void:
 	add_to_group(SaveState.GROUP)
+	level = level_runner.open(LEVEL_NAME)
+	if level.is_valid():
+		max_lives = level.lives()
+		days_to_win = level.total_days()
+	else:
+		push_error("关卡 %s 有错，不能开局：
+%s" % [LEVEL_NAME, level.describe_errors()])
 	SignalBus.story_finished.connect(_on_story_finished)
 	SignalBus.day_time_up.connect(end_day)
 	SignalBus.leave_office_request.connect(_on_leave_office)
@@ -63,6 +80,7 @@ func save_data() -> Dictionary:
 		"lives": lives,
 		"current_round_employee_name_list": current_round_employee_name_list,
 		"current_random_name_list": current_random_name_list,
+		"level": level.save_data() if level != null else {},
 	}
 
 
@@ -71,11 +89,19 @@ func load_data(d: Dictionary) -> void:
 	lives = d.get("lives", max_lives)
 	current_round_employee_name_list = d.get("current_round_employee_name_list", [])
 	current_random_name_list = d.get("current_random_name_list", [])
+	if level != null:
+		level.load_data(d.get("level", {}), current_day)
 
 
-## 开新局：第 1 天，满血。
+## 开新局：第 1 天，满血。关卡图有错就不开，把原因弹出来。
 func start_game() -> void:
-	current_day = 0
+	if level == null or not level.is_valid():
+		var why := level.describe_errors() if level != null else "没有关卡"
+		SignalBus.notice_requested.emit(tr("UI_LEVEL_INVALID") + "
+" + why)
+		return
+	level.start()
+	current_day = level.day
 	lives = max_lives
 	# 剧情状态和玩法状态一起归零，不然新一局会接着上一局的分数往下算。
 	GameState.reset()
@@ -87,11 +113,6 @@ func start_game() -> void:
 	GameState.seed_account_passwords(%story_book.world)
 	# 摇完了才广播：记事本要照着这一局的账号密码印第 1 页。
 	SignalBus.game_started.emit()
-	start_next_day()
-
-
-func start_next_day() -> void:
-	current_day += 1
 	_change_state(RoundState.Round_State.STORY)
 
 
@@ -130,12 +151,33 @@ func _on_result_confirmed() -> void:
 		return
 	# 被开除优先于通关：最后一天把命扣光了也是被开除。
 	if lives <= 0:
+		level.fire()
 		SignalBus.game_over.emit()
 		return
-	if current_day >= days_to_win:
+	if level.advance() == null:
+		push_error("关卡图走不到下一天（见上一条报错），停在第 %d 天" % current_day)
+		return
+	current_day = level.day
+	# 走到结局天就是通关：结局是哪一个，ending_director 问 level.ending_id()。
+	if level.is_ending():
 		SignalBus.game_cleared.emit()
 		return
-	start_next_day()
+	_change_state(RoundState.Round_State.STORY)
+
+
+## 今天用第几天的剧本（story_book.plan_for 的参数）。
+##
+## 平时就是关卡图当前天节点的 plan。测试和调试会直接改 current_day 跳到某一天，
+## 那时关卡图还停在原地，就退回按 current_day 取——两者对不上时信 current_day。
+func current_plan_day() -> int:
+	if level != null and level.doc != null and level.day == current_day:
+		return level.plan_day()
+	return current_day
+
+
+## 今天的剧本，没配就是 null（退回纯随机玩法）。
+func current_plan() -> day_plan:
+	return %story_book.plan_for(current_plan_day())
 
 
 func _change_state(rs: RoundState.Round_State) -> void:
@@ -161,7 +203,7 @@ func _begin_workday() -> void:
 
 	# **电脑不会隔夜自动锁上**：第 1 天敲完密码就一直登着。
 	# 想换号（后面几天拿到别人的账户）得自己去选择页 Sign out。
-	var plan: day_plan = %story_book.plan_for(current_day)
+	var plan: day_plan = current_plan()
 
 	# 剧情角色进表，但**不占随机员工的名额**：随机的永远抽满 employees_per_day 个。
 	# 条件不成立的剧情信当天根本不存在，所以点名、判分都不该算上它点的人。
@@ -354,7 +396,7 @@ func _record_day(rows: Array) -> void:
 
 ## 当天的「逻辑项」：条件成立就加对应的结局分。按写的顺序判，互不排斥。
 func _apply_score_rules() -> void:
-	var plan: day_plan = %story_book.plan_for(current_day)
+	var plan: day_plan = current_plan()
 	if plan == null:
 		return
 	for rule in plan.score_rules:

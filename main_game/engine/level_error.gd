@@ -9,6 +9,7 @@ class_name level_error
 ## 文字模板。显示时先找翻译 key LEVEL_ERR_<代码>，没有才用这里的中文。
 ## {xxx} 换成 params 里同名的值；{node} / {day} 换成位置。
 const TEMPLATES := {
+	"LOAD_FAILED": "关卡文件读不进来：{detail}",
 	"START_COUNT": "初始天节点要恰好一个，现在有 {count} 个",
 	"NO_ENDING": "至少要有一个结局天节点",
 	"UNREACHABLE": "{node} 从入口走不到（孤立节点）",
