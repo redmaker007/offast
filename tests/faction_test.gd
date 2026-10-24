@@ -284,7 +284,7 @@ subject: 欢迎
 """)
 	SignalBus.round_state_change.emit(RoundState.Round_State.GAME)
 	await _frames(1)
-	_rm()._begin_workday()
+	_rm()._send_mails(_node("story_book").plan_for(1))
 	await _frames(1)
 
 	var page := _node("%email_read_page")
@@ -628,7 +628,10 @@ them: conditional.
 
 	# 真正的第 5 天：一封填充信都不发（filler: 0），表上就该一个随机员工都没有。
 	await _spawn_scene()
+	# 跳到第 5 天：关卡图站到 day_5 上，天内图换成它的（停在开场剧情，接着往下走）。
 	_rm().current_day = 5
+	_rm().level.load_data({"current": "day_5", "day": 5, "history": []})
+	_rm().replace_day_body(_rm().level.current_node().body)
 	SignalBus.story_finished.emit()
 	await _frames(2)
 	_eq("第 5 天没有随机员工", _rm().current_random_name_list.size(), 0)
@@ -733,7 +736,7 @@ func _test_dialing() -> void:
 	var phone := _node("%caller_page")
 	var page := _node("%event_page")
 	# 第 1 天有一通来电，先把它接掉，之后点电话才是拨号。
-	SignalBus.open_caller_request.emit()
+	SignalBus.object_clicked.emit(&"caller")
 	await _frames(2)
 	_is_true("先接当天的来电", page.visible)
 	_is_false("这时候不弹拨号盘", phone.visible)
@@ -743,7 +746,7 @@ func _test_dialing() -> void:
 		_advance(_node("%event_bubble"))
 		await _frames(1)
 
-	SignalBus.open_caller_request.emit()
+	SignalBus.object_clicked.emit(&"caller")
 	await _windows_settled()
 	_is_true("来电接完了才弹拨号盘", phone.visible)
 
@@ -796,7 +799,7 @@ them: the key turns.
 	var view := _node("%event_bubble")
 	view.chars_per_second = 0.0
 
-	SignalBus.open_electricbox_request.emit()
+	SignalBus.object_clicked.emit(&"electricbox")
 	await _frames(2)
 	_is_true("点电箱有反应", page.visible)
 	_has_text("没钥匙只说锁着", view.get_node("%text_box").text, "locked")
@@ -806,7 +809,7 @@ them: the key turns.
 
 	# 同一天再点：因为 repeat=yes，还能再开（不然拿到钥匙就没机会用了）。
 	GameState.set_flag(&"has_key")
-	SignalBus.open_electricbox_request.emit()
+	SignalBus.object_clicked.emit(&"electricbox")
 	await _frames(2)
 	_is_true("拿到钥匙当天能再开一次", page.visible)
 	_has_text("这次开得了", view.get_node("%text_box").text, "key turns")
@@ -834,7 +837,7 @@ them: 电话响了两声。
 	var page := _node("%event_page")
 	_is_false("一开始不显示", page.visible)
 
-	SignalBus.open_caller_request.emit()
+	SignalBus.object_clicked.emit(&"caller")
 	await _frames(2)
 	_is_true("点电话播出来了", page.visible)
 	_is_true("记下今天播过了", GameState.has_flag(event_page.flag_for(&"caller", 1)))
@@ -851,14 +854,14 @@ them: 电话响了两声。
 	_is_false("播完自己收起来", page.visible)
 	_is_true("电话里的选项打了 flag", GameState.has_flag(&"took_the_call"))
 
-	SignalBus.open_caller_request.emit()
+	SignalBus.object_clicked.emit(&"caller")
 	await _windows_settled()
 	_is_false("同一天再点不会重播", page.visible)
 	_is_true("接完来电之后点电话是拨号盘", _node("%caller_page").visible)
 	await _node("%caller_page").close()
 
 	# 没配内容的物件点了没反应（电箱是第 3 天才有的桥段）。
-	SignalBus.open_electricbox_request.emit()
+	SignalBus.object_clicked.emit(&"electricbox")
 	await _frames(1)
 	_is_false("没配内容的物件点了没反应", page.visible)
 
@@ -1036,7 +1039,7 @@ func _test_locale_switch_mid_scene() -> void:
 	var event_page_node := _node("%event_page")
 	var event_view := _node("%event_bubble")
 	event_view.chars_per_second = 0.0
-	SignalBus.open_caller_request.emit()
+	SignalBus.object_clicked.emit(&"caller")
 	await _frames(2)
 	if event_page_node.visible:
 		var zh_event: String = event_view.get_node("%text_box").text
@@ -1139,6 +1142,8 @@ func _swap_day_plan(day: int, text: String) -> void:
 		_record("剧本解析", false, str(parsed.errors))
 		return
 	_node("story_book").days[day - 1] = parsed.day
+	# 天内图是照剧本转出来的（有没有电箱、[score] 有几条），剧本换了图也要跟着重转。
+	_rm().replace_day_body(level_converter.work_day_body(day, parsed.day))
 
 
 ## 让某一派往某个员工身上下一道命令（等级 4，盖得过随机信）。

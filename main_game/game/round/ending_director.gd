@@ -39,7 +39,17 @@ func def_for(id: StringName) -> ending_def:
 @export var fallback_ending: StringName = &"C"
 
 
+## 正常通关时，「日志 → 结局对话 → 结局卡」是结局天的天内图在走（round_manager 执行
+## show_log / 剧情 bubble / show_ending），这里不插手。只有没走到结局天就直接发了
+## game_cleared（测试、调试）时，才由这里自己串一遍。
+func _graph_drives_ending() -> bool:
+	var level: level_runner = %round_manager.level
+	return level != null and level.is_ending()
+
+
 func _on_game_cleared() -> void:
+	if _graph_drives_ending():
+		return
 	_pending = _decide()
 	# 先摊日志：这五天的每一个决定，看完再给结局。
 	SignalBus.log_review_requested.emit()
@@ -63,10 +73,10 @@ func _decide() -> StringName:
 func _on_game_over() -> void:
 	_pending = &""
 	_awaiting_story = false
-	# 被开除去哪个结局写在关卡图的背景设定里（round_manager 已经让关卡图跳过去了）。
-	var level: level_runner = %round_manager.level
-	var id := level.ending_id() if level != null and level.is_ending() else &"E"
-	SignalBus.ending_ready.emit(id)
+	# 被开除去哪个结局写在关卡图的背景设定里，结局卡由那个结局天的天内图出。
+	if _graph_drives_ending():
+		return
+	SignalBus.ending_ready.emit(&"E")
 
 
 func _on_log_review_finished() -> void:

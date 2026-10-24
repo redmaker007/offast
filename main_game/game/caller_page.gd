@@ -6,8 +6,8 @@ extends popup_window
 ## 拨对了就接通（对话在 event_page 里播，和桥段共用一套气泡）；
 ## 拨错了只有忙音——不提示「差一位」，不列已知号码，记不住就回去翻本子。
 ##
-## 点电话不一定弹这个：当天要是还有没接的来电（day_plan 的 [caller]），
-## 先播那通，播完之后再点才是拨号。
+## 点电话不一定弹这个：要看当天的天内图。现有内容是「今天的来电还没接就先播来电，
+## 接过了才是拨号盘」，图上用视窗 bubble 调 open_dialer() 打开这里。
 
 const MAX_DIGITS := 6
 
@@ -16,7 +16,6 @@ func _ready() -> void:
 	super()
 	%dial_input.max_length = MAX_DIGITS
 	%dial_input.text_submitted.connect(_on_submitted)
-	SignalBus.open_caller_request.connect(_on_open_request)
 	SignalBus.round_state_change.connect(_on_round_state_change)
 	%dial_status.text = ""
 
@@ -30,10 +29,8 @@ func _clear() -> void:
 	%dial_status.text = ""
 
 
-func _on_open_request() -> void:
-	# 今天还有没接的来电就先接——电话响了总不能先拨号。
-	if %event_page.try_play_day_event(&"caller"):
-		return
+## 打开拨号盘（天内图的视窗 bubble 调）。
+func open_dialer() -> void:
 	_clear()
 	await open()
 

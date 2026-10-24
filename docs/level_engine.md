@@ -212,7 +212,7 @@
 | 步 | 内容 | 状态 |
 |---|---|---|
 | 2a | 数据：条件语法扩展、`if` / `clock_out` / `show_ending`、`non_blocking`；转换器为现有 5 天生成**完整的显式天内图** | 完成 |
-| 2b | 执行：天内图解释器接管一天的流程（取代 `round_manager` 的三段状态机），物件点击、门、电话都改走图 | 未开始 |
+| 2b | 执行：天内图解释器接管一天的流程（取代 `round_manager` 的三段状态机），物件点击、门、电话都改走图 | 完成 |
 | 2c | 内容搬家：剧情、邮件的文字从 `.story` 搬进节点 | 未开始 |
 
 2a 之后的约定：
@@ -221,6 +221,23 @@
   一次性提示（「活还没干完」）已经直接存 `props.script`，文字取自 `ui.csv` 的全部语言。
 - 桥段「今天播过了」用 flag `event_<物件>_day_<N>`，和原来 `event_page.flag_for` 同名，旧存档照样认。
 - 被开除去单独的结局天 `end_E_fired`（只出结局卡）；从规则表走到的 `end_E` 要先摊日志、播结局对话。
+
+2b 之后的运行方式：
+- `day_runner`（`main_game/engine/day_runner.gd`）走天内图。`if` 和效果节点它自己算；
+  其它强制元件交给 host（`round_manager.run_step`）执行，要等界面事件的（开场剧情、桥段、
+  结局对话、结算确认、看完日志）等到了再 `step_done()`。
+- 物件被点击时 `clickable_item` 发 `SignalBus.object_clicked(节点名)`，节点名就是物件 id。
+  原来的 `leave_office_request` / `open_caller_request` / `open_electricbox_request` / `open_light_request`
+  删掉了；`open_laptop_request` / `open_notes_request` / `open_calendar_request` 只是「开窗」命令，由视窗 bubble 发。
+- 强制链期间点物件没反应（`non_blocking` 的例外，它后面只能接瞬间元件）；期间到点先记着，
+  回到自由环节立刻下班。为了不改变原有手感，强制链期间**没有**锁 `RoundState`（上班时钟照走，
+  和原来接电话时一样）。
+- `RoundState` 的三段现在是「画面模式」：开场剧情进 STORY、进自由环节是 GAME（第一次进才开钟）、
+  下班元件进 RESULT。
+- 读档：存盘时停在强制链中间（桥段播到一半）就退回链开始前的自由环节；停在开场剧情 / 结算画面照原样接着等。
+- 结局天的「日志 → 结局对话 → 结局卡」也由图走；`ending_director` 只在直接发 `game_cleared` /
+  `game_over` 信号（测试、调试）时才自己串一遍。
+- 测试换剧本（`_swap_day_plan`）时用 `round_manager.replace_day_body()` 同时换掉当天的天内图。
 - 天数跳转器的语义：`set N` → 下一个天节点就是第 N 天；`add N` → 下一个天节点是「本来的天数 + N」。
 - 历史流水账已经在记，但条件里的 `day3` 还是按天数查日志；等真有时空跳跃时再改成「最近一次」。
 

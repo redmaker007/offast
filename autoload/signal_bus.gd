@@ -36,10 +36,6 @@ signal day_time_changed(clock_text:String, ratio:float)
 ## 到点了，强制下班。
 signal day_time_up()
 
-## 玩家自己点门提前下班。活没干完的话会被 round_manager 挡下来，
-## 挡下来时发 notice_requested 说明原因。
-signal leave_office_request()
-
 ## 弹一条只有「知道了」一个选项的提示。谁都能发，notice_dialog 负责显示。
 ## 提示是模态的：盖住整个屏幕，关掉之前点不了别的。
 signal notice_requested(text:String)
@@ -78,7 +74,7 @@ signal game_suspended()
 
 # ── 笔记本窗口 ───────────────────────────────────────────
 
-## 玩家点了桌面上的笔记本，请求打开笔记本窗口。
+## 打开笔记本窗口（天内图的视窗 bubble 发）。
 ## 打开后固定落在选择页，再由玩家自己翻到别的页。
 signal open_laptop_request()
 
@@ -89,24 +85,21 @@ signal open_email_page_request()
 signal open_instruction_page_request()
 
 
-# ── 其它桌面 / 墙面物件 ──────────────────────────────────
-## 都由挂在物件上的 clickable_item 发出。部分还没有接收方，
-## 点了不会有反应但也不会报错（clickable_item 会先查 has_signal）。
+# ── 桌面 / 墙面物件 ──────────────────────────────────────
 
-## 玩家点了电话，请求打开来电界面。
-signal open_caller_request()
+## 玩家点了房间里的一个物件（clickable_item 发，object_id 是节点名：laptop / door / caller…）。
+## 点了之后发生什么全由当天的天内图决定（round_manager 转给 day_runner）：
+## 开窗、播桥段、门的下班判定都画在图上，没有写死的规则。
+signal object_clicked(object_id:StringName)
 
-## 玩家点了日历，请求打开日历界面（看剩几条命、第几天）。
+## 下面这几个是「打开某个物件自带的弹窗」的命令，由天内图的视窗 bubble 发出，
+## 不再由点击直接发（点电脑 ≠ 一定开电脑，要看图上有没有这条线）。
+
+## 打开日历（看剩几条命、第几天）。
 signal open_calendar_request()
 
-## 玩家点了电箱，请求打开电箱界面。
-signal open_electricbox_request()
-
-## 玩家点了便签，请求打开便签界面。
+## 打开便签。
 signal open_notes_request()
-
-## 玩家点了灯，请求打开灯的界面。
-signal open_light_request()
 
 
 # ── 剧情立场 ────────────────────────────────────────────

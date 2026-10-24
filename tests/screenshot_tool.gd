@@ -89,7 +89,7 @@ func _shoot_game() -> void:
 	await _wait(0.4)
 
 	# 桌面桥段：接电话那一段。
-	SignalBus.open_caller_request.emit()
+	SignalBus.object_clicked.emit(&"caller")
 	await _wait(2.2)
 	await _snap("event_page")
 	scene.get_node("event_page").visible = false

@@ -201,7 +201,6 @@ scale = Vector2(0.575, 0.48)
 pivot_offset = Vector2(69.56531, 283.33328)
 texture = ExtResource("8_gq25j")
 script = ExtResource("10_bdyjf")
-click_signal = "leave_office_request"
 
 [node name="HoverScale" parent="Control/door_control/door" unique_id=1454724611 instance=ExtResource("6_toloy")]
 hover_volume = 0.5
@@ -222,7 +221,6 @@ offset_bottom = 139.0
 scale = Vector2(0.575, 0.48)
 texture = ExtResource("11_p2pey")
 script = ExtResource("10_bdyjf")
-click_signal = "open_light_request"
 
 [node name="HoverScale" parent="Control/light_control/light" unique_id=1806914131 instance=ExtResource("6_toloy")]
 hover_volume = 0.5
@@ -243,7 +241,6 @@ offset_bottom = 319.0
 scale = Vector2(0.575, 0.48)
 texture = ExtResource("12_msbq1")
 script = ExtResource("10_bdyjf")
-click_signal = "open_electricbox_request"
 
 [node name="HoverScale" parent="Control/electricbox_control/electricbox" unique_id=367197045 instance=ExtResource("6_toloy")]
 hover_volume = 0.5
@@ -273,7 +270,6 @@ scale = Vector2(0.575, 0.48)
 pivot_offset = Vector2(113, 86)
 texture = ExtResource("9_bdyjf")
 script = ExtResource("10_bdyjf")
-click_signal = "open_laptop_request"
 
 [node name="HoverScale" parent="Control/laptop_control/laptop" unique_id=750403698 instance=ExtResource("6_toloy")]
 hover_volume = 0.5
@@ -298,7 +294,6 @@ scale = Vector2(0.57525754, 0.47918952)
 pivot_offset = Vector2(39.982086, 56.345154)
 texture = ExtResource("13_i2w82")
 script = ExtResource("10_bdyjf")
-click_signal = "open_notes_request"
 
 [node name="HoverScale" parent="Control/notes_control/notes" unique_id=2106853381 instance=ExtResource("6_toloy")]
 hover_volume = 0.5
@@ -320,7 +315,6 @@ scale = Vector2(0.57525957, 0.4791912)
 pivot_offset = Vector2(34.766876, 112.68988)
 texture = ExtResource("14_g1emn")
 script = ExtResource("10_bdyjf")
-click_signal = "open_caller_request"
 
 [node name="HoverScale" parent="Control/caller_control/caller" unique_id=1068831406 instance=ExtResource("6_toloy")]
 hover_volume = 0.5
@@ -362,7 +356,6 @@ face_3_lives = ExtResource("22_cca48")
 face_2_lives = ExtResource("23_ymimj")
 face_1_life = ExtResource("24_3p1ss")
 face_0_lives = ExtResource("25_2u8wn")
-click_signal = "open_calendar_request"
 
 [node name="HoverScale" parent="Control/calendar_control/calendar" unique_id=1603552601 instance=ExtResource("6_toloy")]
 hover_volume = 0.5

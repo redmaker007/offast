@@ -167,7 +167,7 @@ func _test_leave_blocked() -> void:
 	_is_true("收件箱还有信", reader.remaining() > 0)
 	_is_false("提示一开始是关着的", notice.visible)
 
-	SignalBus.leave_office_request.emit()
+	SignalBus.object_clicked.emit(&"door")
 	await _frames(2)
 
 	_eq("回合状态没变", RoundState.current_round_state, RoundState.Round_State.GAME)
@@ -175,7 +175,7 @@ func _test_leave_blocked() -> void:
 	_is_true("时钟还在走", _node("day_clock").is_processing())
 	_is_true("提示弹出来了", notice.visible)
 	_eq("提示文案", notice.get_node("%notice_bubble").get_node("%text_box").text,
-		tr(_rm().unfinished_notice))
+		tr("UI_UNFINISHED"))
 
 	notice._on_ok_pressed()
 	await _windows_settled()
@@ -184,7 +184,7 @@ func _test_leave_blocked() -> void:
 	# 只剩最后一封没读也一样锁着，不是「读过几封就算干完」。
 	while reader.remaining() > 1:
 		reader.read_next_email()
-	SignalBus.leave_office_request.emit()
+	SignalBus.object_clicked.emit(&"door")
 	await _frames(2)
 	_eq("还剩一封也走不了", RoundState.current_round_state, RoundState.Round_State.GAME)
 	_is_true("又弹了一次提示", notice.visible)
@@ -765,7 +765,7 @@ func _leave_office() -> void:
 	var reader := _node("email_reader")
 	while reader.remaining() > 0:
 		reader.read_next_email()
-	SignalBus.leave_office_request.emit()
+	SignalBus.object_clicked.emit(&"door")
 	await _frames(2)
 
 
