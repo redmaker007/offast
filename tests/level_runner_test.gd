@@ -61,7 +61,8 @@ func _test_committed_level() -> void:
 		_eq("第 %d 条条件照抄" % (i + 1), str(cases[i]["if"]), rule.condition)
 		_eq("第 %d 条去对应结局" % (i + 1), br.target(node_types.case_port(i)), "end_" + String(rule.ending))
 	_eq("else 走兜底 C", br.target("else"), "end_C")
-	_eq("被开除去 E", runner.doc.settings["fired_ending"], "end_E")
+	_eq("被开除去单独的 E（不摊日志）", runner.doc.settings["fired_ending"], "end_E_fired")
+	_check_day_bodies(runner.doc, day_count)
 	_eq("三条命", runner.lives(), 3)
 
 
@@ -136,23 +137,22 @@ func _test_fire() -> void:
 	runner.start()
 	runner.advance()
 	runner.fire()
-	_eq("跳到被开除的结局天", runner.current, "end_E")
+	_eq("跳到被开除的结局天", runner.current, "end_E_fired")
 	_is_true("是结局", runner.is_ending())
 	_eq("结局 id", runner.ending_id(), &"E")
 
 
 ## day_1 → 跳转器 → day_2 → 跳转器 → day_3 → 结局。
 func _jump_doc(mode1: String, value1: int, mode2: String, value2: int) -> level_doc:
-	var doc := level_doc.create()
-	doc.settings["fired_ending"] = "end"
+	var doc := _small_doc()
 	var g := doc.graph
 	for id in ["day_1", "day_2", "day_3", "end"]:
 		var n := g.add(flow_node.new(id, "day"))
 		n.props = {"role": "normal"}
-		n.body = level_converter._work_day_body()
+		n.body = level_converter.work_day_body(1, null)
 	g.node("day_1").props["role"] = "start"
 	g.node("end").props["role"] = "ending"
-	g.node("end").body = level_converter._ending_body()
+	g.node("end").body = level_converter.ending_body("C")
 	var j1 := g.add(flow_node.new("j1", "jumper"))
 	j1.props = {"mode": mode1, "value": value1}
 	var j2 := g.add(flow_node.new("j2", "jumper"))
@@ -163,6 +163,46 @@ func _jump_doc(mode1: String, value1: int, mode2: String, value2: int) -> level_
 	j2.link("next", "day_3")
 	g.node("day_3").link("next", "end")
 	return doc
+
+
+## 手搭的小关卡：带房间物件（天内图会引用它们），被开除去 end。
+func _small_doc() -> level_doc:
+	var doc := level_doc.create()
+	doc.settings["fired_ending"] = "end"
+	doc.world["objects"] = level_converter.room_objects()
+	return doc
+
+
+## 每天的天内图要和那天的 .story 对得上：显式连线、桥段、[score]。
+func _check_day_bodies(doc: level_doc, day_count: int) -> void:
+	for i in range(1, day_count + 1):
+		var plan := load("%s/days/day_%d.story" % [STORY_DIR, i]) as day_plan
+		var b := doc.graph.node("day_%d" % i).body
+		var tag := "第 %d 天" % i
+		var fp := b.node("free_play")
+		for obj in ["laptop", "notes", "calendar", "caller", "door"]:
+			_is_true("%s：%s 挂在自由环节上" % [tag, obj], obj in fp.targets("listen"))
+		for obj in ["laptop", "notes", "calendar"]:
+			_eq("%s：%s → 它自己的视窗" % [tag, obj], b.node(obj).target("next"), obj + "_window")
+		_is_true("%s：便签不锁其他物件" % tag, bool(b.node("notes").props["non_blocking"]))
+		_is_false("%s：电脑会锁" % tag, bool(b.node("laptop").props["non_blocking"]))
+		_eq("%s：门是瞬发判定收件箱" % tag, b.node("door_check").props["cases"], [{"if": "inbox_empty"}])
+		_eq("%s：到点和点门走同一条下班链" % tag, fp.target("time_up"), b.node("door_check").target("case_1"))
+
+		var has_call := plan.caller != null and not plan.caller.is_empty()
+		_eq("%s：有来电才有来电检查" % tag, b.has("caller_check"), has_call)
+		var has_box := plan.electricbox != null and not plan.electricbox.is_empty()
+		_eq("%s：有电箱桥段才挂电箱" % tag, b.has("electricbox"), has_box)
+		if has_box:
+			_eq("%s：电箱能不能重复跟着 repeat=" % tag, bool(b.node("electricbox").props["repeat"]),
+				plan.repeats(&"electricbox"))
+
+		for r in plan.score_rules.size():
+			var fx := b.node("score_%d" % (r + 1))
+			_is_true("%s：第 %d 条 [score] 变成效果节点" % [tag, r + 1], fx != null)
+			if fx:
+				_eq("%s：第 %d 条 [score] 条件照抄" % [tag, r + 1], fx.props["if"], plan.score_rules[r].condition)
+		_is_false("%s：没有多出来的效果节点" % tag, b.has("score_%d" % (plan.score_rules.size() + 1)))
 
 
 func _test_jumper() -> void:
@@ -188,15 +228,14 @@ func _test_jumper() -> void:
 
 func _test_branch_loop_guard() -> void:
 	_section = "分化器绕圈保护"
-	var doc := level_doc.create()
-	doc.settings["fired_ending"] = "end"
+	var doc := _small_doc()
 	var g := doc.graph
 	var d1 := g.add(flow_node.new("day_1", "day"))
 	d1.props = {"role": "start"}
-	d1.body = level_converter._work_day_body()
+	d1.body = level_converter.work_day_body(1, null)
 	var e := g.add(flow_node.new("end", "day"))
 	e.props = {"role": "ending"}
-	e.body = level_converter._ending_body()
+	e.body = level_converter.ending_body("C")
 	var b1 := g.add(flow_node.new("b1", "brancher"))
 	b1.props["cases"] = [{"if": "flag:never_set"}]
 	b1.link("case_1", "end")

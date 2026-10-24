@@ -85,9 +85,7 @@ static func _check_outer(doc: level_doc, errs: Array[level_error]) -> void:
 						errs.append(level_error.new("ENDING_HAS_EXIT", {}, "", id))
 			"brancher":
 				var cases := node_types.branch_cases(n)
-				for i in cases.size():
-					var cond := str(cases[i].get("if", "")) if cases[i] is Dictionary else ""
-					_check_condition(cond, "", id, errs)
+				_check_cases(n, doc.variable_ids(), "", errs)
 			"jumper":
 				var mode := str(n.props.get("mode", ""))
 				if not mode in node_types.JUMP_MODES:
@@ -136,11 +134,13 @@ static func _check_body(doc: level_doc, day: flow_node, errs: Array[level_error]
 					listened[t] = true
 			"interactable":
 				_check_object(n, objects, d, errs)
-				_check_condition(str(n.props.get("unlock", "")), d, id, errs)
+				_check_condition(str(n.props.get("unlock", "")), variables, d, id, errs)
 			"window_bubble":
 				_check_object(n, objects, d, errs)
+			"if":
+				_check_cases(n, variables, d, errs)
 			"effect":
-				_check_condition(str(n.props.get("if", "")), d, id, errs)
+				_check_condition(str(n.props.get("if", "")), variables, d, id, errs)
 				var deltas = n.props.get("deltas", {})
 				if deltas is Dictionary:
 					for v in deltas:
@@ -167,27 +167,39 @@ static func _check_body(doc: level_doc, day: flow_node, errs: Array[level_error]
 
 
 ## 强制链绕成圈的节点（每个圈报一次）。返回圈里全部节点，后面就不再重复报「走不到结束」。
+## 条件分支有多个出口，所以是在「强制链节点」组成的子图里找环（深搜，灰色节点再碰到就是环）。
 static func _chain_loops(g: flow_graph, d: String, errs: Array[level_error]) -> Dictionary:
 	var in_loop := {}
+	var color := {}   # 没有 = 白，1 = 正在走（灰），2 = 走完（黑）
 	for id in g.sorted_ids():
-		if in_loop.has(id) or not g.node(id).type in node_types.FORCED:
-			continue
-		var path: Array = []
-		var cur: String = id
-		while g.has(cur) and g.node(cur).type in node_types.FORCED and not cur in path:
-			path.append(cur)
-			cur = g.node(cur).target("next")
-		if cur in path:
-			var loop := path.slice(path.find(cur))
-			var already := false
-			for m in loop:
-				if in_loop.has(m):
-					already = true
-				in_loop[m] = true
-			if not already:
-				loop.sort()
-				errs.append(level_error.new("CHAIN_LOOP", {}, d, loop[0]))
+		if not color.has(id) and node_types.is_chain(g.node(id).type):
+			_chain_dfs(g, id, [], color, in_loop, d, errs)
 	return in_loop
+
+
+static func _chain_dfs(g: flow_graph, id: String, stack: Array, color: Dictionary,
+		in_loop: Dictionary, d: String, errs: Array[level_error]) -> void:
+	color[id] = 1
+	stack.append(id)
+	var n: flow_node = g.node(id)
+	for port in n.outs:
+		for t in n.targets(port):
+			if not g.has(t) or not node_types.is_chain(g.node(t).type):
+				continue
+			if color.get(t, 0) == 1:
+				var loop := stack.slice(stack.find(t))
+				var already := false
+				for m in loop:
+					if in_loop.has(m):
+						already = true
+					in_loop[m] = true
+				if not already:
+					loop.sort()
+					errs.append(level_error.new("CHAIN_LOOP", {}, d, loop[0]))
+			elif not color.has(t):
+				_chain_dfs(g, t, stack, color, in_loop, d, errs)
+	stack.pop_back()
+	color[id] = 2
 
 
 # ── 共用 ─────────────────────────────────────────────────
@@ -244,10 +256,24 @@ static func _check_ports(kind: String, g: flow_graph, n: flow_node, d: String,
 					{"port": port, "target": t, "target_type": g.node(t).type}, d, n.id))
 
 
-static func _check_condition(cond: String, d: String, id: String, errs: Array[level_error]) -> void:
+## 分化器 / 条件分支的每一条条件。
+static func _check_cases(n: flow_node, variables: Array[String], d: String, errs: Array[level_error]) -> void:
+	for c in node_types.branch_cases(n):
+		var cond := str(c.get("if", "")) if c is Dictionary else ""
+		_check_condition(cond, variables, d, n.id, errs)
+
+
+## 语法交给 story_condition；var.xxx 有没有定义只有关卡知道，在这里查。
+static func _check_condition(cond: String, variables: Array[String], d: String, id: String,
+		errs: Array[level_error]) -> void:
 	var detail := story_condition.validate(cond)
 	if not detail.is_empty():
 		errs.append(level_error.new("BAD_CONDITION", {"detail": detail, "condition": cond}, d, id))
+		return
+	var re := RegEx.create_from_string("var[.]([A-Za-z0-9_]+)")
+	for m in re.search_all(cond):
+		if not m.get_string(1) in variables:
+			errs.append(level_error.new("UNKNOWN_VARIABLE", {"id": m.get_string(1)}, d, id))
 
 
 static func _check_object(n: flow_node, objects: Array[String], d: String, errs: Array[level_error]) -> void:

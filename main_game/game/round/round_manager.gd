@@ -66,8 +66,7 @@ func _ready() -> void:
 		max_lives = level.lives()
 		days_to_win = level.total_days()
 	else:
-		push_error("关卡 %s 有错，不能开局：
-%s" % [LEVEL_NAME, level.describe_errors()])
+		push_error("关卡 %s 有错，不能开局：\n%s" % [LEVEL_NAME, level.describe_errors()])
 	SignalBus.story_finished.connect(_on_story_finished)
 	SignalBus.day_time_up.connect(end_day)
 	SignalBus.leave_office_request.connect(_on_leave_office)
@@ -97,8 +96,7 @@ func load_data(d: Dictionary) -> void:
 func start_game() -> void:
 	if level == null or not level.is_valid():
 		var why := level.describe_errors() if level != null else "没有关卡"
-		SignalBus.notice_requested.emit(tr("UI_LEVEL_INVALID") + "
-" + why)
+		SignalBus.notice_requested.emit(tr("UI_LEVEL_INVALID") + "\n" + why)
 		return
 	level.start()
 	current_day = level.day

@@ -5,10 +5,188 @@
 			"day_1": {
 				"body": {
 					"nodes": {
+						"calendar": {
+							"outs": {
+								"next": [
+									"calendar_window"
+								]
+							},
+							"pos": [
+								880.0,
+								360.0
+							],
+							"props": {
+								"non_blocking": false,
+								"object": "calendar",
+								"repeat": true,
+								"unlock": ""
+							},
+							"type": "interactable"
+						},
+						"calendar_window": {
+							"outs": {
+								"next": [
+									"free_play"
+								]
+							},
+							"pos": [
+								1100.0,
+								360.0
+							],
+							"props": {
+								"object": "calendar",
+								"page": ""
+							},
+							"type": "window_bubble"
+						},
+						"caller": {
+							"outs": {
+								"next": [
+									"caller_check"
+								]
+							},
+							"pos": [
+								880.0,
+								480.0
+							],
+							"props": {
+								"non_blocking": false,
+								"object": "caller",
+								"repeat": true,
+								"unlock": ""
+							},
+							"type": "interactable"
+						},
+						"caller_check": {
+							"outs": {
+								"case_1": [
+									"caller_mark"
+								],
+								"else": [
+									"caller_window"
+								]
+							},
+							"pos": [
+								1100.0,
+								480.0
+							],
+							"props": {
+								"cases": [
+									{
+										"if": "not flag:event_caller_day_1"
+									}
+								]
+							},
+							"type": "if"
+						},
+						"caller_event": {
+							"outs": {
+								"next": [
+									"free_play"
+								]
+							},
+							"pos": [
+								1540.0,
+								480.0
+							],
+							"props": {
+								"source": {
+									"event": "caller",
+									"plan": 1
+								}
+							},
+							"type": "story_bubble"
+						},
+						"caller_mark": {
+							"outs": {
+								"next": [
+									"caller_event"
+								]
+							},
+							"pos": [
+								1320.0,
+								480.0
+							],
+							"props": {
+								"set_flags": [
+									"event_caller_day_1"
+								]
+							},
+							"type": "effect"
+						},
+						"caller_window": {
+							"outs": {
+								"next": [
+									"free_play"
+								]
+							},
+							"pos": [
+								1320.0,
+								600.0
+							],
+							"props": {
+								"object": "caller",
+								"page": ""
+							},
+							"type": "window_bubble"
+						},
+						"clock_out": {
+							"outs": {
+								"next": [
+									"score_1"
+								]
+							},
+							"pos": [
+								1540.0,
+								0.0
+							],
+							"props": {},
+							"type": "clock_out"
+						},
+						"door": {
+							"outs": {
+								"next": [
+									"door_check"
+								]
+							},
+							"pos": [
+								880.0,
+								720.0
+							],
+							"props": {
+								"non_blocking": false,
+								"object": "door",
+								"repeat": true,
+								"unlock": ""
+							},
+							"type": "interactable"
+						},
+						"door_check": {
+							"outs": {
+								"case_1": [
+									"clock_out"
+								],
+								"else": [
+									"unfinished"
+								]
+							},
+							"pos": [
+								1100.0,
+								720.0
+							],
+							"props": {
+								"cases": [
+									{
+										"if": "inbox_empty"
+									}
+								]
+							},
+							"type": "if"
+						},
 						"end": {
 							"outs": {},
 							"pos": [
-								660.0,
+								2420.0,
 								0.0
 							],
 							"props": {},
@@ -16,16 +194,126 @@
 						},
 						"free_play": {
 							"outs": {
+								"listen": [
+									"laptop",
+									"notes",
+									"calendar",
+									"caller",
+									"door"
+								],
 								"time_up": [
-									"result"
+									"clock_out"
+								]
+							},
+							"pos": [
+								660.0,
+								0.0
+							],
+							"props": {},
+							"type": "free_play"
+						},
+						"laptop": {
+							"outs": {
+								"next": [
+									"laptop_window"
+								]
+							},
+							"pos": [
+								880.0,
+								120.0
+							],
+							"props": {
+								"non_blocking": false,
+								"object": "laptop",
+								"repeat": true,
+								"unlock": ""
+							},
+							"type": "interactable"
+						},
+						"laptop_window": {
+							"outs": {
+								"next": [
+									"free_play"
+								]
+							},
+							"pos": [
+								1100.0,
+								120.0
+							],
+							"props": {
+								"object": "laptop",
+								"page": ""
+							},
+							"type": "window_bubble"
+						},
+						"mail": {
+							"outs": {
+								"next": [
+									"free_play"
+								]
+							},
+							"pos": [
+								440.0,
+								0.0
+							],
+							"props": {
+								"source": {
+									"plan": 1
+								}
+							},
+							"type": "send_mail"
+						},
+						"notes": {
+							"outs": {
+								"next": [
+									"notes_window"
+								]
+							},
+							"pos": [
+								880.0,
+								240.0
+							],
+							"props": {
+								"non_blocking": true,
+								"object": "notes",
+								"repeat": true,
+								"unlock": ""
+							},
+							"type": "interactable"
+						},
+						"notes_window": {
+							"outs": {
+								"next": [
+									"free_play"
+								]
+							},
+							"pos": [
+								1100.0,
+								240.0
+							],
+							"props": {
+								"object": "notes",
+								"page": ""
+							},
+							"type": "window_bubble"
+						},
+						"opening": {
+							"outs": {
+								"next": [
+									"mail"
 								]
 							},
 							"pos": [
 								220.0,
 								0.0
 							],
-							"props": {},
-							"type": "free_play"
+							"props": {
+								"source": {
+									"part": "story",
+									"plan": 1
+								}
+							},
+							"type": "story_bubble"
 						},
 						"result": {
 							"outs": {
@@ -34,16 +322,52 @@
 								]
 							},
 							"pos": [
-								440.0,
+								2200.0,
 								0.0
 							],
 							"props": {},
 							"type": "show_result"
 						},
+						"score_1": {
+							"outs": {
+								"next": [
+									"score_2"
+								]
+							},
+							"pos": [
+								1760.0,
+								0.0
+							],
+							"props": {
+								"deltas": {
+									"D": 1
+								},
+								"if": "did(raise,Bob) and did(promotion,Bob)"
+							},
+							"type": "effect"
+						},
+						"score_2": {
+							"outs": {
+								"next": [
+									"result"
+								]
+							},
+							"pos": [
+								1980.0,
+								0.0
+							],
+							"props": {
+								"deltas": {
+									"C": 1
+								},
+								"if": "did(raise,Bob) and not did(promotion,Bob)"
+							},
+							"type": "effect"
+						},
 						"start": {
 							"outs": {
 								"next": [
-									"free_play"
+									"opening"
 								]
 							},
 							"pos": [
@@ -52,6 +376,24 @@
 							],
 							"props": {},
 							"type": "start"
+						},
+						"unfinished": {
+							"outs": {
+								"next": [
+									"free_play"
+								]
+							},
+							"pos": [
+								1320.0,
+								720.0
+							],
+							"props": {
+								"script": {
+									"en": "Need to finish all the work first...",
+									"zh": "活还没干完……"
+								}
+							},
+							"type": "story_bubble"
 						}
 					}
 				},
@@ -77,10 +419,167 @@
 			"day_2": {
 				"body": {
 					"nodes": {
+						"calendar": {
+							"outs": {
+								"next": [
+									"calendar_window"
+								]
+							},
+							"pos": [
+								880.0,
+								360.0
+							],
+							"props": {
+								"non_blocking": false,
+								"object": "calendar",
+								"repeat": true,
+								"unlock": ""
+							},
+							"type": "interactable"
+						},
+						"calendar_window": {
+							"outs": {
+								"next": [
+									"free_play"
+								]
+							},
+							"pos": [
+								1100.0,
+								360.0
+							],
+							"props": {
+								"object": "calendar",
+								"page": ""
+							},
+							"type": "window_bubble"
+						},
+						"caller": {
+							"outs": {
+								"next": [
+									"caller_window"
+								]
+							},
+							"pos": [
+								880.0,
+								480.0
+							],
+							"props": {
+								"non_blocking": false,
+								"object": "caller",
+								"repeat": true,
+								"unlock": ""
+							},
+							"type": "interactable"
+						},
+						"caller_window": {
+							"outs": {
+								"next": [
+									"free_play"
+								]
+							},
+							"pos": [
+								1320.0,
+								600.0
+							],
+							"props": {
+								"object": "caller",
+								"page": ""
+							},
+							"type": "window_bubble"
+						},
+						"clock_out": {
+							"outs": {
+								"next": [
+									"score_1"
+								]
+							},
+							"pos": [
+								1540.0,
+								0.0
+							],
+							"props": {},
+							"type": "clock_out"
+						},
+						"door": {
+							"outs": {
+								"next": [
+									"door_check"
+								]
+							},
+							"pos": [
+								880.0,
+								960.0
+							],
+							"props": {
+								"non_blocking": false,
+								"object": "door",
+								"repeat": true,
+								"unlock": ""
+							},
+							"type": "interactable"
+						},
+						"door_check": {
+							"outs": {
+								"case_1": [
+									"clock_out"
+								],
+								"else": [
+									"unfinished"
+								]
+							},
+							"pos": [
+								1100.0,
+								960.0
+							],
+							"props": {
+								"cases": [
+									{
+										"if": "inbox_empty"
+									}
+								]
+							},
+							"type": "if"
+						},
+						"electricbox": {
+							"outs": {
+								"next": [
+									"electricbox_event"
+								]
+							},
+							"pos": [
+								880.0,
+								720.0
+							],
+							"props": {
+								"non_blocking": false,
+								"object": "electricbox",
+								"repeat": true,
+								"unlock": ""
+							},
+							"type": "interactable"
+						},
+						"electricbox_event": {
+							"outs": {
+								"next": [
+									"free_play"
+								]
+							},
+							"pos": [
+								1320.0,
+								720.0
+							],
+							"props": {
+								"source": {
+									"event": "electricbox",
+									"plan": 2
+								}
+							},
+							"type": "story_bubble"
+						},
 						"end": {
 							"outs": {},
 							"pos": [
-								660.0,
+								2420.0,
 								0.0
 							],
 							"props": {},
@@ -88,16 +587,127 @@
 						},
 						"free_play": {
 							"outs": {
+								"listen": [
+									"laptop",
+									"notes",
+									"calendar",
+									"caller",
+									"electricbox",
+									"door"
+								],
 								"time_up": [
-									"result"
+									"clock_out"
+								]
+							},
+							"pos": [
+								660.0,
+								0.0
+							],
+							"props": {},
+							"type": "free_play"
+						},
+						"laptop": {
+							"outs": {
+								"next": [
+									"laptop_window"
+								]
+							},
+							"pos": [
+								880.0,
+								120.0
+							],
+							"props": {
+								"non_blocking": false,
+								"object": "laptop",
+								"repeat": true,
+								"unlock": ""
+							},
+							"type": "interactable"
+						},
+						"laptop_window": {
+							"outs": {
+								"next": [
+									"free_play"
+								]
+							},
+							"pos": [
+								1100.0,
+								120.0
+							],
+							"props": {
+								"object": "laptop",
+								"page": ""
+							},
+							"type": "window_bubble"
+						},
+						"mail": {
+							"outs": {
+								"next": [
+									"free_play"
+								]
+							},
+							"pos": [
+								440.0,
+								0.0
+							],
+							"props": {
+								"source": {
+									"plan": 2
+								}
+							},
+							"type": "send_mail"
+						},
+						"notes": {
+							"outs": {
+								"next": [
+									"notes_window"
+								]
+							},
+							"pos": [
+								880.0,
+								240.0
+							],
+							"props": {
+								"non_blocking": true,
+								"object": "notes",
+								"repeat": true,
+								"unlock": ""
+							},
+							"type": "interactable"
+						},
+						"notes_window": {
+							"outs": {
+								"next": [
+									"free_play"
+								]
+							},
+							"pos": [
+								1100.0,
+								240.0
+							],
+							"props": {
+								"object": "notes",
+								"page": ""
+							},
+							"type": "window_bubble"
+						},
+						"opening": {
+							"outs": {
+								"next": [
+									"mail"
 								]
 							},
 							"pos": [
 								220.0,
 								0.0
 							],
-							"props": {},
-							"type": "free_play"
+							"props": {
+								"source": {
+									"part": "story",
+									"plan": 2
+								}
+							},
+							"type": "story_bubble"
 						},
 						"result": {
 							"outs": {
@@ -106,16 +716,52 @@
 								]
 							},
 							"pos": [
-								440.0,
+								2200.0,
 								0.0
 							],
 							"props": {},
 							"type": "show_result"
 						},
+						"score_1": {
+							"outs": {
+								"next": [
+									"score_2"
+								]
+							},
+							"pos": [
+								1760.0,
+								0.0
+							],
+							"props": {
+								"deltas": {
+									"A": 2
+								},
+								"if": "did(fire,*random)"
+							},
+							"type": "effect"
+						},
+						"score_2": {
+							"outs": {
+								"next": [
+									"result"
+								]
+							},
+							"pos": [
+								1980.0,
+								0.0
+							],
+							"props": {
+								"deltas": {
+									"C": 2
+								},
+								"if": "not did(fire,*any)"
+							},
+							"type": "effect"
+						},
 						"start": {
 							"outs": {
 								"next": [
-									"free_play"
+									"opening"
 								]
 							},
 							"pos": [
@@ -124,6 +770,24 @@
 							],
 							"props": {},
 							"type": "start"
+						},
+						"unfinished": {
+							"outs": {
+								"next": [
+									"free_play"
+								]
+							},
+							"pos": [
+								1320.0,
+								960.0
+							],
+							"props": {
+								"script": {
+									"en": "Need to finish all the work first...",
+									"zh": "活还没干完……"
+								}
+							},
+							"type": "story_bubble"
 						}
 					}
 				},
@@ -149,10 +813,131 @@
 			"day_3": {
 				"body": {
 					"nodes": {
+						"calendar": {
+							"outs": {
+								"next": [
+									"calendar_window"
+								]
+							},
+							"pos": [
+								880.0,
+								360.0
+							],
+							"props": {
+								"non_blocking": false,
+								"object": "calendar",
+								"repeat": true,
+								"unlock": ""
+							},
+							"type": "interactable"
+						},
+						"calendar_window": {
+							"outs": {
+								"next": [
+									"free_play"
+								]
+							},
+							"pos": [
+								1100.0,
+								360.0
+							],
+							"props": {
+								"object": "calendar",
+								"page": ""
+							},
+							"type": "window_bubble"
+						},
+						"caller": {
+							"outs": {
+								"next": [
+									"caller_window"
+								]
+							},
+							"pos": [
+								880.0,
+								480.0
+							],
+							"props": {
+								"non_blocking": false,
+								"object": "caller",
+								"repeat": true,
+								"unlock": ""
+							},
+							"type": "interactable"
+						},
+						"caller_window": {
+							"outs": {
+								"next": [
+									"free_play"
+								]
+							},
+							"pos": [
+								1320.0,
+								600.0
+							],
+							"props": {
+								"object": "caller",
+								"page": ""
+							},
+							"type": "window_bubble"
+						},
+						"clock_out": {
+							"outs": {
+								"next": [
+									"score_1"
+								]
+							},
+							"pos": [
+								1540.0,
+								0.0
+							],
+							"props": {},
+							"type": "clock_out"
+						},
+						"door": {
+							"outs": {
+								"next": [
+									"door_check"
+								]
+							},
+							"pos": [
+								880.0,
+								720.0
+							],
+							"props": {
+								"non_blocking": false,
+								"object": "door",
+								"repeat": true,
+								"unlock": ""
+							},
+							"type": "interactable"
+						},
+						"door_check": {
+							"outs": {
+								"case_1": [
+									"clock_out"
+								],
+								"else": [
+									"unfinished"
+								]
+							},
+							"pos": [
+								1100.0,
+								720.0
+							],
+							"props": {
+								"cases": [
+									{
+										"if": "inbox_empty"
+									}
+								]
+							},
+							"type": "if"
+						},
 						"end": {
 							"outs": {},
 							"pos": [
-								660.0,
+								2860.0,
 								0.0
 							],
 							"props": {},
@@ -160,16 +945,126 @@
 						},
 						"free_play": {
 							"outs": {
+								"listen": [
+									"laptop",
+									"notes",
+									"calendar",
+									"caller",
+									"door"
+								],
 								"time_up": [
-									"result"
+									"clock_out"
+								]
+							},
+							"pos": [
+								660.0,
+								0.0
+							],
+							"props": {},
+							"type": "free_play"
+						},
+						"laptop": {
+							"outs": {
+								"next": [
+									"laptop_window"
+								]
+							},
+							"pos": [
+								880.0,
+								120.0
+							],
+							"props": {
+								"non_blocking": false,
+								"object": "laptop",
+								"repeat": true,
+								"unlock": ""
+							},
+							"type": "interactable"
+						},
+						"laptop_window": {
+							"outs": {
+								"next": [
+									"free_play"
+								]
+							},
+							"pos": [
+								1100.0,
+								120.0
+							],
+							"props": {
+								"object": "laptop",
+								"page": ""
+							},
+							"type": "window_bubble"
+						},
+						"mail": {
+							"outs": {
+								"next": [
+									"free_play"
+								]
+							},
+							"pos": [
+								440.0,
+								0.0
+							],
+							"props": {
+								"source": {
+									"plan": 3
+								}
+							},
+							"type": "send_mail"
+						},
+						"notes": {
+							"outs": {
+								"next": [
+									"notes_window"
+								]
+							},
+							"pos": [
+								880.0,
+								240.0
+							],
+							"props": {
+								"non_blocking": true,
+								"object": "notes",
+								"repeat": true,
+								"unlock": ""
+							},
+							"type": "interactable"
+						},
+						"notes_window": {
+							"outs": {
+								"next": [
+									"free_play"
+								]
+							},
+							"pos": [
+								1100.0,
+								240.0
+							],
+							"props": {
+								"object": "notes",
+								"page": ""
+							},
+							"type": "window_bubble"
+						},
+						"opening": {
+							"outs": {
+								"next": [
+									"mail"
 								]
 							},
 							"pos": [
 								220.0,
 								0.0
 							],
-							"props": {},
-							"type": "free_play"
+							"props": {
+								"source": {
+									"part": "story",
+									"plan": 3
+								}
+							},
+							"type": "story_bubble"
 						},
 						"result": {
 							"outs": {
@@ -178,16 +1073,88 @@
 								]
 							},
 							"pos": [
-								440.0,
+								2640.0,
 								0.0
 							],
 							"props": {},
 							"type": "show_result"
 						},
+						"score_1": {
+							"outs": {
+								"next": [
+									"score_2"
+								]
+							},
+							"pos": [
+								1760.0,
+								0.0
+							],
+							"props": {
+								"deltas": {
+									"D": 1
+								},
+								"if": "did(promotion,Bob)"
+							},
+							"type": "effect"
+						},
+						"score_2": {
+							"outs": {
+								"next": [
+									"score_3"
+								]
+							},
+							"pos": [
+								1980.0,
+								0.0
+							],
+							"props": {
+								"deltas": {
+									"A": 1
+								},
+								"if": "did(promotion,Rick)"
+							},
+							"type": "effect"
+						},
+						"score_3": {
+							"outs": {
+								"next": [
+									"score_4"
+								]
+							},
+							"pos": [
+								2200.0,
+								0.0
+							],
+							"props": {
+								"deltas": {
+									"B": 1
+								},
+								"if": "did(reduction,Rick)"
+							},
+							"type": "effect"
+						},
+						"score_4": {
+							"outs": {
+								"next": [
+									"result"
+								]
+							},
+							"pos": [
+								2420.0,
+								0.0
+							],
+							"props": {
+								"deltas": {
+									"B": 2
+								},
+								"if": "did(fire,Rick)"
+							},
+							"type": "effect"
+						},
 						"start": {
 							"outs": {
 								"next": [
-									"free_play"
+									"opening"
 								]
 							},
 							"pos": [
@@ -196,6 +1163,24 @@
 							],
 							"props": {},
 							"type": "start"
+						},
+						"unfinished": {
+							"outs": {
+								"next": [
+									"free_play"
+								]
+							},
+							"pos": [
+								1320.0,
+								720.0
+							],
+							"props": {
+								"script": {
+									"en": "Need to finish all the work first...",
+									"zh": "活还没干完……"
+								}
+							},
+							"type": "story_bubble"
 						}
 					}
 				},
@@ -221,10 +1206,131 @@
 			"day_4": {
 				"body": {
 					"nodes": {
+						"calendar": {
+							"outs": {
+								"next": [
+									"calendar_window"
+								]
+							},
+							"pos": [
+								880.0,
+								360.0
+							],
+							"props": {
+								"non_blocking": false,
+								"object": "calendar",
+								"repeat": true,
+								"unlock": ""
+							},
+							"type": "interactable"
+						},
+						"calendar_window": {
+							"outs": {
+								"next": [
+									"free_play"
+								]
+							},
+							"pos": [
+								1100.0,
+								360.0
+							],
+							"props": {
+								"object": "calendar",
+								"page": ""
+							},
+							"type": "window_bubble"
+						},
+						"caller": {
+							"outs": {
+								"next": [
+									"caller_window"
+								]
+							},
+							"pos": [
+								880.0,
+								480.0
+							],
+							"props": {
+								"non_blocking": false,
+								"object": "caller",
+								"repeat": true,
+								"unlock": ""
+							},
+							"type": "interactable"
+						},
+						"caller_window": {
+							"outs": {
+								"next": [
+									"free_play"
+								]
+							},
+							"pos": [
+								1320.0,
+								600.0
+							],
+							"props": {
+								"object": "caller",
+								"page": ""
+							},
+							"type": "window_bubble"
+						},
+						"clock_out": {
+							"outs": {
+								"next": [
+									"score_1"
+								]
+							},
+							"pos": [
+								1540.0,
+								0.0
+							],
+							"props": {},
+							"type": "clock_out"
+						},
+						"door": {
+							"outs": {
+								"next": [
+									"door_check"
+								]
+							},
+							"pos": [
+								880.0,
+								720.0
+							],
+							"props": {
+								"non_blocking": false,
+								"object": "door",
+								"repeat": true,
+								"unlock": ""
+							},
+							"type": "interactable"
+						},
+						"door_check": {
+							"outs": {
+								"case_1": [
+									"clock_out"
+								],
+								"else": [
+									"unfinished"
+								]
+							},
+							"pos": [
+								1100.0,
+								720.0
+							],
+							"props": {
+								"cases": [
+									{
+										"if": "inbox_empty"
+									}
+								]
+							},
+							"type": "if"
+						},
 						"end": {
 							"outs": {},
 							"pos": [
-								660.0,
+								2640.0,
 								0.0
 							],
 							"props": {},
@@ -232,16 +1338,126 @@
 						},
 						"free_play": {
 							"outs": {
+								"listen": [
+									"laptop",
+									"notes",
+									"calendar",
+									"caller",
+									"door"
+								],
 								"time_up": [
-									"result"
+									"clock_out"
+								]
+							},
+							"pos": [
+								660.0,
+								0.0
+							],
+							"props": {},
+							"type": "free_play"
+						},
+						"laptop": {
+							"outs": {
+								"next": [
+									"laptop_window"
+								]
+							},
+							"pos": [
+								880.0,
+								120.0
+							],
+							"props": {
+								"non_blocking": false,
+								"object": "laptop",
+								"repeat": true,
+								"unlock": ""
+							},
+							"type": "interactable"
+						},
+						"laptop_window": {
+							"outs": {
+								"next": [
+									"free_play"
+								]
+							},
+							"pos": [
+								1100.0,
+								120.0
+							],
+							"props": {
+								"object": "laptop",
+								"page": ""
+							},
+							"type": "window_bubble"
+						},
+						"mail": {
+							"outs": {
+								"next": [
+									"free_play"
+								]
+							},
+							"pos": [
+								440.0,
+								0.0
+							],
+							"props": {
+								"source": {
+									"plan": 4
+								}
+							},
+							"type": "send_mail"
+						},
+						"notes": {
+							"outs": {
+								"next": [
+									"notes_window"
+								]
+							},
+							"pos": [
+								880.0,
+								240.0
+							],
+							"props": {
+								"non_blocking": true,
+								"object": "notes",
+								"repeat": true,
+								"unlock": ""
+							},
+							"type": "interactable"
+						},
+						"notes_window": {
+							"outs": {
+								"next": [
+									"free_play"
+								]
+							},
+							"pos": [
+								1100.0,
+								240.0
+							],
+							"props": {
+								"object": "notes",
+								"page": ""
+							},
+							"type": "window_bubble"
+						},
+						"opening": {
+							"outs": {
+								"next": [
+									"mail"
 								]
 							},
 							"pos": [
 								220.0,
 								0.0
 							],
-							"props": {},
-							"type": "free_play"
+							"props": {
+								"source": {
+									"part": "story",
+									"plan": 4
+								}
+							},
+							"type": "story_bubble"
 						},
 						"result": {
 							"outs": {
@@ -250,16 +1466,70 @@
 								]
 							},
 							"pos": [
-								440.0,
+								2420.0,
 								0.0
 							],
 							"props": {},
 							"type": "show_result"
 						},
+						"score_1": {
+							"outs": {
+								"next": [
+									"score_2"
+								]
+							},
+							"pos": [
+								1760.0,
+								0.0
+							],
+							"props": {
+								"deltas": {
+									"B": 2
+								},
+								"if": "did(promotion,me)"
+							},
+							"type": "effect"
+						},
+						"score_2": {
+							"outs": {
+								"next": [
+									"score_3"
+								]
+							},
+							"pos": [
+								1980.0,
+								0.0
+							],
+							"props": {
+								"deltas": {
+									"D": 1
+								},
+								"if": "did(promotion,Bob)"
+							},
+							"type": "effect"
+						},
+						"score_3": {
+							"outs": {
+								"next": [
+									"result"
+								]
+							},
+							"pos": [
+								2200.0,
+								0.0
+							],
+							"props": {
+								"deltas": {
+									"A": 1
+								},
+								"if": "did(fire,Bob)"
+							},
+							"type": "effect"
+						},
 						"start": {
 							"outs": {
 								"next": [
-									"free_play"
+									"opening"
 								]
 							},
 							"pos": [
@@ -268,6 +1538,24 @@
 							],
 							"props": {},
 							"type": "start"
+						},
+						"unfinished": {
+							"outs": {
+								"next": [
+									"free_play"
+								]
+							},
+							"pos": [
+								1320.0,
+								720.0
+							],
+							"props": {
+								"script": {
+									"en": "Need to finish all the work first...",
+									"zh": "活还没干完……"
+								}
+							},
+							"type": "story_bubble"
 						}
 					}
 				},
@@ -293,10 +1581,131 @@
 			"day_5": {
 				"body": {
 					"nodes": {
+						"calendar": {
+							"outs": {
+								"next": [
+									"calendar_window"
+								]
+							},
+							"pos": [
+								880.0,
+								360.0
+							],
+							"props": {
+								"non_blocking": false,
+								"object": "calendar",
+								"repeat": true,
+								"unlock": ""
+							},
+							"type": "interactable"
+						},
+						"calendar_window": {
+							"outs": {
+								"next": [
+									"free_play"
+								]
+							},
+							"pos": [
+								1100.0,
+								360.0
+							],
+							"props": {
+								"object": "calendar",
+								"page": ""
+							},
+							"type": "window_bubble"
+						},
+						"caller": {
+							"outs": {
+								"next": [
+									"caller_window"
+								]
+							},
+							"pos": [
+								880.0,
+								480.0
+							],
+							"props": {
+								"non_blocking": false,
+								"object": "caller",
+								"repeat": true,
+								"unlock": ""
+							},
+							"type": "interactable"
+						},
+						"caller_window": {
+							"outs": {
+								"next": [
+									"free_play"
+								]
+							},
+							"pos": [
+								1320.0,
+								600.0
+							],
+							"props": {
+								"object": "caller",
+								"page": ""
+							},
+							"type": "window_bubble"
+						},
+						"clock_out": {
+							"outs": {
+								"next": [
+									"result"
+								]
+							},
+							"pos": [
+								1540.0,
+								0.0
+							],
+							"props": {},
+							"type": "clock_out"
+						},
+						"door": {
+							"outs": {
+								"next": [
+									"door_check"
+								]
+							},
+							"pos": [
+								880.0,
+								720.0
+							],
+							"props": {
+								"non_blocking": false,
+								"object": "door",
+								"repeat": true,
+								"unlock": ""
+							},
+							"type": "interactable"
+						},
+						"door_check": {
+							"outs": {
+								"case_1": [
+									"clock_out"
+								],
+								"else": [
+									"unfinished"
+								]
+							},
+							"pos": [
+								1100.0,
+								720.0
+							],
+							"props": {
+								"cases": [
+									{
+										"if": "inbox_empty"
+									}
+								]
+							},
+							"type": "if"
+						},
 						"end": {
 							"outs": {},
 							"pos": [
-								660.0,
+								1980.0,
 								0.0
 							],
 							"props": {},
@@ -304,16 +1713,126 @@
 						},
 						"free_play": {
 							"outs": {
+								"listen": [
+									"laptop",
+									"notes",
+									"calendar",
+									"caller",
+									"door"
+								],
 								"time_up": [
-									"result"
+									"clock_out"
+								]
+							},
+							"pos": [
+								660.0,
+								0.0
+							],
+							"props": {},
+							"type": "free_play"
+						},
+						"laptop": {
+							"outs": {
+								"next": [
+									"laptop_window"
+								]
+							},
+							"pos": [
+								880.0,
+								120.0
+							],
+							"props": {
+								"non_blocking": false,
+								"object": "laptop",
+								"repeat": true,
+								"unlock": ""
+							},
+							"type": "interactable"
+						},
+						"laptop_window": {
+							"outs": {
+								"next": [
+									"free_play"
+								]
+							},
+							"pos": [
+								1100.0,
+								120.0
+							],
+							"props": {
+								"object": "laptop",
+								"page": ""
+							},
+							"type": "window_bubble"
+						},
+						"mail": {
+							"outs": {
+								"next": [
+									"free_play"
+								]
+							},
+							"pos": [
+								440.0,
+								0.0
+							],
+							"props": {
+								"source": {
+									"plan": 5
+								}
+							},
+							"type": "send_mail"
+						},
+						"notes": {
+							"outs": {
+								"next": [
+									"notes_window"
+								]
+							},
+							"pos": [
+								880.0,
+								240.0
+							],
+							"props": {
+								"non_blocking": true,
+								"object": "notes",
+								"repeat": true,
+								"unlock": ""
+							},
+							"type": "interactable"
+						},
+						"notes_window": {
+							"outs": {
+								"next": [
+									"free_play"
+								]
+							},
+							"pos": [
+								1100.0,
+								240.0
+							],
+							"props": {
+								"object": "notes",
+								"page": ""
+							},
+							"type": "window_bubble"
+						},
+						"opening": {
+							"outs": {
+								"next": [
+									"mail"
 								]
 							},
 							"pos": [
 								220.0,
 								0.0
 							],
-							"props": {},
-							"type": "free_play"
+							"props": {
+								"source": {
+									"part": "story",
+									"plan": 5
+								}
+							},
+							"type": "story_bubble"
 						},
 						"result": {
 							"outs": {
@@ -322,7 +1841,7 @@
 								]
 							},
 							"pos": [
-								440.0,
+								1760.0,
 								0.0
 							],
 							"props": {},
@@ -331,7 +1850,7 @@
 						"start": {
 							"outs": {
 								"next": [
-									"free_play"
+									"opening"
 								]
 							},
 							"pos": [
@@ -340,6 +1859,24 @@
 							],
 							"props": {},
 							"type": "start"
+						},
+						"unfinished": {
+							"outs": {
+								"next": [
+									"free_play"
+								]
+							},
+							"pos": [
+								1320.0,
+								720.0
+							],
+							"props": {
+								"script": {
+									"en": "Need to finish all the work first...",
+									"zh": "活还没干完……"
+								}
+							},
+							"type": "story_bubble"
 						}
 					}
 				},
@@ -365,10 +1902,25 @@
 			"end_A": {
 				"body": {
 					"nodes": {
+						"card": {
+							"outs": {
+								"next": [
+									"end"
+								]
+							},
+							"pos": [
+								660.0,
+								0.0
+							],
+							"props": {
+								"ending": "A"
+							},
+							"type": "show_ending"
+						},
 						"end": {
 							"outs": {},
 							"pos": [
-								440.0,
+								880.0,
 								0.0
 							],
 							"props": {},
@@ -377,7 +1929,7 @@
 						"log": {
 							"outs": {
 								"next": [
-									"end"
+									"story"
 								]
 							},
 							"pos": [
@@ -399,6 +1951,23 @@
 							],
 							"props": {},
 							"type": "start"
+						},
+						"story": {
+							"outs": {
+								"next": [
+									"card"
+								]
+							},
+							"pos": [
+								440.0,
+								0.0
+							],
+							"props": {
+								"source": {
+									"ending": "A"
+								}
+							},
+							"type": "story_bubble"
 						}
 					}
 				},
@@ -420,10 +1989,25 @@
 			"end_B": {
 				"body": {
 					"nodes": {
+						"card": {
+							"outs": {
+								"next": [
+									"end"
+								]
+							},
+							"pos": [
+								660.0,
+								0.0
+							],
+							"props": {
+								"ending": "B"
+							},
+							"type": "show_ending"
+						},
 						"end": {
 							"outs": {},
 							"pos": [
-								440.0,
+								880.0,
 								0.0
 							],
 							"props": {},
@@ -432,7 +2016,7 @@
 						"log": {
 							"outs": {
 								"next": [
-									"end"
+									"story"
 								]
 							},
 							"pos": [
@@ -454,6 +2038,23 @@
 							],
 							"props": {},
 							"type": "start"
+						},
+						"story": {
+							"outs": {
+								"next": [
+									"card"
+								]
+							},
+							"pos": [
+								440.0,
+								0.0
+							],
+							"props": {
+								"source": {
+									"ending": "B"
+								}
+							},
+							"type": "story_bubble"
 						}
 					}
 				},
@@ -475,10 +2076,25 @@
 			"end_C": {
 				"body": {
 					"nodes": {
+						"card": {
+							"outs": {
+								"next": [
+									"end"
+								]
+							},
+							"pos": [
+								660.0,
+								0.0
+							],
+							"props": {
+								"ending": "C"
+							},
+							"type": "show_ending"
+						},
 						"end": {
 							"outs": {},
 							"pos": [
-								440.0,
+								880.0,
 								0.0
 							],
 							"props": {},
@@ -487,7 +2103,7 @@
 						"log": {
 							"outs": {
 								"next": [
-									"end"
+									"story"
 								]
 							},
 							"pos": [
@@ -509,6 +2125,23 @@
 							],
 							"props": {},
 							"type": "start"
+						},
+						"story": {
+							"outs": {
+								"next": [
+									"card"
+								]
+							},
+							"pos": [
+								440.0,
+								0.0
+							],
+							"props": {
+								"source": {
+									"ending": "C"
+								}
+							},
+							"type": "story_bubble"
 						}
 					}
 				},
@@ -530,10 +2163,25 @@
 			"end_D": {
 				"body": {
 					"nodes": {
+						"card": {
+							"outs": {
+								"next": [
+									"end"
+								]
+							},
+							"pos": [
+								660.0,
+								0.0
+							],
+							"props": {
+								"ending": "D"
+							},
+							"type": "show_ending"
+						},
 						"end": {
 							"outs": {},
 							"pos": [
-								440.0,
+								880.0,
 								0.0
 							],
 							"props": {},
@@ -542,7 +2190,7 @@
 						"log": {
 							"outs": {
 								"next": [
-									"end"
+									"story"
 								]
 							},
 							"pos": [
@@ -564,6 +2212,23 @@
 							],
 							"props": {},
 							"type": "start"
+						},
+						"story": {
+							"outs": {
+								"next": [
+									"card"
+								]
+							},
+							"pos": [
+								440.0,
+								0.0
+							],
+							"props": {
+								"source": {
+									"ending": "D"
+								}
+							},
+							"type": "story_bubble"
 						}
 					}
 				},
@@ -585,10 +2250,25 @@
 			"end_E": {
 				"body": {
 					"nodes": {
+						"card": {
+							"outs": {
+								"next": [
+									"end"
+								]
+							},
+							"pos": [
+								660.0,
+								0.0
+							],
+							"props": {
+								"ending": "E"
+							},
+							"type": "show_ending"
+						},
 						"end": {
 							"outs": {},
 							"pos": [
-								440.0,
+								880.0,
 								0.0
 							],
 							"props": {},
@@ -597,7 +2277,7 @@
 						"log": {
 							"outs": {
 								"next": [
-									"end"
+									"story"
 								]
 							},
 							"pos": [
@@ -619,6 +2299,23 @@
 							],
 							"props": {},
 							"type": "start"
+						},
+						"story": {
+							"outs": {
+								"next": [
+									"card"
+								]
+							},
+							"pos": [
+								440.0,
+								0.0
+							],
+							"props": {
+								"source": {
+									"ending": "E"
+								}
+							},
+							"type": "story_bubble"
 						}
 					}
 				},
@@ -632,6 +2329,63 @@
 					"name": {
 						"en": "Ending E",
 						"zh": "结局 E"
+					},
+					"role": "ending"
+				},
+				"type": "day"
+			},
+			"end_E_fired": {
+				"body": {
+					"nodes": {
+						"card": {
+							"outs": {
+								"next": [
+									"end"
+								]
+							},
+							"pos": [
+								220.0,
+								0.0
+							],
+							"props": {
+								"ending": "E"
+							},
+							"type": "show_ending"
+						},
+						"end": {
+							"outs": {},
+							"pos": [
+								440.0,
+								0.0
+							],
+							"props": {},
+							"type": "day_end"
+						},
+						"start": {
+							"outs": {
+								"next": [
+									"card"
+								]
+							},
+							"pos": [
+								0.0,
+								0.0
+							],
+							"props": {},
+							"type": "start"
+						}
+					}
+				},
+				"outs": {},
+				"pos": [
+					1560.0,
+					700.0
+				],
+				"props": {
+					"ending": "E",
+					"name": {
+						"en": "Fired",
+						"zh": "被开除"
 					},
 					"role": "ending"
 				},
@@ -686,7 +2440,7 @@
 		}
 	},
 	"settings": {
-		"fired_ending": "end_E",
+		"fired_ending": "end_E_fired",
 		"lives": 3,
 		"variables": [
 			{

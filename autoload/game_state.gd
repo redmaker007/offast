@@ -120,6 +120,20 @@ func score_of(key: StringName) -> int:
 	return int(scores.get(key, 0))
 
 
+## 关卡里的自定义变量（计数器之类）。和结局分存在同一个字典里：
+## A/B/C/D 本来就是变量，条件里 var.A 和 score.A 读的是同一个值，存档也不用多一份。
+func var_of(key: StringName) -> int:
+	return int(scores.get(key, 0))
+
+
+## 改一个变量。和 add_score 不同，没见过的变量直接新建——计数器第一次 +1 时还不存在。
+func add_var(key: StringName, amount: int) -> void:
+	if amount == 0:
+		return
+	scores[key] = int(scores.get(key, 0)) + amount
+	SignalBus.scores_changed.emit(scores.duplicate())
+
+
 # ── 员工权限 ────────────────────────────────────────────
 
 ## 开局把档案上写的 clearance 灌进来（round_manager.start_game 调）。

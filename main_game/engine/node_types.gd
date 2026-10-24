@@ -21,14 +21,18 @@ const ROLES := ["start", "normal", "ending"]
 const JUMP_MODES := ["set", "add"]
 
 ## 强制元件：播放期间锁交互，一个接一个跑，最后必须收在自由环节或 day_end 上。
-const FORCED := ["story_bubble", "window_bubble", "send_mail", "effect", "show_result", "show_log"]
+const FORCED := ["story_bubble", "window_bubble", "send_mail", "effect", "clock_out",
+	"show_result", "show_log", "show_ending"]
+
+## 条件分支：强制链里瞬间判一次，往成立的那个出口走。它也是强制链的一部分。
+const BRANCHES := ["if"]
 
 ## 强制链里的一步能接到的地方。可互动物件不在里面：它只能挂在自由环节的 listen 上。
-const CHAIN_TARGETS := ["story_bubble", "window_bubble", "send_mail", "effect",
-	"show_result", "show_log", "free_play", "day_end"]
+const CHAIN_TARGETS := ["story_bubble", "window_bubble", "send_mail", "effect", "clock_out",
+	"show_result", "show_log", "show_ending", "if", "free_play", "day_end"]
 
 const INNER_TYPES := ["start", "free_play", "interactable", "story_bubble", "window_bubble",
-	"send_mail", "effect", "show_result", "show_log", "day_end"]
+	"send_mail", "effect", "clock_out", "show_result", "show_log", "show_ending", "if", "day_end"]
 
 
 static func is_known(kind: String, type: String) -> bool:
@@ -59,18 +63,27 @@ static func ports(kind: String, n: flow_node) -> Array[Dictionary]:
 		"free_play":
 			result.append(_port("listen", ["interactable"], true, false))
 			result.append(_port("time_up", CHAIN_TARGETS))
+		"if":
+			for i in branch_cases(n).size():
+				result.append(_port(case_port(i), CHAIN_TARGETS))
+			result.append(_port("else", CHAIN_TARGETS))
 		_:
 			if n.type in FORCED:
 				result.append(_port("next", CHAIN_TARGETS))
 	return result
 
 
-## 分化器第 i 个条件（0 起）对应的出口名：case_1、case_2……
+## 强制链里的节点（强制元件 + 条件分支）。
+static func is_chain(type: String) -> bool:
+	return type in FORCED or type in BRANCHES
+
+
+## 分化器 / 条件分支第 i 个条件（0 起）对应的出口名：case_1、case_2……
 static func case_port(i: int) -> String:
 	return "case_%d" % (i + 1)
 
 
-## 分化器的条件列表，每项是 {"if": "条件"}。
+## 分化器 / 条件分支的条件列表，每项是 {"if": "条件"}。
 static func branch_cases(n: flow_node) -> Array:
 	var cases = n.props.get("cases", [])
 	return cases if cases is Array else []

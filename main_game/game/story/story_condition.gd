@@ -20,6 +20,8 @@ class_name story_condition
 ##     called(Mira)         打通过米拉的电话
 ##     leading(A)           A 这条结局线现在领先
 ##     tied(A,B)            两条线打平
+##     var.mails_read>=3    关卡背景设定里的自定义变量（计数器之类，A/B/C/D 也能这么写）
+##     inbox_empty          收件箱清空了（点门时判「活干完没有」）
 ##     not <条件>           取反
 ##     <条件> and <条件>     都满足
 ##     <条件> or <条件>      满足一个就行（or 比 and 松）
@@ -38,6 +40,11 @@ const ACTIONS := {
 }
 const OPS := [">=", "<=", "==", "!=", ">", "<"]
 const SCORE_KEYS := ["A", "B", "C", "D"]
+
+const INBOX_EMPTY := "inbox_empty"
+
+## email_reader 进的组，inbox_empty 靠它找到收件箱。
+const INBOX_GROUP := &"email_reader"
 
 
 ## GameState 是 autoload，**编辑器里不存在**——导入 .story 时会跑到这个脚本，
@@ -99,6 +106,9 @@ static func _eval_term(term: String) -> bool:
 	if t.begins_with("flag:"):
 		return gs.has_flag(StringName(t.substr(5).strip_edges()))
 
+	if t == INBOX_EMPTY:
+		return _inbox_empty()
+
 	if t.to_lower().begins_with("did(") and t.ends_with(")"):
 		return _eval_did(_args(t))
 
@@ -131,6 +141,9 @@ static func _validate_term(term: String) -> String:
 	if t.begins_with("flag:"):
 		if t.substr(5).strip_edges().is_empty():
 			return "flag: 后面要写开关名"
+		return ""
+
+	if t == INBOX_EMPTY:
 		return ""
 
 	if t.to_lower().begins_with("did("):
@@ -183,6 +196,11 @@ static func _validate_term(term: String) -> String:
 		if left.substr(6).strip_edges().is_empty():
 			return "level. 后面要写员工名"
 		return ""
+	if left.begins_with("var."):
+		# 变量有没有定义只有关卡知道，那一步归 level_validator。
+		if left.substr(4).strip_edges().is_empty():
+			return "var. 后面要写变量名"
+		return ""
 	return "读不懂的条件：%s" % term
 
 
@@ -221,7 +239,19 @@ static func _value_of(left: String) -> int:
 		return gs.score_of(StringName(left.substr(6).to_upper()))
 	if left.begins_with("level."):
 		return gs.level_of(StringName(left.substr(6).strip_edges()))
+	if left.begins_with("var."):
+		return gs.var_of(StringName(left.substr(4).strip_edges()))
 	return 0
+
+
+## 收件箱是场景里的节点（email_reader 自己进这个组），不在 GameState 里。
+## 场景不在（导入期、纯数据测试）就当没清空。
+static func _inbox_empty() -> bool:
+	var loop := Engine.get_main_loop()
+	if not loop is SceneTree:
+		return false
+	var reader := (loop as SceneTree).get_first_node_in_group(INBOX_GROUP)
+	return reader != null and reader.remaining() == 0
 
 
 static func _compare(value: int, op: String, right: String) -> bool:

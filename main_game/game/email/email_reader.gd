@@ -10,6 +10,8 @@ var unread_email = []
 
 func _ready() -> void:
 	add_to_group(SaveState.GROUP)
+	# 条件 inbox_empty 靠这个组找到收件箱。
+	add_to_group(story_condition.INBOX_GROUP)
 	SignalBus.send_email.connect(receive_email)
 
 

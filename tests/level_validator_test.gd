@@ -23,6 +23,8 @@ func _ready() -> void:
 	_test_inner_structure()
 	_test_inner_chains()
 	_test_inner_props()
+	_test_logic()
+	_test_conditions()
 	_test_error_text()
 	_test_round_trip()
 	_test_store()
@@ -313,6 +315,69 @@ func _test_inner_props() -> void:
 	wb.link("next", "fp")
 	_body(doc).node("s1").link("next", "wb")
 	_expect_exactly("视窗 bubble 引用不存在的物件", doc, ["UNKNOWN_OBJECT@day_1/wb"])
+
+
+## 条件分支（if）、自定义变量、绕过 if 的强制链圈。
+func _test_logic() -> void:
+	_section = "逻辑"
+	var doc := _valid()
+	var g := _body(doc)
+	var check := _inner(g, "check", "if")
+	check.props["cases"] = [{"if": "flag:x and var.A>=1"}]
+	check.link("case_1", "fp")
+	check.link("else", "fp")
+	g.node("s1").link("next", "check")
+	_expect_exactly("合法的条件分支", doc, [])
+
+	check.unlink("else")
+	_expect_exactly("条件分支缺 else", doc, ["PORT_MISSING@day_1/check"])
+
+	check.link("else", "fp")
+	check.props["cases"] = [{"if": "flag:"}]
+	_expect_exactly("条件分支的条件写错", doc, ["BAD_CONDITION@day_1/check"])
+
+	check.props["cases"] = [{"if": "var.mails_read>=3"}]
+	_expect_exactly("条件里用了没定义的变量", doc, ["UNKNOWN_VARIABLE@day_1/check"])
+	doc.settings["variables"].append({"id": "mails_read", "kind": "counter"})
+	_expect_exactly("定义之后就合法", doc, [])
+
+	check.props["cases"] = [{"if": "inbox_empty"}]
+	_expect_exactly("inbox_empty 是合法的原子", doc, [])
+
+	doc = _valid()
+	g = _body(doc)
+	check = _inner(g, "check", "if")
+	check.props["cases"] = [{"if": "flag:x"}]
+	check.link("case_1", "s2")
+	check.link("else", "fp")
+	_inner(g, "s2", "story_bubble").link("next", "check")
+	g.node("s1").link("next", "check")
+	var codes := _codes(doc)
+	_is_true("经过条件分支的强制链绕圈也抓得到", "CHAIN_LOOP@day_1/check" in codes, str(codes))
+
+	doc = _valid()
+	g = _body(doc)
+	_inner(g, "out", "clock_out").link("next", "res")
+	g.node("fp").link("time_up", "out")
+	g.node("fx").unlink("next")
+	g.node("fx").link("next", "res")
+	_body(doc).nodes.erase("fx")
+	_expect_exactly("下班元件能接进结算链", doc, [])
+
+
+## 条件语法的新原子：自定义变量、收件箱。
+func _test_conditions() -> void:
+	_section = "条件原子"
+	_eq("var. 语法合法", story_condition.validate("var.mails_read>=3"), "")
+	_is_false("var. 后面要写名字", story_condition.validate("var.>=3").is_empty())
+	GameState.reset()
+	GameState.add_var(&"mails_read", 3)
+	_is_true("计数器到 3", story_condition.eval("var.mails_read>=3"))
+	_is_false("计数器没到 4", story_condition.eval("var.mails_read>=4"))
+	GameState.add_score(GameState.SCORE_A, 2)
+	_is_true("var.A 和 score.A 读的是同一个值", story_condition.eval("var.A==2 and score.A==2"))
+	_is_false("没有收件箱（不在游戏场景里）时 inbox_empty 不成立", story_condition.eval("inbox_empty"))
+	GameState.reset()
 
 
 func _test_error_text() -> void:
