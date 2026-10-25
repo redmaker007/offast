@@ -47,3 +47,4 @@ UI_FACTION_B,B 派,Faction B
 UI_FACTION_GROUND,员工,Staff
 UI_FACTION_NONE,公司,Company
 UI_LEVEL_INVALID,关卡有错，不能开始游戏：,The level has errors and cannot start:
+UI_LEVEL_EDITOR,关卡编辑器,Level editor
