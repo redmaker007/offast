@@ -91,10 +91,32 @@
 不属于某一天、整局都在的东西，用表单编辑：房间物件、账户（随机密码）、员工档案、
 联系人和通话（随机号码）、随机名字池、结局卡文案。
 
+**房间物件**（`world.objects`，第 3 阶段起游戏按它生成房间，场景里不再手摆）：
+
+| 字段 | 含义 |
+|---|---|
+| `id` | 物件 id，也是生成出来的节点名（`Control/<id>_control/<id>`），天内图里的可互动物件按它引用 |
+| `name` | 多语言显示名 |
+| `texture` | 贴图的素材 id |
+| `anchors` / `offsets` / `grow` | 和 Control 的锚点、偏移、生长方向一样（左上右下） |
+| `scale` / `pivot` / `z` | 缩放、缩放原点、层级 |
+| `clickable` | 能不能点（桌子是 false：不发光、不响应） |
+| `glow` | 悬停时描边发光 |
+| `hover` | 悬停放大和音效：`scale`、`volume`、`click_volume`、`hover_sound`、`click_sound`、`center_pivot` |
+| `window` | 自带的弹窗（内建 app）：`laptop` / `notes` / `calendar` / `caller`，空 = 没有。视窗 bubble 按它开窗 |
+| `camera` | 点击推近：`zoom`、`duration`、`enabled` |
+| `faces` | 按剩余命数换图（日历）：`{"3": …, "2": …, "1": …, "0": …}` |
+
+校验器会报 `BAD_WINDOW`（弹窗类型不认识）、`MISSING_ASSET`（素材找不到）、
+`NO_WINDOW`（视窗 bubble 要开一个没有弹窗的物件）。
+
 ## 6. 其它约定
 
 - **多语言**：每个文字字段直接存多个语言的值：`{"zh": "…", "en": "…"}`。UI 文字也收进引擎。
-- **素材**：不做导入界面。玩家把图片、音乐丢进游戏文件夹，引擎按文件夹扫描，内容里用文件名引用。
+- **素材**：不做导入界面。内容里用「相对 `res://` 的路径」当素材 id（`theme/items/2t.png`）。
+  玩家按同样的相对路径把文件丢进外部素材文件夹就会盖掉游戏自带的：先找 `<游戏目录>/assets/`
+  （导出后的游戏才有），再找 `user://assets/`，都没有才用 `res://` 自带的。外部文件按扩展名直接读
+  （png / jpg / webp / svg，mp3 / ogg / wav）。见 `main_game/engine/asset_library.gd`。
 - **房间**：所有可互动物件是同一种元件，只是贴图、位置、热区、弹窗不同。需要房间布局编辑器。
 - **内建 app**（电脑、便签、电话、日历）、主菜单、设置、存读档是**引擎外壳**，不开放编辑。
 - **存储**：`res://levels/` 是原版，`user://levels/` 里有同名文件就用它覆盖。文件带版本号。
@@ -256,6 +278,15 @@
 - 天数跳转器的语义：`set N` → 下一个天节点就是第 N 天；`add N` → 下一个天节点是「本来的天数 + N」。
 - 历史流水账已经在记，但条件里的 `day3` 还是按天数查日志；等真有时空跳跃时再改成「最近一次」。
 
+## 10c. 第 3 阶段
+
+- 房间里 8 个物件从 `main_scene` 搬进了 `world.objects`（转换器照原来手摆的参数抄的）。
+  场景里 `Control` 节点挂 `room_view.gd`，开局时按数据生成物件，节点结构和名字和原来一样。
+- 视窗 bubble 开哪个窗改成看物件的 `window` 字段，`round_manager` 里不再写死。
+- 外部素材文件夹覆盖（见第 6 节）。改了外部文件要 `asset_library.clear_cache()` 再重建房间才会换图。
+- 还没做：房间布局的编辑界面（第 4 阶段）；`hover_scale.tscn` 里那个默认悬停音效、glow shader 的参数
+  还是写在代码里，没进数据。
+
 ## 11. 代码位置
 
 `main_game/engine/`：
@@ -268,3 +299,7 @@
 - `level_store.gd`：读写 JSON，`res://` / `user://` 覆盖，版本检查。
 - `level_runner.gd`：外层解释器（第 1 阶段）。
 - `level_converter.gd`：把 `.story` 转成关卡图（第 1 阶段），工具脚本在 `tools/convert_story_to_level.gd`。
+- `day_runner.gd`：天内图解释器（第 2b 步）。
+- `level_content.gd`：节点文字 → 对话 / 邮件（第 2c 步）。
+- `asset_library.gd`：素材查找，外部文件夹覆盖（第 3 阶段）。
+- `main_game/game/room_view.gd`：按物件表生成房间（第 3 阶段）。

@@ -25,6 +25,7 @@ func _ready() -> void:
 	_test_inner_props()
 	_test_logic()
 	_test_scripts()
+	_test_room_objects()
 	_test_conditions()
 	_test_error_text()
 	_test_round_trip()
@@ -409,6 +410,32 @@ func _test_scripts() -> void:
 	_expect_exactly("两天里有同一个邮件 id", doc, ["DUP_MAIL_ID@day_2/mail"])
 
 
+## 房间物件（第 3 阶段）：弹窗类型、素材、视窗 bubble 指向没弹窗的物件。
+func _test_room_objects() -> void:
+	_section = "房间物件"
+	var doc := _valid()
+	doc.world["objects"] = level_converter.room_objects()
+	_expect_exactly("转换器给的整套房间是合法的", doc, [])
+
+	doc.world["objects"][0]["window"] = "fridge"
+	_expect_exactly("弹窗类型不认识", doc, ["BAD_WINDOW@"])
+
+	doc = _valid()
+	doc.world["objects"] = level_converter.room_objects()
+	doc.world["objects"][0]["texture"] = "theme/items/nope.png"
+	_expect_exactly("贴图找不到", doc, ["MISSING_ASSET@"])
+
+	doc = _valid()
+	doc.world["objects"] = level_converter.room_objects()
+	var wb := _inner(_body(doc), "wb", "window_bubble")
+	wb.props["object"] = "door"
+	wb.link("next", "fp")
+	_body(doc).node("s1").link("next", "wb")
+	_expect_exactly("门没有弹窗，视窗 bubble 打不开", doc, ["NO_WINDOW@day_1/wb"])
+	wb.props["object"] = "laptop"
+	_expect_exactly("电脑有弹窗", doc, [])
+
+
 ## 条件语法的新原子：自定义变量、收件箱。
 func _test_conditions() -> void:
 	_section = "条件原子"
@@ -435,7 +462,7 @@ func _test_error_text() -> void:
 		_is_false("模板里没有漏掉的占位符：%s" % code,
 			level_error.new(code, {"count": 0, "role": "", "mode": "", "target": "", "value": 0,
 				"options": "", "id": "", "table": "", "object": "", "type": "", "port": "",
-				"target_type": "", "detail": "", "layer": "", "locale": "", "other": ""}, "d", "n").describe().contains("{"))
+				"target_type": "", "detail": "", "layer": "", "locale": "", "other": "", "window": "", "asset": ""}, "d", "n").describe().contains("{"))
 
 
 func _test_round_trip() -> void:

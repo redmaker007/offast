@@ -2707,60 +2707,359 @@
 	"world": {
 		"objects": [
 			{
+				"anchors": [
+					0,
+					0,
+					0,
+					0
+				],
+				"clickable": true,
+				"glow": true,
+				"grow": [
+					1,
+					1
+				],
+				"hover": {
+					"center_pivot": false,
+					"click_sound": "sound/click2.mp3",
+					"click_volume": 1.0,
+					"hover_sound": "sound/mixkit-message-pop-alert-2354.mp3",
+					"scale": 1.08,
+					"volume": 0.5
+				},
 				"id": "door",
 				"name": {
 					"en": "Door",
 					"zh": "门"
-				}
+				},
+				"offsets": [
+					823.0,
+					30.0,
+					974.0,
+					688.0
+				],
+				"pivot": [
+					69.5653,
+					283.3333
+				],
+				"scale": [
+					0.575,
+					0.48
+				],
+				"texture": "theme/items/3t.png",
+				"window": "",
+				"z": 0
 			},
 			{
+				"anchors": [
+					0,
+					0,
+					0,
+					0
+				],
+				"clickable": true,
+				"glow": true,
+				"grow": [
+					1,
+					1
+				],
+				"hover": {
+					"center_pivot": false,
+					"click_sound": "sound/click2.mp3",
+					"click_volume": 1.0,
+					"hover_sound": "sound/mixkit-message-pop-alert-2354.mp3",
+					"scale": 1.08,
+					"volume": 0.5
+				},
 				"id": "light",
 				"name": {
 					"en": "Light",
 					"zh": "灯"
-				}
+				},
+				"offsets": [
+					521.0,
+					28.0,
+					703.0,
+					139.0
+				],
+				"pivot": [
+					0,
+					0
+				],
+				"scale": [
+					0.575,
+					0.48
+				],
+				"texture": "theme/items/10t.png",
+				"window": "",
+				"z": 0
 			},
 			{
+				"anchors": [
+					0,
+					0,
+					0,
+					0
+				],
+				"clickable": true,
+				"glow": true,
+				"grow": [
+					1,
+					1
+				],
+				"hover": {
+					"center_pivot": false,
+					"click_sound": "sound/click2.mp3",
+					"click_volume": 1.0,
+					"hover_sound": "sound/mixkit-message-pop-alert-2354.mp3",
+					"scale": 1.08,
+					"volume": 0.5
+				},
 				"id": "electricbox",
 				"name": {
 					"en": "Electric box",
 					"zh": "电箱"
-				}
+				},
+				"offsets": [
+					308.0,
+					184.0,
+					418.0,
+					319.0
+				],
+				"pivot": [
+					0,
+					0
+				],
+				"scale": [
+					0.575,
+					0.48
+				],
+				"texture": "theme/items/6t.png",
+				"window": "",
+				"z": 0
 			},
 			{
+				"anchors": [
+					0.5,
+					0.5,
+					0.5,
+					0.5
+				],
+				"camera": {
+					"duration": 0.4,
+					"enabled": true,
+					"zoom": 1.5
+				},
+				"clickable": true,
+				"glow": true,
+				"grow": [
+					2,
+					2
+				],
+				"hover": {
+					"center_pivot": true,
+					"click_sound": "sound/click2.mp3",
+					"click_volume": 1.0,
+					"hover_sound": "sound/mixkit-message-pop-alert-2354.mp3",
+					"scale": 1.08,
+					"volume": 0.5
+				},
 				"id": "laptop",
 				"name": {
 					"en": "Laptop",
 					"zh": "电脑"
-				}
+				},
+				"offsets": [
+					-316.0,
+					-32.0,
+					-97.0,
+					158.0
+				],
+				"pivot": [
+					113.0,
+					86.0
+				],
+				"scale": [
+					0.575,
+					0.48
+				],
+				"texture": "theme/items/2t.png",
+				"window": "laptop",
+				"z": 2
 			},
 			{
+				"anchors": [
+					0,
+					0,
+					0,
+					0
+				],
+				"clickable": true,
+				"glow": true,
+				"grow": [
+					1,
+					1
+				],
+				"hover": {
+					"center_pivot": true,
+					"click_sound": "sound/click2.mp3",
+					"click_volume": 1.0,
+					"hover_sound": "sound/mixkit-message-pop-alert-2354.mp3",
+					"scale": 1.08,
+					"volume": 0.5
+				},
 				"id": "notes",
 				"name": {
 					"en": "Notes",
 					"zh": "便签"
-				}
+				},
+				"offsets": [
+					96.0,
+					301.0,
+					171.0,
+					421.0
+				],
+				"pivot": [
+					39.9821,
+					56.3452
+				],
+				"scale": [
+					0.575258,
+					0.47919
+				],
+				"texture": "theme/items/5t.png",
+				"window": "notes",
+				"z": 2
 			},
 			{
+				"anchors": [
+					0,
+					0,
+					0,
+					0
+				],
+				"clickable": true,
+				"glow": true,
+				"grow": [
+					1,
+					1
+				],
+				"hover": {
+					"center_pivot": true,
+					"click_sound": "sound/click2.mp3",
+					"click_volume": 1.0,
+					"hover_sound": "sound/mixkit-message-pop-alert-2354.mp3",
+					"scale": 1.08,
+					"volume": 0.5
+				},
 				"id": "caller",
 				"name": {
 					"en": "Phone",
 					"zh": "电话"
-				}
+				},
+				"offsets": [
+					203.0,
+					237.0,
+					273.0,
+					475.0
+				],
+				"pivot": [
+					34.7669,
+					112.6899
+				],
+				"scale": [
+					0.57526,
+					0.479191
+				],
+				"texture": "theme/items/9t.png",
+				"window": "caller",
+				"z": 2
 			},
 			{
+				"anchors": [
+					0,
+					0,
+					0,
+					0
+				],
+				"clickable": false,
+				"glow": false,
+				"grow": [
+					1,
+					1
+				],
 				"id": "table",
 				"name": {
 					"en": "Table",
 					"zh": "桌子"
-				}
+				},
+				"offsets": [
+					-168.0,
+					274.0,
+					932.0,
+					699.0
+				],
+				"pivot": [
+					557.3193,
+					209.6436
+				],
+				"scale": [
+					0.567,
+					0.477
+				],
+				"texture": "theme/items/test-export.png",
+				"window": "",
+				"z": 1
 			},
 			{
+				"anchors": [
+					0,
+					0,
+					0,
+					0
+				],
+				"clickable": true,
+				"faces": {
+					"0": "theme/items/calendar/4.png",
+					"1": "theme/items/calendar/3.png",
+					"2": "theme/items/calendar/2.png",
+					"3": "theme/items/calendar/1.png"
+				},
+				"glow": true,
+				"grow": [
+					1,
+					1
+				],
+				"hover": {
+					"center_pivot": false,
+					"click_sound": "sound/click2.mp3",
+					"click_volume": 1.0,
+					"hover_sound": "sound/mixkit-message-pop-alert-2354.mp3",
+					"scale": 1.08,
+					"volume": 0.5
+				},
 				"id": "calendar",
 				"name": {
 					"en": "Calendar",
 					"zh": "日历"
-				}
+				},
+				"offsets": [
+					86.0,
+					143.0,
+					280.0,
+					506.0
+				],
+				"pivot": [
+					0,
+					0
+				],
+				"scale": [
+					0.575,
+					0.48
+				],
+				"texture": "theme/items/4t.png",
+				"window": "calendar",
+				"z": 2
 			}
 		]
 	}

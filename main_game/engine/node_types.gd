@@ -20,6 +20,9 @@ const ROLES := ["start", "normal", "ending"]
 ## 天数跳转器的 mode。
 const JUMP_MODES := ["set", "add"]
 
+## 房间物件自带的弹窗（内建 app）。空串 = 没有弹窗。
+const WINDOWS := ["", "laptop", "notes", "calendar", "caller"]
+
 ## 剧情 bubble 放在哪层播：一句话提示框 / 全屏剧情层 / 桌面桥段层。
 const STORY_LAYERS := ["notice", "story", "event"]
 

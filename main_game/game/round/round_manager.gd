@@ -330,9 +330,10 @@ func _ending_story(n: flow_node) -> conversation:
 	return d.story if d != null else null
 
 
-## 视窗 bubble：打开物件自带的弹窗。第 3 阶段房间数据化之后，物件开什么窗写在世界表里。
+## 视窗 bubble：打开物件自带的弹窗。物件开哪个内建 app 写在世界表里（objects[].window）。
 func _open_window(object_id: String) -> void:
-	match object_id:
+	var win := str(level.doc.object(object_id).get("window", "")) if level != null and level.doc != null else ""
+	match win:
 		"laptop":
 			SignalBus.open_laptop_request.emit()
 		"notes":

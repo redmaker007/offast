@@ -8,33 +8,18 @@
 [ext_resource type="Script" uid="uid://de6tkdhw5l3ur" path="res://main_game/game/instruction/personnel_manager.gd" id="6_dkwpr"]
 [ext_resource type="PackedScene" uid="uid://cmrxkr3nf2x84" path="res://addons/ui_polish/hover_scale.tscn" id="6_toloy"]
 [ext_resource type="Script" uid="uid://dy53fcanqnmmd" path="res://main_game/game/round/day_clock.gd" id="7_6m4a6"]
-[ext_resource type="Texture2D" uid="uid://c4tibi4q3p00d" path="res://theme/items/3t.png" id="8_gq25j"]
 [ext_resource type="Theme" uid="uid://mc8mrn88s36b" path="res://theme/office_draw.tres" id="8_nggn0"]
-[ext_resource type="Shader" uid="uid://1gcn0tdpnc55" path="res://theme/glow_outline.gdshader" id="8_wxc6e"]
 [ext_resource type="Script" uid="uid://bcxew14614uds" path="res://main_game/game/instruction/instruction_execute_page.gd" id="9_17gcd"]
-[ext_resource type="Texture2D" uid="uid://b3w2n5ecsc101" path="res://theme/items/2t.png" id="9_bdyjf"]
-[ext_resource type="Script" uid="uid://c3l7s3hng70ks" path="res://main_game/game/widgets/clickable_item.gd" id="10_bdyjf"]
-[ext_resource type="Texture2D" uid="uid://b5ddc2qjstvot" path="res://theme/items/10t.png" id="11_p2pey"]
+[ext_resource type="Script" uid="uid://babkve14h5gve" path="res://main_game/game/room_view.gd" id="11_2u8wn"]
 [ext_resource type="Texture2D" uid="uid://deglhobr6d8oj" path="res://theme/next_mark.png" id="12_4j4se"]
 [ext_resource type="AudioStream" uid="uid://c3i4jdi1ve7ap" path="res://sound/click2.mp3" id="12_6xou6"]
-[ext_resource type="Texture2D" uid="uid://brafdan80rp5l" path="res://theme/items/6t.png" id="12_msbq1"]
 [ext_resource type="Script" uid="uid://dhw01an7ycpsq" path="res://main_game/game/email/email_read_page.gd" id="12_ygwb2"]
-[ext_resource type="Texture2D" uid="uid://d10xosxgf3efw" path="res://theme/items/5t.png" id="13_i2w82"]
-[ext_resource type="Texture2D" uid="uid://cydsvnuy4piet" path="res://theme/items/9t.png" id="14_g1emn"]
 [ext_resource type="Texture2D" uid="uid://3srrhri3mfdp" path="res://theme/false_mark2.png" id="15_0ogao"]
 [ext_resource type="Texture2D" uid="uid://bmyntnv6wqji1" path="res://theme/back_mark.png" id="15_back"]
-[ext_resource type="Texture2D" uid="uid://b8ajguubnoaqo" path="res://theme/items/test-export.png" id="15_csskb"]
 [ext_resource type="Script" uid="uid://cd5gsxlwlycv5" path="res://main_game/game/widgets/cancel_button.gd" id="16_asovh"]
 [ext_resource type="Script" uid="uid://wkvk11jgmydc" path="res://main_game/game/widgets/back_to_menu_button.gd" id="17_back"]
-[ext_resource type="Texture2D" uid="uid://c25txihrqe3ks" path="res://theme/items/4t.png" id="19_6ccht"]
-[ext_resource type="Script" uid="uid://c7ad367daucgo" path="res://main_game/game/widgets/camera_focus.gd" id="19_uyg1v"]
-[ext_resource type="Script" uid="uid://c5ndbrui0xg15" path="res://main_game/game/widgets/calendar_face.gd" id="21_6m4a6"]
 [ext_resource type="Script" uid="uid://bs1r5jxjxddx6" path="res://main_game/game/laptop_page.gd" id="21_laptop"]
 [ext_resource type="Script" uid="uid://co27d22quswp5" path="res://main_game/game/laptop_select_page.gd" id="22_ac6o7"]
-[ext_resource type="Texture2D" uid="uid://cll447er0kkkd" path="res://theme/items/calendar/1.png" id="22_cca48"]
-[ext_resource type="Texture2D" uid="uid://fvsjfb4k2hqc" path="res://theme/items/calendar/2.png" id="23_ymimj"]
-[ext_resource type="Texture2D" uid="uid://dyixdxoxp5c28" path="res://theme/items/calendar/3.png" id="24_3p1ss"]
-[ext_resource type="Texture2D" uid="uid://cvgvylv2iu1xs" path="res://theme/items/calendar/4.png" id="25_2u8wn"]
 [ext_resource type="Script" uid="uid://bea43hjft2c77" path="res://main_game/game/calendar_page.gd" id="28_c0ovc"]
 [ext_resource type="Script" uid="uid://5uq6wqq3umtg" path="res://main_game/game/story/story_page.gd" id="29_407uj"]
 [ext_resource type="Script" uid="uid://chdgxmwp1cb2f" path="res://main_game/game/round/result_overlay.gd" id="30_lfs87"]
@@ -56,76 +41,6 @@
 [ext_resource type="Script" uid="uid://csjp14vv4lbdx" path="res://main_game/game/profile/profile_page.gd" id="54_ppage"]
 [ext_resource type="Script" uid="uid://d2qt5cyu7hpol" path="res://main_game/game/widgets/event_page.gd" id="56_event"]
 [ext_resource type="Script" uid="uid://yl8oedsv8dfv" path="res://main_game/game/round/log_overlay.gd" id="57_log"]
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_gq25j"]
-shader = ExtResource("8_wxc6e")
-shader_parameter/enabled = false
-shader_parameter/maxLineWidth = 14.4990006887025
-shader_parameter/minLineWidth = 0.0
-shader_parameter/speed = 5.2950002515125
-shader_parameter/blockSize = 20.0
-shader_parameter/color = Color(0.98764473, 0.5664917, 0.48990333, 1)
-shader_parameter/tolerance = 0.606000028785
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_p2pey"]
-shader = ExtResource("8_wxc6e")
-shader_parameter/enabled = false
-shader_parameter/maxLineWidth = 14.4990006887025
-shader_parameter/minLineWidth = 0.0
-shader_parameter/speed = 5.2950002515125
-shader_parameter/blockSize = 20.0
-shader_parameter/color = Color(0.98764473, 0.5664917, 0.48990333, 1)
-shader_parameter/tolerance = 0.606000028785
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_msbq1"]
-shader = ExtResource("8_wxc6e")
-shader_parameter/enabled = false
-shader_parameter/maxLineWidth = 14.4990006887025
-shader_parameter/minLineWidth = 0.0
-shader_parameter/speed = 5.2950002515125
-shader_parameter/blockSize = 20.0
-shader_parameter/color = Color(0.98764473, 0.5664917, 0.48990333, 1)
-shader_parameter/tolerance = 0.606000028785
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_ac6o7"]
-shader = ExtResource("8_wxc6e")
-shader_parameter/enabled = false
-shader_parameter/maxLineWidth = 14.4990006887025
-shader_parameter/minLineWidth = 0.0
-shader_parameter/speed = 5.2950002515125
-shader_parameter/blockSize = 20.0
-shader_parameter/color = Color(0.98764473, 0.5664917, 0.48990333, 1)
-shader_parameter/tolerance = 0.606000028785
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_6ccht"]
-shader = ExtResource("8_wxc6e")
-shader_parameter/enabled = false
-shader_parameter/maxLineWidth = 14.4990006887025
-shader_parameter/minLineWidth = 0.0
-shader_parameter/speed = 5.2950002515125
-shader_parameter/blockSize = 20.0
-shader_parameter/color = Color(0.98764473, 0.5664917, 0.48990333, 1)
-shader_parameter/tolerance = 0.606000028785
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_dkwpr"]
-shader = ExtResource("8_wxc6e")
-shader_parameter/enabled = false
-shader_parameter/maxLineWidth = 14.4990006887025
-shader_parameter/minLineWidth = 0.0
-shader_parameter/speed = 5.2950002515125
-shader_parameter/blockSize = 20.0
-shader_parameter/color = Color(0.98764473, 0.5664917, 0.48990333, 1)
-shader_parameter/tolerance = 0.606000028785
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_6m4a6"]
-shader = ExtResource("8_wxc6e")
-shader_parameter/enabled = false
-shader_parameter/maxLineWidth = 14.4990006887025
-shader_parameter/minLineWidth = 0.0
-shader_parameter/speed = 5.2950002515125
-shader_parameter/blockSize = 20.0
-shader_parameter/color = Color(0.98764473, 0.5664917, 0.48990333, 1)
-shader_parameter/tolerance = 0.606000028785
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_laptop"]
 
@@ -185,182 +100,7 @@ size_flags_horizontal = 4
 size_flags_vertical = 4
 mouse_filter = 1
 theme = ExtResource("8_nggn0")
-
-[node name="door_control" type="Control" parent="Control" unique_id=295467068]
-layout_mode = 2
-mouse_filter = 2
-
-[node name="door" type="TextureRect" parent="Control/door_control" unique_id=2068510054]
-material = SubResource("ShaderMaterial_gq25j")
-layout_mode = 0
-offset_left = 823.0
-offset_top = 30.00003
-offset_right = 974.0
-offset_bottom = 688.0
-scale = Vector2(0.575, 0.48)
-pivot_offset = Vector2(69.56531, 283.33328)
-texture = ExtResource("8_gq25j")
-script = ExtResource("10_bdyjf")
-
-[node name="HoverScale" parent="Control/door_control/door" unique_id=1454724611 instance=ExtResource("6_toloy")]
-hover_volume = 0.5
-click_sound = ExtResource("12_6xou6")
-center_pivot = false
-
-[node name="light_control" type="Control" parent="Control" unique_id=2072009231]
-layout_mode = 2
-mouse_filter = 2
-
-[node name="light" type="TextureRect" parent="Control/light_control" unique_id=1641952157]
-material = SubResource("ShaderMaterial_p2pey")
-layout_mode = 0
-offset_left = 520.99994
-offset_top = 28.000004
-offset_right = 702.99994
-offset_bottom = 139.0
-scale = Vector2(0.575, 0.48)
-texture = ExtResource("11_p2pey")
-script = ExtResource("10_bdyjf")
-
-[node name="HoverScale" parent="Control/light_control/light" unique_id=1806914131 instance=ExtResource("6_toloy")]
-hover_volume = 0.5
-click_sound = ExtResource("12_6xou6")
-center_pivot = false
-
-[node name="electricbox_control" type="Control" parent="Control" unique_id=1185708771]
-layout_mode = 2
-mouse_filter = 2
-
-[node name="electricbox" type="TextureRect" parent="Control/electricbox_control" unique_id=47990813]
-material = SubResource("ShaderMaterial_msbq1")
-layout_mode = 0
-offset_left = 308.0
-offset_top = 184.0
-offset_right = 418.0
-offset_bottom = 319.0
-scale = Vector2(0.575, 0.48)
-texture = ExtResource("12_msbq1")
-script = ExtResource("10_bdyjf")
-
-[node name="HoverScale" parent="Control/electricbox_control/electricbox" unique_id=367197045 instance=ExtResource("6_toloy")]
-hover_volume = 0.5
-click_sound = ExtResource("12_6xou6")
-center_pivot = false
-
-[node name="laptop_control" type="Control" parent="Control" unique_id=888319210]
-layout_mode = 2
-mouse_filter = 2
-
-[node name="laptop" type="TextureRect" parent="Control/laptop_control" unique_id=943076679]
-z_index = 2
-material = SubResource("ShaderMaterial_ac6o7")
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -316.0
-offset_top = -32.0
-offset_right = -97.0
-offset_bottom = 158.0
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(0.575, 0.48)
-pivot_offset = Vector2(113, 86)
-texture = ExtResource("9_bdyjf")
-script = ExtResource("10_bdyjf")
-
-[node name="HoverScale" parent="Control/laptop_control/laptop" unique_id=750403698 instance=ExtResource("6_toloy")]
-hover_volume = 0.5
-click_sound = ExtResource("12_6xou6")
-
-[node name="camera_focus" type="Node" parent="Control/laptop_control/laptop" unique_id=418628175]
-script = ExtResource("19_uyg1v")
-
-[node name="notes_control" type="Control" parent="Control" unique_id=20847891]
-layout_mode = 2
-mouse_filter = 2
-
-[node name="notes" type="TextureRect" parent="Control/notes_control" unique_id=38439007]
-z_index = 2
-material = SubResource("ShaderMaterial_6ccht")
-layout_mode = 0
-offset_left = 96.0
-offset_top = 301.0
-offset_right = 171.0
-offset_bottom = 421.0
-scale = Vector2(0.57525754, 0.47918952)
-pivot_offset = Vector2(39.982086, 56.345154)
-texture = ExtResource("13_i2w82")
-script = ExtResource("10_bdyjf")
-
-[node name="HoverScale" parent="Control/notes_control/notes" unique_id=2106853381 instance=ExtResource("6_toloy")]
-hover_volume = 0.5
-click_sound = ExtResource("12_6xou6")
-
-[node name="caller_control" type="Control" parent="Control" unique_id=1839391919]
-layout_mode = 2
-mouse_filter = 2
-
-[node name="caller" type="TextureRect" parent="Control/caller_control" unique_id=1860602362]
-z_index = 2
-material = SubResource("ShaderMaterial_dkwpr")
-layout_mode = 0
-offset_left = 203.0
-offset_top = 237.00003
-offset_right = 273.0
-offset_bottom = 475.00003
-scale = Vector2(0.57525957, 0.4791912)
-pivot_offset = Vector2(34.766876, 112.68988)
-texture = ExtResource("14_g1emn")
-script = ExtResource("10_bdyjf")
-
-[node name="HoverScale" parent="Control/caller_control/caller" unique_id=1068831406 instance=ExtResource("6_toloy")]
-hover_volume = 0.5
-click_sound = ExtResource("12_6xou6")
-
-[node name="table_control" type="Control" parent="Control" unique_id=1946382421]
-layout_mode = 2
-mouse_filter = 2
-
-[node name="table" type="TextureRect" parent="Control/table_control" unique_id=1644984128]
-z_index = 1
-layout_mode = 0
-offset_left = -167.99997
-offset_top = 273.99997
-offset_right = 932.0
-offset_bottom = 699.0
-scale = Vector2(0.567, 0.477)
-pivot_offset = Vector2(557.3193, 209.64362)
-mouse_filter = 2
-texture = ExtResource("15_csskb")
-
-[node name="calendar_control" type="Control" parent="Control" unique_id=815841534]
-layout_mode = 2
-mouse_filter = 2
-
-[node name="calendar" type="TextureRect" parent="Control/calendar_control" unique_id=603786647]
-unique_name_in_owner = true
-z_index = 2
-material = SubResource("ShaderMaterial_6m4a6")
-layout_mode = 0
-offset_left = 86.0
-offset_top = 142.99998
-offset_right = 280.0
-offset_bottom = 506.0
-scale = Vector2(0.575, 0.48)
-texture = ExtResource("19_6ccht")
-script = ExtResource("21_6m4a6")
-face_3_lives = ExtResource("22_cca48")
-face_2_lives = ExtResource("23_ymimj")
-face_1_life = ExtResource("24_3p1ss")
-face_0_lives = ExtResource("25_2u8wn")
-
-[node name="HoverScale" parent="Control/calendar_control/calendar" unique_id=1603552601 instance=ExtResource("6_toloy")]
-hover_volume = 0.5
-click_sound = ExtResource("12_6xou6")
-center_pivot = false
+script = ExtResource("11_2u8wn")
 
 [node name="laptop_page" type="PanelContainer" parent="." unique_id=1030673075]
 unique_name_in_owner = true

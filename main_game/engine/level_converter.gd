@@ -47,18 +47,42 @@ const ENDINGS := ["A", "B", "C", "D", "E"]
 ## （同样是 E，从规则表走过来的要先看日志，所以不能共用一个节点。）
 const FIRED_NODE := "end_E_fired"
 
-## 房间里的可互动物件（main_scene 里 Control 下那 8 个 *_control）。
-## 第 3 阶段房间数据化之后，这份表会带上位置、贴图和热区。
-const ROOM_OBJECTS := {
-	"door": {"zh": "门", "en": "Door"},
-	"light": {"zh": "灯", "en": "Light"},
-	"electricbox": {"zh": "电箱", "en": "Electric box"},
-	"laptop": {"zh": "电脑", "en": "Laptop"},
-	"notes": {"zh": "便签", "en": "Notes"},
-	"caller": {"zh": "电话", "en": "Phone"},
-	"table": {"zh": "桌子", "en": "Table"},
-	"calendar": {"zh": "日历", "en": "Calendar"},
-}
+## 悬停 / 点击音效，原来所有物件都一样。
+const _HOVER := {"scale": 1.08, "volume": 0.5, "click_volume": 1.0,
+	"hover_sound": "sound/mixkit-message-pop-alert-2354.mp3", "click_sound": "sound/click2.mp3"}
+
+## 房间里的物件，照原来 main_scene 里 Control 下那 8 个 *_control 手摆的样子抄过来（第 3 阶段）。
+## 顺序就是画的先后。字段见 docs/level_engine.md 第 5 节。
+const ROOM_OBJECTS := [
+	{"id": "door", "name": {"zh": "门", "en": "Door"}, "texture": "theme/items/3t.png",
+		"offsets": [823.0, 30.0, 974.0, 688.0], "scale": [0.575, 0.48], "pivot": [69.5653, 283.3333],
+		"glow": true, "hover_center": false},
+	{"id": "light", "name": {"zh": "灯", "en": "Light"}, "texture": "theme/items/10t.png",
+		"offsets": [521.0, 28.0, 703.0, 139.0], "scale": [0.575, 0.48],
+		"glow": true, "hover_center": false},
+	{"id": "electricbox", "name": {"zh": "电箱", "en": "Electric box"}, "texture": "theme/items/6t.png",
+		"offsets": [308.0, 184.0, 418.0, 319.0], "scale": [0.575, 0.48],
+		"glow": true, "hover_center": false},
+	{"id": "laptop", "name": {"zh": "电脑", "en": "Laptop"}, "texture": "theme/items/2t.png",
+		"anchors": [0.5, 0.5, 0.5, 0.5], "grow": [2, 2],
+		"offsets": [-316.0, -32.0, -97.0, 158.0], "scale": [0.575, 0.48], "pivot": [113.0, 86.0], "z": 2,
+		"glow": true, "hover_center": true, "window": "laptop",
+		"camera": {"zoom": 1.5, "duration": 0.4, "enabled": true}},
+	{"id": "notes", "name": {"zh": "便签", "en": "Notes"}, "texture": "theme/items/5t.png",
+		"offsets": [96.0, 301.0, 171.0, 421.0], "scale": [0.575258, 0.47919], "pivot": [39.9821, 56.3452], "z": 2,
+		"glow": true, "hover_center": true, "window": "notes"},
+	{"id": "caller", "name": {"zh": "电话", "en": "Phone"}, "texture": "theme/items/9t.png",
+		"offsets": [203.0, 237.0, 273.0, 475.0], "scale": [0.57526, 0.479191], "pivot": [34.7669, 112.6899], "z": 2,
+		"glow": true, "hover_center": true, "window": "caller"},
+	{"id": "table", "name": {"zh": "桌子", "en": "Table"}, "texture": "theme/items/test-export.png",
+		"offsets": [-168.0, 274.0, 932.0, 699.0], "scale": [0.567, 0.477], "pivot": [557.3193, 209.6436], "z": 1,
+		"clickable": false},
+	{"id": "calendar", "name": {"zh": "日历", "en": "Calendar"}, "texture": "theme/items/4t.png",
+		"offsets": [86.0, 143.0, 280.0, 506.0], "scale": [0.575, 0.48], "z": 2,
+		"glow": true, "hover_center": false, "window": "calendar",
+		"faces": {"3": "theme/items/calendar/1.png", "2": "theme/items/calendar/2.png",
+			"1": "theme/items/calendar/3.png", "0": "theme/items/calendar/4.png"}},
+]
 
 const COLUMN := 260.0
 const ROW := 120.0
@@ -126,11 +150,25 @@ static func from_world(world: world_book, days: Array[Dictionary]) -> level_doc:
 	return doc
 
 
-## 世界表里的房间物件那一栏。
+## 世界表里的房间物件那一栏：把上面的简写补全成完整记录。
 static func room_objects() -> Array:
 	var objects: Array = []
-	for id in ROOM_OBJECTS:
-		objects.append({"id": id, "name": ROOM_OBJECTS[id]})
+	for src in ROOM_OBJECTS:
+		var o := {
+			"id": src["id"], "name": src["name"], "texture": src["texture"],
+			"anchors": src.get("anchors", [0, 0, 0, 0]), "offsets": src["offsets"],
+			"grow": src.get("grow", [1, 1]), "scale": src["scale"], "pivot": src.get("pivot", [0, 0]),
+			"z": src.get("z", 0), "clickable": src.get("clickable", true), "glow": src.get("glow", false),
+			"window": src.get("window", ""),
+		}
+		if o["clickable"]:
+			var hover := _HOVER.duplicate()
+			hover["center_pivot"] = src.get("hover_center", true)
+			o["hover"] = hover
+		for key in ["camera", "faces"]:
+			if src.has(key):
+				o[key] = src[key].duplicate(true)
+		objects.append(o)
 	return objects
 
 

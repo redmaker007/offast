@@ -51,6 +51,14 @@ func variable_ids() -> Array[String]:
 	return result
 
 
+## 按 id 找房间物件的记录，没有就是空字典。
+func object(id: String) -> Dictionary:
+	for o in world.get("objects", []):
+		if o is Dictionary and str(o.get("id", "")) == id:
+			return o
+	return {}
+
+
 ## 房间物件 id 列表。
 func object_ids() -> Array[String]:
 	var result: Array[String] = []

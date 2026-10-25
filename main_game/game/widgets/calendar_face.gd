@@ -65,8 +65,13 @@ func current_face() -> Texture2D:
 
 ## 开局前（还没发第一天）round_manager.lives 还是 0，
 ## 这时候不该显示「已经死透」的那张。
+##
+## 房间是开局时按关卡数据生成的（room_view），_ready 那一刻还没设 owner、找不到 %round_manager，
+## 就先当满命；room_view 设好 owner 之后会再调一次 refresh()。
 func _current_lives() -> int:
-	var rm = %round_manager
+	var rm = get_node_or_null("%round_manager") if owner != null else null
+	if rm == null:
+		return 3
 	if rm.current_day <= 0:
 		return rm.max_lives
 	return rm.lives

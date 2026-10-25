@@ -48,6 +48,7 @@ static func _check_settings(doc: level_doc, errs: Array[level_error]) -> void:
 
 
 static func _check_world(doc: level_doc, errs: Array[level_error]) -> void:
+	_check_room(doc, errs)
 	for table in doc.world:
 		if not doc.world[table] is Array:
 			continue
@@ -138,6 +139,9 @@ static func _check_body(doc: level_doc, day: flow_node, errs: Array[level_error]
 				_check_condition(str(n.props.get("unlock", "")), variables, d, id, errs)
 			"window_bubble":
 				_check_object(n, objects, d, errs)
+				var obj := doc.object(str(n.props.get("object", "")))
+				if not obj.is_empty() and str(obj.get("window", "")).is_empty():
+					errs.append(level_error.new("NO_WINDOW", {"object": obj["id"]}, d, id))
 			"story_bubble":
 				var layer := str(n.props.get("layer", "event"))
 				if not layer in node_types.STORY_LAYERS:
@@ -321,6 +325,29 @@ static func _check_condition(cond: String, variables: Array[String], d: String, 
 	for m in re.search_all(cond):
 		if not m.get_string(1) in variables:
 			errs.append(level_error.new("UNKNOWN_VARIABLE", {"id": m.get_string(1)}, d, id))
+
+
+## 房间物件：弹窗类型认不认识、引用的素材找不找得到（外部文件夹或游戏自带都算）。
+static func _check_room(doc: level_doc, errs: Array[level_error]) -> void:
+	for o in doc.world.get("objects", []):
+		if not o is Dictionary:
+			continue
+		var oid := str(o.get("id", ""))
+		var win := str(o.get("window", ""))
+		if not win in node_types.WINDOWS:
+			errs.append(level_error.new("BAD_WINDOW", {"object": oid, "window": win}))
+		var assets: Array = []
+		if o.has("texture"):
+			assets.append(str(o["texture"]))
+		if o.get("faces") is Dictionary:
+			assets.append_array(o["faces"].values())
+		if o.get("hover") is Dictionary:
+			for key in ["hover_sound", "click_sound"]:
+				if o["hover"].has(key):
+					assets.append(str(o["hover"][key]))
+		for a in assets:
+			if not asset_library.exists(str(a)):
+				errs.append(level_error.new("MISSING_ASSET", {"object": oid, "asset": str(a)}))
 
 
 static func _check_object(n: flow_node, objects: Array[String], d: String, errs: Array[level_error]) -> void:
